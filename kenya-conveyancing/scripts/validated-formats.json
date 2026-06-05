@@ -1,0 +1,44 @@
+{
+  "validated": [
+    {
+      "doc_type": "developer_sale_agreement",
+      "project_slug": "tsavo_skywalk",
+      "validated_at": "2026-05-19",
+      "validated_by": "ED (project-aware generator smoke test)",
+      "test_data": "/tmp/test-mak-tsavo-skywalk.json",
+      "test_output": "/tmp/test-out-skywalk.docx",
+      "notes": "Smoke test of signing-anchored completion + omitted DLP + lowest stage costs. Renders cleanly. One wording polish open: Possession clause body still references 'Anticipated Practical Completion Date' although Skywalk does not define one — to be tightened in next iteration."
+    },
+    {
+      "doc_type": "developer_sale_agreement",
+      "project_slug": "royal_suburb_1",
+      "validated_at": "2026-05-19",
+      "validated_by": "ED (project-aware generator smoke test)",
+      "test_data": "/tmp/test-mak-royal-suburb-1.json",
+      "test_output": "/tmp/test-out-royal-suburb-1.docx",
+      "notes": "Smoke test of CIArb arbitration variant + LSK Conditions 2015 incorporation + 3% resale admin fee + Common Seal execution + omitted electricity meter line. All five conditional branches rendered correctly. Most divergent project in the registry."
+    }
+  ],
+  "_pending_validation": [
+    {
+      "doc_type": "developer_sale_agreement",
+      "project_slug": "royal_suburb_2",
+      "notes": "Power of Attorney execution + Title Long Stop 60 BD + completed Change of User recital. Test before next MAK matter."
+    },
+    {
+      "doc_type": "developer_sale_agreement",
+      "project_slug": "royal_suburb_3",
+      "notes": "Power of Attorney execution + 10-day grace + applied-for Change of User recital + APCD 8 May 2025."
+    },
+    {
+      "doc_type": "developer_sale_agreement",
+      "project_slug": "tsavo_divine",
+      "notes": "Highest Stage 2 costs in portfolio + in-process construction recital + PoA execution."
+    },
+    {
+      "doc_type": "developer_sale_agreement",
+      "project_slug": "tsavo_rising",
+      "notes": "180 BD Sale Completion lag + 7 business-day grace (strictest) + bi-annual Service Charge + tenant handover protocol + carve-out of Negotiation Period for payment defaults. Most Vendor-protective contract — most edge cases to verify."
+    }
+  ]
+}

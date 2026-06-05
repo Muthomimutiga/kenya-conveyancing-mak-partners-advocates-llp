@@ -1,0 +1,8 @@
+{
+  "name": "The Conveyancing Tracker",
+  "description": "Live conveyancing cycle tracker showing all active transactions, per-matter milestone progress, overdue detection, official-search expiry countdown, and a due-this-week digest.",
+  "tools": [
+    "mcp____AT_SERVER_UUID____list_records_for_table"
+  ],
+  "title": "The Conveyancing Tracker"
+}

@@ -1,0 +1,11 @@
+{
+  "name": "mak-partners-advocates-plugins",
+  "owner": { "name": "MAK & Partners Advocates LLP" },
+  "plugins": [
+    {
+      "name": "kenya-conveyancing",
+      "source": "./kenya-conveyancing",
+      "description": "Full conveyancing cycle automation for Kenyan advocates — 9-milestone tracking from instructions to title, document drafting at each stage, official search expiry alerts, and client updates."
+    }
+  ]
+}

@@ -1,0 +1,548 @@
+{
+  "$schema_version": "1.0",
+  "_notes": "Registry of MAK Partners developer-project sale agreement variants. Each project is a self-contained record. Generator looks up by project_slug. Add new projects by appending an entry; do not modify the generator code.",
+  "_source": "Templates supplied by Ann Wayodi 2026-05-13 via email subject 'SALE AGREEMENTS TEMPLATES'.",
+  "_outstanding": "Ann mentioned 8 active developer projects at MAK. This registry covers 6. Two pending.",
+  "vendor_advocates": {
+    "firm_name": "MAK & PARTNERS ADVOCATES",
+    "address_line_1": "4th Floor, Victoria at Two Rivers",
+    "address_line_2": "Two Rivers Development, Limuru Road",
+    "po_box": "P.O Box 10644 - 00100, Nairobi, Kenya",
+    "email": "mak@makadvocates.com",
+    "website": "www.makadvocates.com"
+  },
+  "tsavo_group_constants": {
+    "_notes": "All 6 known projects are Tsavo-group developments. These constants are shared.",
+    "architect": {
+      "name": "TSAVO Architects Limited",
+      "po_box": "Post Office Box Number 15854-00509, Nairobi",
+      "office": "Coral Bells Apartments, Thindigua, Kiambu Road, Nairobi"
+    },
+    "property_manager": {
+      "name": "TSAVO LIFESTYLE LIMITED",
+      "note": "Optional engagement; Purchaser may but is not required to engage."
+    },
+    "vendor_office_email": "invest@tsavo.ke",
+    "vendor_office_address": "Coral Bells, Thindigua, Kiambu Road, Nairobi"
+  },
+  "projects": {
+    "royal_suburb_1": {
+      "display_name": "Royal Suburb (Phase 1)",
+      "short_label": "Royal Suburb 1",
+      "vendor": {
+        "company_name": "ROYAL SUBURB APARTMENTS LIMITED",
+        "company_registration_number": "PVT-DLUQBE7",
+        "po_box": "Post 15854 - 00509 Nairobi",
+        "notice_address": "ROYAL SUBURB APARTMENTS LIMITED, P.O. Box Number 15854-00509, NAIROBI",
+        "notice_email": "invest@tsavo.ke"
+      },
+      "land": {
+        "title_number": "Nairobi/Block 138/841",
+        "tenure": "freehold",
+        "change_of_user_status": "in_progress_subdivision_pending"
+      },
+      "development": {
+        "name": "Royal Suburb",
+        "unit_breakdown": "403 units of which 200 are One-Bedroom Apartments, 177 are Studio Apartments and 26 are Two Bedroom Apartments",
+        "floors": null,
+        "construction_status": "constructed"
+      },
+      "completion": {
+        "anchor": "anticipated_practical_completion_date",
+        "lag_business_days": 90,
+        "anticipated_practical_completion_date": null,
+        "defects_liability_period_months": null,
+        "post_handover_inspection_window_days": 30
+      },
+      "payments": {
+        "vendor_bank": {
+          "account_name": "ROYAL SUBURB APARTMENTS LIMITED",
+          "bank_name": "NCBA BANK KENYA PLC",
+          "branch": "Village Market 2",
+          "account_number": "8429700033",
+          "swift_code": "CBAFKENX",
+          "paybill_number": null,
+          "paybill_account": null
+        },
+        "vendor_advocates_bank": {
+          "account_name": "MAK AND PARTNERS ADVOCATES",
+          "bank_name": "ECOBANK KENYA LTD",
+          "kes_account_number": "6658001141",
+          "branch_code": "022",
+          "bank_code": "043",
+          "swift_code": "ECOCKENA",
+          "paybill_number": "700201",
+          "paybill_account": "6658001141"
+        },
+        "late_payment_grace_days": 60,
+        "late_payment_grace_unit": "calendar_days",
+        "stage_1": {
+          "legal_fees_kes": 25000,
+          "office_disbursements_kes": 3000,
+          "vat_kes": 4480,
+          "proportionate_management_company_incorporation_kes": 1000,
+          "share_acquisition_kes": 2500,
+          "proportionate_land_transfer_kes": 2000,
+          "stage_1_total_kes": 33480
+        },
+        "stage_2": {
+          "water_meter_kes": 3000,
+          "electricity_meter_kes": null,
+          "service_charge_initial_six_months_kes": 6000,
+          "georeferencing_kes": 15000
+        },
+        "stage_3": {
+          "stamp_duty_basis": "4_percent_of_purchase_price_subject_to_government_valuer",
+          "valuation_for_stamp_kes": 8000,
+          "land_rent_and_rates_clearance_kes": 1000,
+          "commissioner_of_lands_consent_kes": 1500,
+          "registration_fees_kes": 5500
+        }
+      },
+      "dispute_resolution": {
+        "type": "arbitration_ciarb_kenya",
+        "consultation_window_business_days": 30,
+        "arbitrator_appointing_body": "Chairman of the Chartered Institute of Arbitrators, Kenya Branch",
+        "seat": "Nairobi",
+        "language": "English",
+        "governing_rules": "Arbitration Act, 1995"
+      },
+      "incorporates_lsk_conditions_2015": true,
+      "covid_audio_visual_verification_clause": false,
+      "resale_admin_fee_percent": 3,
+      "cover_page_border": true,
+      "cover_page_dated_top_line": true,
+      "notes_for_drafter": "Older template style. Incorporates LSK Conditions of Sale 2015. Dispute resolution is arbitration, not NCIA mediation. No electricity meter line item in Stage 2 — bundled. Cover page has MAK asymmetric page border (thickThinSmallGap top+left, thinThickSmallGap bottom+right, 24pt offset). Cover begins with 'Dated ____ this day ____ of YEAR' line.",
+      "cover_relation_phrase": "in respect of",
+      "cover_apartment_line": "Apartment(s) Number(s) {*}, ROYAL SUBURB APARTMENTS LIMITED"
+    },
+    "royal_suburb_2": {
+      "display_name": "Royal Suburb Phase 2",
+      "short_label": "Royal Suburb 2",
+      "vendor": {
+        "company_name": "ROYAL SUBURB PHASE 2 LIMITED",
+        "company_registration_number": "PVT-7LU555JD",
+        "po_box": "15854-00509 Nairobi",
+        "notice_address": "ROYAL SUBURB PHASE 2 LIMITED, P.O. Box Number 15854-00509, NAIROBI",
+        "notice_email": "invest@tsavo.ke"
+      },
+      "land": {
+        "title_number": "Nairobi/Block 138/1333",
+        "original_number": "1012/47/1/8",
+        "area_hectares": 0.2024,
+        "land_survey_plan_number": "317244",
+        "title_instrument": "IR 8126/28",
+        "tenure": "leasehold_government_of_kenya",
+        "change_of_user_status": "completed_new_title_issued"
+      },
+      "development": {
+        "name": "Royal Suburbs Phase Two",
+        "floors": 12,
+        "unit_breakdown": "446 Apartments of which 169 are One-Bedroom, 12 are Superior One Bedroom, 157 are Studios and 72 are Superior Studios",
+        "construction_status": "erected_and_completed"
+      },
+      "completion": {
+        "anchor": "practical_completion_date",
+        "lag_business_days": 60,
+        "lag_label": "Title Long Stop Date",
+        "anticipated_practical_completion_date": null,
+        "defects_liability_period_months": 6,
+        "post_handover_inspection_window_days": 30
+      },
+      "payments": {
+        "vendor_bank": {
+          "account_name": "ROYAL SUBURB PHASE 2",
+          "bank_name": "NCBA BANK KENYA PLC",
+          "branch": "Ciata Mall",
+          "account_number": "980900",
+          "swift_code": "CBAFKENX",
+          "bank_code": "07000",
+          "branch_code": "142",
+          "paybill_number": "880100"
+        },
+        "vendor_advocates_bank": {
+          "account_name": "MAK & PARTNERS ADVOCATES LLP",
+          "bank_name": "NCBA BANK KENYA LTD",
+          "branch": "Kakamega",
+          "account_number": "5101670016",
+          "swift_code": "CBAFKENX",
+          "paybill_number": "880100",
+          "paybill_account": "5101670016"
+        },
+        "late_payment_grace_days": 60,
+        "late_payment_grace_unit": "calendar_days",
+        "stage_1": {
+          "legal_fees_kes": 25000,
+          "office_disbursements_kes": 3000,
+          "vat_kes": 4480,
+          "stage_1_total_kes": 32480
+        },
+        "stage_2": {
+          "water_meter_kes": 6000,
+          "electricity_meter_kes": 5000,
+          "service_charge_deposit_kes": 12000,
+          "georeferencing_kes": 15000
+        },
+        "stage_3": {
+          "stamp_duty_basis": "4_percent_of_purchase_price_subject_to_government_valuer",
+          "banking_charges_and_kra_eslip_kes": 610,
+          "office_disbursements_kes": 7000,
+          "valuation_and_registration_estimate_kes": 15000
+        }
+      },
+      "dispute_resolution": {
+        "type": "ncia_mediation_then_court",
+        "consultation_window_business_days": 30,
+        "mediation_body": "Nairobi Center for International Arbitration (NCIA)",
+        "mediation_rules": "Nairobi Centre for International Arbitration Mediation Rules"
+      },
+      "incorporates_lsk_conditions_2015": false,
+      "covid_audio_visual_verification_clause": true,
+      "resale_admin_fee_percent": null,
+      "vendor_execution_mode": "power_of_attorney",
+      "cover_page_border": true,
+      "cover_page_dated_top_line": true,
+      "notes_for_drafter": "Construction complete, new title with Change of User issued, so Title Long Stop is just 60 BD. Vendor executes via Power of Attorney. Cover page has MAK asymmetric page border. Cover begins with 'Dated ____ this day ____ of YEAR' line.",
+      "cover_relation_phrase": "in respect of",
+      "cover_apartment_line": "Apartment(s) Number(s) {*}, ROYAL SUBURB PHASE 2 LIMITED"
+    },
+    "royal_suburb_3": {
+      "display_name": "Royal Suburb Phase Three",
+      "short_label": "Royal Suburb 3",
+      "vendor": {
+        "company_name": "ROYAL SUBURB PHASE THREE LIMITED",
+        "company_registration_number": "PVT-RXU235BK",
+        "po_box": "Post Office Box Number 15854-00509, Nairobi",
+        "notice_address": "ROYAL SUBURB PHASE THREE LIMITED, P.O. Box Number 15854-00509, NAIROBI",
+        "notice_email": "invest@tsavo.ke"
+      },
+      "land": {
+        "title_number": "Nairobi/Block 138/1335",
+        "tenure": "leasehold_government_of_kenya",
+        "change_of_user_status": "applied_surrender_pending"
+      },
+      "development": {
+        "name": "Royal Suburb Phase Three",
+        "floors": 12,
+        "unit_breakdown": "studio, one-bedroom and Two Bedroom residential apartments",
+        "construction_status": "under_construction"
+      },
+      "completion": {
+        "anchor": "anticipated_practical_completion_date",
+        "lag_business_days": 90,
+        "anticipated_practical_completion_date": "2025-05-08",
+        "defects_liability_period_months": 6,
+        "post_handover_inspection_window_days": 30
+      },
+      "payments": {
+        "vendor_bank": {
+          "account_name": "ROYAL SUBURB PHASE THREE LIMITED",
+          "bank_name": "NCBA BANK KENYA PLC",
+          "branch": "Ciata Mall",
+          "account_number": "981200",
+          "bank_code": "07000",
+          "branch_code": "142",
+          "swift_code": "CBAFKENX",
+          "paybill_number": "880100"
+        },
+        "vendor_advocates_bank": {
+          "account_name": "MAK & PARTNERS ADVOCATES LLP",
+          "bank_name": "ABSA BANK KENYA LTD",
+          "branch": "Nairobi JKIA",
+          "account_number": "2045078216",
+          "swift_code": "BARCKENX",
+          "paybill_number": "303030",
+          "paybill_account": "2045078216"
+        },
+        "late_payment_grace_days": 10,
+        "late_payment_grace_unit": "calendar_days",
+        "stage_1": {
+          "legal_fees_kes": 25000,
+          "office_disbursements_kes": 3000,
+          "vat_kes": 4480,
+          "proportionate_corp_and_sectional_plan_registration_kes": 6300
+        },
+        "stage_2": {
+          "water_meter_kes": 9000,
+          "electricity_meter_kes": 5000,
+          "service_charge_deposit_kes": 12000,
+          "georeferencing_kes": 15000
+        },
+        "stage_3": {
+          "stamp_duty_basis": "4_percent_of_purchase_price_subject_to_government_valuer",
+          "banking_charges_and_kra_eslip_kes": 610,
+          "office_disbursements_kes": 7000,
+          "valuation_and_registration_estimate_kes": 15000
+        }
+      },
+      "dispute_resolution": {
+        "type": "ncia_mediation_then_court",
+        "consultation_window_business_days": 30,
+        "mediation_body": "Nairobi Center for International Arbitration (NCIA)",
+        "mediation_rules": "Nairobi Centre for International Arbitration Mediation Rules"
+      },
+      "incorporates_lsk_conditions_2015": false,
+      "covid_audio_visual_verification_clause": true,
+      "resale_admin_fee_percent": null,
+      "vendor_execution_mode": "power_of_attorney",
+      "notes_for_drafter": "Change of User still pending — recital must reflect that surrender of title is needed. Stricter 10-day late-payment grace. Vendor executes via Power of Attorney.",
+      "cover_relation_phrase": "relating to",
+      "cover_apartment_line": "Apartment Number {*}, ROYAL SUBURB PHASE THREE LIMITED"
+    },
+    "tsavo_divine": {
+      "display_name": "Tsavo Divine Executive Apartments",
+      "short_label": "Tsavo Divine",
+      "vendor": {
+        "company_name": "TSAVO DIVINE EXECUTIVE APARTMENTS LIMITED",
+        "company_registration_number": "PVT-PJUY85ZX",
+        "po_box": "Post Office Box Number 15854-00509, Nairobi",
+        "notice_address": "TSAVO DIVINE EXECUTIVE APARTMENTS LIMITED, P.O. Box Number 15854-00509, NAIROBI",
+        "notice_email": "invest@tsavo.ke"
+      },
+      "land": {
+        "title_number": "Nairobi/Block 245/461",
+        "tenure": "leasehold_government_of_kenya",
+        "change_of_user_status": "applied_surrender_pending"
+      },
+      "development": {
+        "name": "Tsavo Divine Apartments",
+        "floors": 15,
+        "unit_breakdown": "studio, Superior Studio and one bedroom residential apartments",
+        "construction_status": "in_process_of_erection"
+      },
+      "completion": {
+        "anchor": "anticipated_practical_completion_date",
+        "lag_business_days": 90,
+        "anticipated_practical_completion_date": "2026-02-28",
+        "defects_liability_period_months": 6,
+        "post_handover_inspection_window_days": 30
+      },
+      "payments": {
+        "vendor_bank": {
+          "account_name": "TSAVO DIVINE EXECUTIVE APARTMENTS LTD",
+          "bank_name": "NCBA BANK KENYA PLC",
+          "branch": "Ciata Mall",
+          "account_number": "981700",
+          "bank_code": "07000",
+          "branch_code": "142",
+          "swift_code": "CBAFKENX"
+        },
+        "vendor_advocates_bank": {
+          "account_name": "MAK & PARTNERS ADVOCATES LLP",
+          "bank_name": "EQUITY BANK KENYA LTD",
+          "branch": "Community Branch",
+          "account_number": "0170284202270",
+          "branch_code": "017",
+          "bank_code": "68",
+          "swift_code": "EQBLKENA",
+          "paybill_number": "247247",
+          "paybill_account": "0170284202270"
+        },
+        "late_payment_grace_days": 10,
+        "late_payment_grace_unit": "calendar_days",
+        "stage_1": {
+          "legal_fees_kes": 25000,
+          "office_disbursements_kes": 3000,
+          "vat_kes": 4480,
+          "proportionate_corp_and_sectional_plan_registration_kes": 6300,
+          "stage_1_total_kes": 38780
+        },
+        "stage_2": {
+          "water_meter_kes": 9000,
+          "electricity_meter_kes": 10000,
+          "service_charge_deposit_kes": 15000,
+          "georeferencing_kes": 15000
+        },
+        "stage_3": {
+          "stamp_duty_basis": "4_percent_of_purchase_price_subject_to_government_valuer",
+          "banking_charges_and_kra_eslip_kes": 610,
+          "office_disbursements_kes": 7000,
+          "valuation_and_registration_estimate_kes": 15000
+        }
+      },
+      "dispute_resolution": {
+        "type": "ncia_mediation_then_court",
+        "consultation_window_business_days": 30,
+        "mediation_body": "Nairobi Center for International Arbitration (NCIA)",
+        "mediation_rules": "Nairobi Centre for International Arbitration Mediation Rules"
+      },
+      "incorporates_lsk_conditions_2015": false,
+      "covid_audio_visual_verification_clause": true,
+      "resale_admin_fee_percent": null,
+      "vendor_execution_mode": "power_of_attorney",
+      "notes_for_drafter": "Highest per-meter costs in the portfolio (10k electricity, 15k service charge deposit). Construction still in progress. Vendor executes via Power of Attorney.",
+      "cover_relation_phrase": "relating to",
+      "cover_apartment_line": "Apartment Number {*}, TSAVO DIVINE EXECUTIVE APARTMENTS LIMITED"
+    },
+    "tsavo_rising": {
+      "display_name": "Tsavo Rising",
+      "short_label": "Tsavo Rising",
+      "vendor": {
+        "company_name": "TSAVO RISING LIMITED",
+        "company_registration_number": "PVT-9XUG9KMP",
+        "po_box": "Post Office Box Number 15854-00509, Nairobi",
+        "notice_address": "TSAVO RISING LIMITED, P.O. Box Number 15854-00509, NAIROBI",
+        "notice_email": "invest@tsavo.ke"
+      },
+      "land": {
+        "title_number": "NAIROBI/BLOCK 225/279",
+        "tenure": "freehold",
+        "change_of_user_status": "commenced_in_progress"
+      },
+      "development": {
+        "name": "Tsavo Rising",
+        "floors": 12,
+        "unit_breakdown": "Studios, Superior Studios, One Bedrooms, Two bedrooms residential apartments",
+        "construction_status": "under_construction"
+      },
+      "completion": {
+        "anchor": "anticipated_practical_completion_date",
+        "lag_business_days": 180,
+        "anticipated_practical_completion_date": "2025-09-30",
+        "defects_liability_period_months": 6,
+        "post_handover_inspection_window_days": 30,
+        "service_charge_frequency": "bi_annually"
+      },
+      "payments": {
+        "vendor_bank": {
+          "account_name": "TSAVO RISING LIMITED",
+          "bank_name": "NCBA BANK KENYA PLC",
+          "branch": "Ciata Mall",
+          "account_number": "981600",
+          "bank_code": "07000",
+          "branch_code": "142",
+          "swift_code": "CBAFKENX"
+        },
+        "vendor_advocates_bank": {
+          "account_name": "MAK & PARTNERS ADVOCATES LLP",
+          "bank_name": "NCBA BANK KENYA LTD",
+          "branch": "Kakamega",
+          "account_number": "5101670021",
+          "swift_code": "CBAFKENX",
+          "paybill_number": "880100",
+          "paybill_account": "5101670021"
+        },
+        "late_payment_grace_days": 7,
+        "late_payment_grace_unit": "business_days",
+        "stage_1": {
+          "legal_fees_kes": 25000,
+          "office_disbursements_kes": 3000,
+          "vat_kes": 4480,
+          "proportionate_corp_and_sectional_plan_registration_kes": 6300
+        },
+        "stage_2": {
+          "water_meter_kes": 9000,
+          "electricity_meter_kes": 10000,
+          "service_charge_deposit_kes": 12000,
+          "service_charge_deposit_basis": "6_months_at_2000_per_month",
+          "georeferencing_kes": 15000
+        },
+        "stage_3": {
+          "stamp_duty_basis": "4_percent_of_purchase_price_subject_to_government_valuer",
+          "banking_charges_and_kra_eslip_kes": 610,
+          "office_disbursements_kes": 7000,
+          "valuation_and_registration_estimate_kes": 15000
+        }
+      },
+      "dispute_resolution": {
+        "type": "ncia_mediation_then_court",
+        "consultation_window_business_days": 30,
+        "mediation_body": "Nairobi Centre for International Arbitration (NCIA)",
+        "mediation_rules": "Nairobi Centre for International Arbitration Mediation Rules"
+      },
+      "incorporates_lsk_conditions_2015": false,
+      "covid_audio_visual_verification_clause": true,
+      "resale_admin_fee_percent": null,
+      "vendor_execution_mode": "power_of_attorney",
+      "tenant_handover_notice_days": 30,
+      "notes_for_drafter": "Exceptional 180 BD Sale Completion lag (~9 months). Stricter 7 BUSINESS day late-payment grace — Vendor is the only project with no consultation period before termination. Service Charge paid bi-annually (not monthly). Tenant-in-occupation handover protocol baked in: Vendor must give tenant 30 days notice before handover.",
+      "cover_relation_phrase": "in respect of",
+      "cover_apartment_line": "Apartment Number {*}, at TSAVO RISING Apartments"
+    },
+    "tsavo_skywalk": {
+      "display_name": "Tsavo Skywalk Executive Apartments",
+      "short_label": "Tsavo Skywalk",
+      "vendor": {
+        "company_name": "TSAVO SKYWALK EXECUTIVE APARTMENTS LIMITED",
+        "company_registration_number": "PVT-JZUXZ8M",
+        "po_box": "Post Office Box Number 15854-00509, Nairobi",
+        "notice_address": "TSAVO SKYWALK EXECUTIVE APARTMENTS LIMITED, P.O. Box Number 15854-00509, NAIROBI",
+        "notice_email": "invest@tsavo.ke"
+      },
+      "land": {
+        "title_number": "Nairobi/Block 66/8927",
+        "tenure": "freehold",
+        "change_of_user_status": "not_required_or_completed"
+      },
+      "development": {
+        "name": "Tsavo Skywalk Executive Apartments",
+        "floors": 12,
+        "unit_breakdown": "studios and one bedroom residential apartments",
+        "construction_status": "constructed"
+      },
+      "completion": {
+        "anchor": "agreement_signing_date",
+        "lag_business_days": 90,
+        "anticipated_practical_completion_date": null,
+        "defects_liability_period_months": null,
+        "post_handover_inspection_window_days": null
+      },
+      "payments": {
+        "vendor_bank": {
+          "account_name": "TSAVO SKYWALK EXECUTIVE APARTMENTS LTD",
+          "bank_name": "NCBA Bank Kenya PLC",
+          "branch": "Ciata Mall",
+          "account_number": "84982400018",
+          "swift_code": "CBAFKENX",
+          "branch_code": "142",
+          "bank_code": "07000"
+        },
+        "vendor_advocates_bank": {
+          "account_name": "MAK AND PARTNERS ADVOCATES",
+          "bank_name": "KCB BANK LTD",
+          "branch": "Langata Branch",
+          "account_number": "1270419706",
+          "branch_code": "338",
+          "bank_code": "01",
+          "swift_code": "KCBLKENXXX",
+          "paybill_number": "522522",
+          "paybill_account": "1270419706"
+        },
+        "late_payment_grace_days": 10,
+        "late_payment_grace_unit": "calendar_days",
+        "stage_1": {
+          "legal_fees_kes": 25000,
+          "office_disbursements_kes": 3000,
+          "proportionate_management_company_incorporation_kes": 1000,
+          "share_acquisition_kes": 2500,
+          "proportionate_land_transfer_kes": 2000
+        },
+        "stage_2": {
+          "water_meter_kes": 5000,
+          "electricity_meter_kes": 3000,
+          "service_charge_initial_six_months_kes": 12000,
+          "georeferencing_kes": 15000
+        },
+        "stage_3": {
+          "stamp_duty_basis": "4_percent_of_purchase_price_subject_to_government_valuer",
+          "banking_charges_and_kra_eslip_kes": 650,
+          "valuation_for_stamp_kes": 8000,
+          "registration_and_incidental_fees_kes": 5500
+        }
+      },
+      "dispute_resolution": {
+        "type": "ncia_mediation_then_court",
+        "consultation_window_business_days": 30,
+        "mediation_body": "Nairobi Center for International Arbitration (NCIA)",
+        "mediation_rules": "Nairobi Centre for International Arbitration Mediation Rules"
+      },
+      "incorporates_lsk_conditions_2015": false,
+      "covid_audio_visual_verification_clause": true,
+      "resale_admin_fee_percent": null,
+      "vendor_execution_mode": "power_of_attorney",
+      "notes_for_drafter": "Building already constructed. Sale Completion anchored to AGREEMENT SIGNING DATE rather than APCD — different completion-calendar logic in the plugin. Lowest per-meter costs in the portfolio.",
+      "cover_relation_phrase": "relating to",
+      "cover_apartment_line": "Apartment Number {*} TSAVO SKYWALK EXECUTIVE APARTMENTS LIMITED"
+    }
+  }
+}

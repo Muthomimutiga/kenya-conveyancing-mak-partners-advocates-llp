@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kenya Conveyancing Manager — Team Install & Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+:root {
+  /* Type */
+  --type-mega: 132px;
+  --type-display: 96px;
+  --type-title: 72px;
+  --type-subtitle: 44px;
+  --type-body: 32px;
+  --type-small: 26px;
+  --type-mono: 28px;
+  --type-eyebrow: 22px;
+
+  /* Spacing */
+  --pad-top: 110px;
+  --pad-bottom: 110px;
+  --pad-x: 120px;
+  --gap-title: 56px;
+  --gap-item: 28px;
+
+  /* Color — warm cream + ink, terracotta accent */
+  --bg: #f4eee3;
+  --bg-deep: #ebe2d1;
+  --ink: #1a1812;
+  --ink-soft: #4a4438;
+  --ink-mute: #7a7264;
+  --rule: #cabfa8;
+  --accent: #b04a2a;        /* terracotta */
+  --accent-deep: #7a3318;
+  --paper: #fbf7ef;
+  --dark: #1a1812;
+  --dark-ink: #f4eee3;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #1a1812;
+  font-family: 'Geist', system-ui, sans-serif;
+  color: var(--ink);
+  font-feature-settings: "ss01", "ss02";
+}
+
+deck-stage section {
+  background: var(--bg);
+  font-family: 'Geist', system-ui, sans-serif;
+  color: var(--ink);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Reusable slide chrome */
+.slide {
+  width: 100%;
+  height: 100%;
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide.dark { background: var(--dark); color: var(--dark-ink); }
+.slide.paper { background: var(--paper); }
+.slide.deep { background: var(--bg-deep); }
+
+/* Headers */
+.eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: var(--type-eyebrow);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.slide.dark .eyebrow { color: #b8ad95; }
+
+.title {
+  font-family: 'Newsreader', serif;
+  font-weight: 380;
+  font-size: var(--type-title);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ink);
+}
+.slide.dark .title { color: var(--dark-ink); }
+
+.title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 380;
+}
+
+.subtitle {
+  font-family: 'Newsreader', serif;
+  font-weight: 380;
+  font-size: var(--type-subtitle);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--ink-soft);
+}
+.slide.dark .subtitle { color: #d4c8af; }
+
+.body {
+  font-size: var(--type-body);
+  line-height: 1.4;
+  color: var(--ink-soft);
+  font-weight: 400;
+  max-width: 1300px;
+}
+.slide.dark .body { color: #d4c8af; }
+
+.mono {
+  font-family: 'Geist Mono', monospace;
+  font-size: var(--type-mono);
+  letter-spacing: -0.01em;
+}
+
+/* Top bar */
+.topbar {
+  position: absolute;
+  top: 56px;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.slide.dark .topbar { color: #8c8270; }
+
+.topbar .firm { display: flex; align-items: center; gap: 14px; }
+.topbar .dot {
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Bottom bar */
+.botbar {
+  position: absolute;
+  bottom: 56px;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border-top: 1px solid var(--rule);
+  padding-top: 24px;
+}
+.slide.dark .botbar { color: #8c8270; border-color: #3a3328; }
+
+/* Cards */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 36px 40px;
+  border-radius: 6px;
+}
+
+/* Numbered marker */
+.numbox {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: 'Geist Mono', monospace;
+  color: var(--accent);
+  font-size: var(--type-eyebrow);
+  letter-spacing: 0.12em;
+}
+
+/* Code chip */
+.cmd {
+  font-family: 'Geist Mono', monospace;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.92em;
+  white-space: nowrap;
+  display: inline-block;
+}
+.slide.dark .cmd { background: var(--bg); color: var(--ink); }
+
+.cmd.accent { background: var(--accent); color: white; }
+
+/* Tables */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 28px;
+  line-height: 1.35;
+}
+.tbl th, .tbl td {
+  text-align: left;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+.tbl th {
+  font-family: 'Geist Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 14px;
+}
+.tbl td.cmd-cell {
+  font-family: 'Geist Mono', monospace;
+  color: var(--accent-deep);
+  font-size: 26px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tbl tr:last-child td { border-bottom: none; }
+
+/* Two-col grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+
+/* Step pill */
+.step-pill {
+  display: inline-block;
+  font-family: 'Geist Mono', monospace;
+  font-size: 22px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  padding: 8px 18px;
+  border-radius: 100px;
+}
+
+/* Big number */
+.bignum {
+  font-family: 'Newsreader', serif;
+  font-size: 220px;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* Cover composition */
+.cover-grid {
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+}
+.cover-left {
+  padding: var(--pad-top) 80px var(--pad-bottom) var(--pad-x);
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+}
+.cover-right {
+  background: var(--dark);
+  color: var(--dark-ink);
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom) 80px;
+  display: flex; flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-mark {
+  width: 220px; height: 220px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.cover-mark::before {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.cover-mark .glyph {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 110px;
+  color: var(--accent);
+  font-weight: 300;
+}
+
+/* Architecture diagram */
+.arch {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  align-items: stretch;
+  margin-top: 40px;
+}
+.arch .node {
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  min-height: 360px;
+}
+.arch .node .label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.arch .node h3 {
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+  font-size: 42px;
+  margin: 0;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.arch .node p {
+  font-size: 24px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.arch .arrow {
+  position: absolute;
+  right: -34px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Geist Mono', monospace;
+  font-size: 36px;
+  color: var(--accent);
+  z-index: 2;
+  background: var(--bg);
+  width: 28px;
+  text-align: center;
+}
+
+/* Milestone strip */
+.mile-strip {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 14px;
+  margin-top: 30px;
+}
+.mile-cell {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 260px;
+}
+.mile-cell .num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 56px;
+  color: var(--accent);
+  line-height: 1;
+  font-weight: 300;
+}
+.mile-cell .day {
+  font-family: 'Geist Mono', monospace;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.mile-cell .name {
+  font-family: 'Newsreader', serif;
+  font-size: 24px;
+  line-height: 1.15;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+/* Section opener */
+.section-open {
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--pad-x);
+  position: relative;
+}
+.section-open .part-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 28px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 60px;
+}
+.section-open .part-title {
+  font-family: 'Newsreader', serif;
+  font-weight: 320;
+  font-size: var(--type-display);
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  max-width: 1500px;
+  margin: 0 0 40px 0;
+}
+.section-open .part-title em { font-style: italic; color: var(--accent); font-weight: 320; }
+.section-open .part-sub {
+  font-family: 'Newsreader', serif;
+  font-weight: 380;
+  font-size: 38px;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  max-width: 1300px;
+  font-style: italic;
+}
+
+/* Step list */
+.steps { display: flex; flex-direction: column; gap: 36px; }
+.step-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 36px;
+  align-items: baseline;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule);
+}
+.step-row:last-child { border-bottom: none; }
+.step-row .step-n {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 64px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+}
+.step-row .step-body h3 {
+  font-family: 'Newsreader', serif;
+  font-weight: 420;
+  font-size: 38px;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.step-row .step-body p {
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 1300px;
+}
+
+/* List */
+.bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 22px; }
+.bullets li {
+  font-size: var(--type-body);
+  line-height: 1.4;
+  color: var(--ink-soft);
+  padding-left: 38px;
+  position: relative;
+}
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 18px;
+  width: 18px; height: 1.5px;
+  background: var(--accent);
+}
+
+/* Quote */
+.pull {
+  font-family: 'Newsreader', serif;
+  font-weight: 380;
+  font-size: 64px;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+  color: var(--ink);
+  font-style: italic;
+}
+.pull em { color: var(--accent); }
+
+/* Print fix */
+@media print {
+  html, body { background: white; }
+}
+</style>
+
+<script type="application/json" id="speaker-notes">
+[]
+</script>
+</head>
+<body>
+
+<deck-stage width="1920" height="1080">
+
+<!-- ============ 1. COVER ============ -->
+<section data-label="01 Cover">
+  <div class="cover-grid">
+    <div class="cover-left">
+      <div class="topbar" style="position:static; padding:0;">
+        <div class="firm"><span class="dot"></span><span>MAK &amp; Partners Advocates LLP</span></div>
+        <div>May 2026</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom: 36px;">Team Training · Live Install</div>
+        <h1 class="title" style="font-size: 124px; line-height: 0.98;">Kenya<br>Conveyancing<br><em>Manager</em></h1>
+        <p class="subtitle" style="margin-top: 44px; font-size: 40px; max-width: 900px;">
+          A workflow plugin for the entire conveyancing practice — built into Claude CoWork.
+        </p>
+      </div>
+      <div class="mono" style="font-size: 22px; color: var(--ink-mute); letter-spacing: 0.12em; text-transform: uppercase;">
+        Built by Robin Advisory Group
+      </div>
+    </div>
+    <div class="cover-right" style="background-color: rgb(244, 238, 227)">
+      <div class="mono" style="font-size: 22px; letter-spacing: 0.12em; text-transform: uppercase; color: #b8ad95;">
+</div>
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div class="cover-mark" data-comment-anchor="b06756d779-div" style="display:none;"><span class="glyph">K</span></div>
+        <div style="font-family: 'Newsreader', serif; font-size: 44px; line-height: 1.2; font-style: italic; color: #d4c8af; max-width: 600px;">
+</div>
+      </div>
+      <div style="display: grid; grid-template-columns: auto 1fr; gap: 14px 28px; font-family: 'Geist Mono', monospace; font-size: 22px; color: #b8ad95; letter-spacing: 0.06em;">
+        <div>SESSION</div><div style="color: var(--dark-ink);"><span style="color: rgb(26, 24, 18);">~ 60 minutes</span></div>
+        <div>FOR</div><div style="color: var(--dark-ink);"><span style="color: rgb(26, 24, 18);">All conveyancing fee-earners</span></div>
+        <div>OUTCOME</div><div style="color: var(--dark-ink);"><span style="color: rgb(26, 24, 18);">Plugin live on every machine</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. ABOUT ROBIN ============ -->
+<section data-label="02 About Robin">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Your trainer today</span></div>
+      <div>About</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">About me</div>
+    <h2 class="title" style="margin-top: 24px;">Robin <em>Muthomi Mutiga.</em></h2>
+
+    <div style="margin-top: 56px; display: grid; grid-template-columns: 540px 1fr; gap: 80px; flex: 1; align-items: start;">
+      <div style="width: 540px; height: 640px; border-radius: 6px; overflow: hidden; background: var(--bg-deep);">
+        <img src="robin-portrait.jpeg" alt="Robin Muthomi Mutiga" style="width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block;">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 36px;">
+        <p style="font-family: 'Newsreader', serif; font-size: 38px; line-height: 1.25; color: var(--ink); font-weight: 380; margin: 0;">
+          Advocate of the High Court of Kenya · legal technologist specialising in <em style="color: var(--accent);">AI adoption for legal practice.</em>
+        </p>
+        <p style="font-family: 'Newsreader', serif; font-size: 30px; line-height: 1.35; color: var(--ink-soft); margin: 0;">
+          Since 2023, training Kenya's legal sector — judges, researchers, pupil masters and advocates — on AI in research, drafting and case analysis.
+        </p>
+        <div class="card" style="padding: 28px 32px;">
+          <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">CONTACT</div>
+          <div style="margin-top: 14px; font-family: 'Geist Mono', monospace; font-size: 24px; color: var(--ink); line-height: 1.7;">
+            robinmutiga@gmail.com · +254 799 157 696
+          </div>
+        </div>
+        <div style="padding: 20px 26px; border-left: 3px solid var(--accent); background: var(--bg-deep);">
+          <div class="mono" style="color: var(--ink-mute); font-size: 18px; letter-spacing: 0.14em;">TOOL BUILT BY</div>
+          <div style="margin-top: 8px; font-family: 'Newsreader', serif; font-size: 24px; color: var(--ink);">Robin Advisory Group</div>
+        </div>
+      </div>
+    </div>
+    <div class="botbar"><div>About Robin</div><div>02</div></div>
+  </div>
+</section>
+
+<!-- ============ 3. SELECTED ENGAGEMENTS ============ -->
+<section data-label="03 Engagements">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Track record</span></div>
+      <div>03</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Selected training engagements</div>
+    <h2 class="title" style="margin-top: 28px;">From the Court of Appeal to <em>1,200+ advocates across Africa.</em></h2>
+
+    <table class="tbl" style="margin-top: 36px; font-size: 22px;">
+      <thead>
+        <tr>
+          <th style="width: 17%;">Date</th>
+          <th style="width: 26%;">Institution</th>
+          <th style="width: 32%;">Programme</th>
+          <th>Audience</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">March 2026</td>
+          <td style="color: var(--ink); font-weight: 500;">Court of Appeal of Kenya</td>
+          <td>AI-Powered Legal Research &amp; Drafting</td>
+          <td>Judges of the Court of Appeal &amp; legal researchers</td>
+        </tr>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">August 2025</td>
+          <td style="color: var(--ink); font-weight: 500;">Kenya Judiciary Annual Colloquium</td>
+          <td>Introduction to AI — A Schema &amp; Practical Demo</td>
+          <td>The entire Kenyan Judiciary</td>
+        </tr>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">2024 — 2025</td>
+          <td style="color: var(--ink); font-weight: 500;">Law Society of Kenya · CPD</td>
+          <td>Pupillage in the Age of AI</td>
+          <td>Pupil masters &amp; advocates across Kenya</td>
+        </tr>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">2024 — 2025</td>
+          <td style="color: var(--ink); font-weight: 500;">Kenya School of Law</td>
+          <td>The Future of the Legal Profession</td>
+          <td>Advocate trainees</td>
+        </tr>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">2024</td>
+          <td style="color: var(--ink); font-weight: 500;">Catholic University of East Africa</td>
+          <td>Studying Law in the Age of AI</td>
+          <td>Law students &amp; faculty</td>
+        </tr>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">2024 — 2025</td>
+          <td style="color: var(--ink); font-weight: 500;">Private Law Firms · Nairobi</td>
+          <td>Custom AI Integration Workshops</td>
+          <td>Legal teams — research, drafting, practice management</td>
+        </tr>
+        <tr>
+          <td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-weight: 500;">2024 — 2025</td>
+          <td style="color: var(--ink); font-weight: 500;">Lawyers on the Cutting-Edge Series</td>
+          <td>Community AI Workshops</td>
+          <td>1,200+ legal professionals across Africa · 10+ sessions</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="botbar"><div>Selected Training Engagements</div><div>03</div></div>
+  </div>
+</section>
+
+<!-- ============ 4. AGENDA ============ -->
+<section data-label="04 Agenda">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>MAK &amp; Partners · Conveyancing Manager</span></div>
+      <div>Agenda</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">What we'll cover</div>
+    <h2 class="title" style="margin-top: 28px; max-width: 1400px;">Four parts. <em>One working system</em> by the end.</h2>
+
+    <div style="margin-top: 80px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; flex: 1;">
+      <div style="border-top: 2px solid var(--ink); padding-top: 28px; display: flex; flex-direction: column; gap: 18px;">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.16em;">PART 01</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 44px; font-weight: 400; margin: 0; line-height: 1.05; letter-spacing: -0.015em;">Foundations</h3>
+        <p style="font-size: 24px; color: var(--ink-soft); line-height: 1.4; margin: 0;">CoWork, plugins, and how the pieces fit together.</p>
+      </div>
+      <div style="border-top: 2px solid var(--ink); padding-top: 28px; display: flex; flex-direction: column; gap: 18px;">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.16em;">PART 02</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 44px; font-weight: 400; margin: 0; line-height: 1.05; letter-spacing: -0.015em;">The Airtable Backbone</h3>
+        <p style="font-size: 24px; color: var(--ink-soft); line-height: 1.4; margin: 0;">The shared base every matter is stored in.</p>
+      </div>
+      <div style="border-top: 2px solid var(--accent); padding-top: 28px; display: flex; flex-direction: column; gap: 18px;">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.16em;">PART 03</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 44px; font-weight: 400; margin: 0; line-height: 1.05; letter-spacing: -0.015em;">Project-Specific Drafting</h3>
+        <p style="font-size: 24px; color: var(--ink-soft); line-height: 1.4; margin: 0;">Six projects, six template variants, one generator.</p>
+      </div>
+      <div style="border-top: 2px solid var(--ink); padding-top: 28px; display: flex; flex-direction: column; gap: 18px;">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.16em;">PART 04</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 44px; font-weight: 400; margin: 0; line-height: 1.05; letter-spacing: -0.015em;">Daily Use</h3>
+        <p style="font-size: 24px; color: var(--ink-soft); line-height: 1.4; margin: 0;">The seven commands, in the order you'll use them.</p>
+      </div>
+    </div>
+    <div class="botbar"><div>Kenya Conveyancing Manager · Training</div><div>02</div></div>
+  </div>
+</section>
+
+<!-- ============ 3. THE PROBLEM ============ -->
+<section data-label="03 The Problem">
+  <div class="slide deep">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Why we built this</span></div>
+      <div>The Problem</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 1500px;">
+      <div class="eyebrow">The problem</div>
+      <p class="pull" style="margin-top: 40px;">
+        A typical conveyance has <em>nine milestones</em>, dozens of statutory deadlines, and roughly twenty documents — all tracked in someone's head, an Excel sheet, or a paper diary.
+      </p>
+      <p class="body" style="margin-top: 50px; font-size: 34px; max-width: 1400px;">
+        Searches expire. Stamp duty windows close. Clients ask "where are we?" and we draft the same letters from scratch every time.
+      </p>
+    </div>
+    <div class="botbar"><div>The Problem We're Solving</div><div>03</div></div>
+  </div>
+</section>
+
+<!-- ============ 4. WHAT THIS TOOL DOES ============ -->
+<section data-label="04 What It Does">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The solution, in one slide</span></div>
+      <div>04</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">What this tool does</div>
+    <h2 class="title" style="margin-top: 28px; max-width: 1500px;">The full property transaction lifecycle, <em>from one conversation.</em></h2>
+
+    <div style="margin-top: 70px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px 100px; flex: 1;">
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">01 — INTAKE</div>
+        <p style="font-size: 30px; line-height: 1.4; color: var(--ink-soft); margin-top: 14px;">
+          One command opens a matter. Names, IDs, PINs and property details captured once.
+        </p>
+      </div>
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">02 — CALENDAR</div>
+        <p style="font-size: 30px; line-height: 1.4; color: var(--ink-soft); margin-top: 14px;">
+          Nine milestones land in Outlook Calendar with 7-day and 1-day reminders, automatically.
+        </p>
+      </div>
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">03 — DOCUMENTS</div>
+        <p style="font-size: 30px; line-height: 1.4; color: var(--ink-soft); margin-top: 14px;">
+          Sale Agreement, LRA forms, transfers, undertakings — drafted as ready-to-sign Word files.
+        </p>
+      </div>
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">04 — CLIENT UPDATES</div>
+        <p style="font-size: 30px; line-height: 1.4; color: var(--ink-soft); margin-top: 14px;">
+          Plain-English progress notes drafted and sent via Outlook at every milestone.
+        </p>
+      </div>
+    </div>
+    <div class="botbar"><div>What This Tool Does</div><div>04</div></div>
+  </div>
+</section>
+
+<!-- ============ 5. PART 1 OPENER ============ -->
+<section data-label="05 Part 1 Opener">
+  <div class="slide dark">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Section opener</span></div>
+      <div>Part 01 of 04</div>
+    </div>
+    <div class="section-open">
+      <div class="part-num" style="color: var(--accent);">— Part 01</div>
+      <h2 class="part-title">Foundations: <em>CoWork &amp; Plugins</em></h2>
+      <p class="part-sub" style="color: #d4c8af;">Before we install anything, ten minutes on what these words actually mean.</p>
+    </div>
+    <div class="botbar"><div>Foundations</div><div>05</div></div>
+  </div>
+</section>
+
+<!-- ============ 6. WHAT IS COWORK ============ -->
+<section data-label="06 What is CoWork">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The platform</span></div>
+      <div>06</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Foundation #1</div>
+    <h2 class="title" style="margin-top: 28px;">What is <em>Claude CoWork?</em></h2>
+    <div style="margin-top: 60px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 100px; flex: 1; align-items: start;">
+      <div>
+        <p style="font-family: 'Newsreader', serif; font-size: 44px; line-height: 1.25; font-weight: 380; color: var(--ink); letter-spacing: -0.012em; margin: 0;">
+          A desktop application from Anthropic. Think of it as <span style="color: var(--accent); font-style: italic;">an AI assistant that lives on your computer</span> — not in a browser tab.
+        </p>
+        <p style="margin-top: 36px; font-size: 28px; line-height: 1.4; color: var(--ink-soft);">
+          Because it lives on your computer, it can read files, talk to your calendar, and run small programs we install — what we call <em>plugins.</em>
+        </p>
+      </div>
+      <div class="card" style="padding: 44px;">
+        <div class="mono" style="color: var(--ink-mute); font-size: 20px; letter-spacing: 0.14em;">FACTS</div>
+        <div style="margin-top: 24px; display: grid; grid-template-columns: auto 1fr; gap: 22px 32px; font-size: 26px; line-height: 1.3;">
+          <div class="mono" style="color: var(--accent-deep);">DOWNLOAD</div>
+          <div style="color: var(--ink-soft);">claude.ai/download</div>
+          <div class="mono" style="color: var(--accent-deep);">PLATFORMS</div>
+          <div style="color: var(--ink-soft);">Mac &amp; Windows</div>
+          <div class="mono" style="color: var(--accent-deep);">ACCOUNT</div>
+          <div style="color: var(--ink-soft);">Each person uses their own Anthropic login</div>
+          <div class="mono" style="color: var(--accent-deep);">PLAN</div>
+          <div style="color: var(--ink-soft);">Pro subscription · $20/month per user</div>
+          <div class="mono" style="color: var(--accent-deep);">PAID BY</div>
+          <div style="color: var(--ink-soft);">The firm, for everyone who needs access</div>
+        </div>
+      </div>
+    </div>
+    <div class="botbar"><div>What is Claude CoWork</div><div>06</div></div>
+  </div>
+</section>
+
+<!-- ============ 7. WHAT IS A PLUGIN ============ -->
+<section data-label="07 What is a Plugin">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The unit of capability</span></div>
+      <div>07</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Foundation #2</div>
+    <h2 class="title" style="margin-top: 28px;">What is <em>a plugin?</em></h2>
+    <div style="margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; flex: 1; align-items: start;">
+      <div>
+        <p style="font-family: 'Newsreader', serif; font-size: 42px; line-height: 1.25; font-weight: 380; color: var(--ink); margin: 0;">
+          A plugin is a <em style="color: var(--accent);">small package of skills</em> we add to CoWork.
+        </p>
+        <p style="margin-top: 32px; font-size: 28px; line-height: 1.4; color: var(--ink-soft);">
+          Each plugin teaches CoWork new commands — typed with a forward slash, like <span class="cmd">/new-conveyance</span> — and connects it to outside services like Airtable, Outlook Calendar, and Outlook mail.
+        </p>
+        <p style="margin-top: 28px; font-size: 28px; line-height: 1.4; color: var(--ink-soft);">
+          You can have many plugins installed at once. We are installing <em>one</em>: the Conveyancing Manager.
+        </p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="background: var(--bg-deep); padding: 28px 32px; border-left: 3px solid var(--accent);">
+          <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">ANALOGY</div>
+          <p style="font-family: 'Newsreader', serif; font-size: 32px; line-height: 1.3; color: var(--ink); margin: 14px 0 0;">
+            CoWork is the Microsoft Word window. The plugin is the macro that turns it into a conveyancing assistant.
+          </p>
+        </div>
+        <div style="background: var(--bg-deep); padding: 28px 32px;">
+          <div class="mono" style="color: var(--ink-mute); font-size: 20px; letter-spacing: 0.14em;">YOU TRIGGER A PLUGIN BY:</div>
+          <ul class="bullets" style="margin-top: 18px; gap: 14px;">
+            <li style="font-size: 26px; line-height: 1.3;">Toggling it on for a conversation</li>
+            <li style="font-size: 26px; line-height: 1.3;">Typing one of its slash-commands</li>
+            <li style="font-size: 26px; line-height: 1.3;">Following the prompts it asks you</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="botbar"><div>What is a Plugin</div><div>07</div></div>
+  </div>
+</section>
+
+<!-- ============ 8. ARCHITECTURE ============ -->
+<section data-label="08 Architecture">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>How it all fits together</span></div>
+      <div>08</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Foundation #3</div>
+    <h2 class="title" style="margin-top: 28px;">CoWork, plugin, and Airtable — <em>three layers, one workflow.</em></h2>
+
+    <div class="arch">
+      <div class="node">
+        <div class="label">Layer 01 · App</div>
+        <h3>Claude CoWork</h3>
+        <p>Runs on your laptop. Where you type, where documents are saved, where you see Calendar invites.</p>
+        <div style="margin-top: auto; font-family: 'Geist Mono', monospace; font-size: 22px; color: var(--ink-mute);">↳ One per person</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="node">
+        <div class="label">Layer 02 · Brain</div>
+        <h3>Conveyancing Manager Plugin</h3>
+        <p>The seven slash-commands. Knows the 9 milestones, every LRA form, and the firm's drafting style.</p>
+        <div style="margin-top: auto; font-family: 'Geist Mono', monospace; font-size: 22px; color: var(--ink-mute);">↳ Same on every machine</div>
+        <div class="arrow">→</div>
+      </div>
+      <div class="node" style="border-color: var(--accent); background: var(--paper);">
+        <div class="label">Layer 03 · Memory</div>
+        <h3>Shared Airtable Base</h3>
+        <p>One database for the whole firm. Every matter, every party, every milestone, every document — written here.</p>
+        <div style="margin-top: auto; font-family: 'Geist Mono', monospace; font-size: 22px; color: var(--accent-deep);">↳ One for the whole firm</div>
+      </div>
+    </div>
+    <p style="margin-top: 50px; font-size: 26px; color: var(--ink-mute); font-style: italic; font-family: 'Newsreader', serif;">
+      Each person installs the app and the plugin on their own laptop. Everyone shares the same Airtable base — that's how matters stay in sync across the team.
+    </p>
+    <div class="botbar"><div>How CoWork + Plugins + Airtable Fit Together</div><div>08</div></div>
+  </div>
+</section>
+
+<!-- ============ 9. THE PLUGIN ============ -->
+<section data-label="09 The Plugin">
+  <div class="slide deep">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Meet the plugin</span></div>
+      <div>09</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">The plugin itself</div>
+    <h2 class="title" style="margin-top: 28px; max-width: 1500px;">The Kenya Conveyancing Manager.</h2>
+    <p class="subtitle" style="margin-top: 36px; max-width: 1400px;">
+      Built for Kenyan property practice — LRA forms, LCB and NLC consents, KRA stamp duty, and the realities of the Land Registry.
+    </p>
+    <div style="margin-top: 70px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 50px; flex: 1;">
+      <div>
+        <div class="bignum">9</div>
+        <div style="margin-top: 16px; font-family: 'Newsreader', serif; font-size: 32px; line-height: 1.2; color: var(--ink);">milestones tracked per matter</div>
+      </div>
+      <div>
+        <div class="bignum">7</div>
+        <div style="margin-top: 16px; font-family: 'Newsreader', serif; font-size: 32px; line-height: 1.2; color: var(--ink);">slash-commands you'll learn today</div>
+      </div>
+      <div>
+        <div class="bignum">20+</div>
+        <div style="margin-top: 16px; font-family: 'Newsreader', serif; font-size: 32px; line-height: 1.2; color: var(--ink);">documents drafted on demand</div>
+      </div>
+    </div>
+    <div class="botbar"><div>The Conveyancing Manager Plugin</div><div>09</div></div>
+  </div>
+</section>
+
+<!-- ============ 10. SEVEN COMMANDS ============ -->
+<section data-label="10 Seven Commands">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The vocabulary of the plugin</span></div>
+      <div>10</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Reference</div>
+    <h2 class="title" style="margin-top: 28px;">Your seven commands.</h2>
+    <table class="tbl" style="margin-top: 50px;">
+      <thead>
+        <tr><th style="width: 28%;">Command</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cmd-cell">/setup-conveyancing</td><td>One-time admin setup. Wires the plugin to the firm's Airtable base.</td></tr>
+        <tr><td class="cmd-cell">/new-conveyance</td><td>Open a new matter. Intake → 9 milestones → Calendar reminders → Sale Agreement, Engagement Letter, Fee Note generated.</td></tr>
+        <tr><td class="cmd-cell">/conveyance-status</td><td>Dashboard of active matters: overdue, official searches expiring, completions due this month.</td></tr>
+        <tr><td class="cmd-cell">/draft-conveyance-doc</td><td>Draft any document for a matter — LRA forms, transfers, letters, undertakings, fee notes.</td></tr>
+        <tr><td class="cmd-cell">/complete-milestone</td><td>Mark a milestone done. Advances the matter and offers next-stage documents.</td></tr>
+        <tr><td class="cmd-cell">/send-client-update</td><td>Plain-English progress update, drafted and sent to the client via Outlook.</td></tr>
+        <tr><td class="cmd-cell">/train-form</td><td>Teach the system a new LRA statutory form — auto-downloaded from the Ministry of Lands site.</td></tr>
+      </tbody>
+    </table>
+    <div class="botbar"><div>Your 7 Commands</div><div>10</div></div>
+  </div>
+</section>
+
+<!-- ============ 11. PART 2 OPENER ============ -->
+<section data-label="11 Part 2 Opener">
+  <div class="slide dark">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Section opener</span></div>
+      <div>Part 02 of 04</div>
+    </div>
+    <div class="section-open">
+      <div class="part-num">— Part 02</div>
+      <h2 class="part-title">The <em>Airtable</em> Backbone.</h2>
+      <p class="part-sub" style="color: #d4c8af;">Where every matter lives. One shared database for the whole firm.</p>
+    </div>
+    <div class="botbar"><div>The Airtable Backbone</div><div>11</div></div>
+  </div>
+</section>
+
+<!-- ============ 12. WHY AIRTABLE ============ -->
+<section data-label="12 Why Airtable">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Why we picked it</span></div>
+      <div>12</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Why Airtable</div>
+    <h2 class="title" style="margin-top: 28px; max-width: 1500px;">A spreadsheet that thinks like a database — <em>without an IT department.</em></h2>
+
+    <div style="margin-top: 80px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 50px; flex: 1;">
+      <div>
+        <div class="step-pill">Shared</div>
+        <p style="margin-top: 24px; font-family: 'Newsreader', serif; font-size: 36px; line-height: 1.2; color: var(--ink);">One base. Everyone sees the same matters in real time.</p>
+      </div>
+      <div>
+        <div class="step-pill">Visible</div>
+        <p style="margin-top: 24px; font-family: 'Newsreader', serif; font-size: 36px; line-height: 1.2; color: var(--ink);">If something looks wrong in a document, you can fix the row directly and regenerate.</p>
+      </div>
+      <div>
+        <div class="step-pill">Free</div>
+        <p style="margin-top: 24px; font-family: 'Newsreader', serif; font-size: 36px; line-height: 1.2; color: var(--ink);">The free plan is sufficient for the firm's current matter volume.</p>
+      </div>
+    </div>
+    <div class="botbar"><div>Why Airtable</div><div>12</div></div>
+  </div>
+</section>
+
+<!-- ============ 13. FOUR TABLES ============ -->
+<section data-label="13 Four Tables">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Inside the base</span></div>
+      <div>13</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">The shape of the data</div>
+    <h2 class="title" style="margin-top: 28px;">Four tables. <em>That's the whole base.</em></h2>
+
+    <div style="margin-top: 70px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; flex: 1;">
+      <div style="border: 1.5px solid var(--ink); padding: 36px 40px; background: var(--bg);">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">TABLE 01</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 48px; font-weight: 400; margin: 14px 0 18px; letter-spacing: -0.015em;">Conveyances</h3>
+        <p style="font-size: 26px; line-height: 1.4; color: var(--ink-soft); margin: 0;">One record per property transaction — all party and property details, status, milestone tracking.</p>
+      </div>
+      <div style="border: 1.5px solid var(--ink); padding: 36px 40px; background: var(--bg);">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">TABLE 02</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 48px; font-weight: 400; margin: 14px 0 18px; letter-spacing: -0.015em;">Milestones</h3>
+        <p style="font-size: 26px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Nine records per conveyance — target dates, status, Calendar event IDs.</p>
+      </div>
+      <div style="border: 1.5px solid var(--ink); padding: 36px 40px; background: var(--bg);">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">TABLE 03</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 48px; font-weight: 400; margin: 14px 0 18px; letter-spacing: -0.015em;">Parties</h3>
+        <p style="font-size: 26px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Buyers, sellers, and other parties — with ID and KRA PIN details.</p>
+      </div>
+      <div style="border: 1.5px solid var(--ink); padding: 36px 40px; background: var(--bg);">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">TABLE 04</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 48px; font-weight: 400; margin: 14px 0 18px; letter-spacing: -0.015em;">Documents</h3>
+        <p style="font-size: 26px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Records of every document drafted — linked to the conveyance and milestone.</p>
+      </div>
+    </div>
+    <div class="botbar"><div>The Four Tables</div><div>13</div></div>
+  </div>
+</section>
+
+<!-- ============ 14. SETUP THE BASE — Open question ============ -->
+<section data-label="14 Setup the Base">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Admin setup · before today's session</span></div>
+      <div>14</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Setting up the shared base</div>
+    <h2 class="title" style="margin-top: 28px;">One person creates the base. <em>Everyone else joins it.</em></h2>
+
+    <div style="margin-top: 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; flex: 1; align-items: start;">
+      <div class="steps">
+        <div class="step-row">
+          <div class="step-n">1</div>
+          <div class="step-body">
+            <h3>Create the Airtable account</h3>
+            <p>Go to airtable.com and sign up using the firm email address. The free plan is enough.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">2</div>
+          <div class="step-body">
+            <h3>Create the base, name it exactly</h3>
+            <p>Name it <span class="cmd">Kenya Conveyancing Manager</span> — the plugin looks for that exact name.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">3</div>
+          <div class="step-body">
+            <h3>Generate one API token, share it with the team</h3>
+            <p>Profile → Developer Hub → Personal access tokens. Scopes: <span class="mono" style="font-size: 22px;">data.records:read · data.records:write · schema.bases:read</span></p>
+          </div>
+        </div>
+      </div>
+      <div style="background: var(--accent); color: white; padding: 44px; border-radius: 4px;">
+        <div class="mono" style="font-size: 22px; letter-spacing: 0.14em; opacity: 0.85;">OPEN QUESTION</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 44px; font-weight: 380; margin: 18px 0 22px; letter-spacing: -0.015em; line-height: 1.1; font-style: italic;">How do we duplicate the base?</h3>
+        <p style="font-size: 26px; line-height: 1.4; margin: 0; opacity: 0.95;">
+          The fastest path is a shared <em>template link</em> from Robin — one click and the base appears in your Airtable, tables and fields already in place.
+        </p>
+        <p style="font-size: 26px; line-height: 1.4; margin: 22px 0 0; opacity: 0.95;">
+          Alternative: create the base from scratch and add the four tables manually using the schema in the playbook. We will confirm before the session.
+        </p>
+      </div>
+    </div>
+    <div class="botbar"><div>Setting Up the Shared Base</div><div>14</div></div>
+  </div>
+</section>
+
+<!-- ============ 15. PART 3 OPENER (Project-Specific Drafting) ============ -->
+<section data-label="15 Part 3 Opener">
+  <div class="slide dark">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Section opener</span></div>
+      <div>Part 03 of 04</div>
+    </div>
+    <div class="section-open">
+      <div class="part-num">— Part 03</div>
+      <h2 class="part-title">Six projects. Six contracts. <em>One generator.</em></h2>
+      <p class="part-sub" style="color: #d4c8af;">Where the work actually happens — the per-project sale agreement, drafted live.</p>
+    </div>
+    <div class="botbar"><div>Project-Specific Drafting</div><div>15</div></div>
+  </div>
+</section>
+
+<!-- ============ 16. PROJECT PORTFOLIO ============ -->
+<section data-label="16 Project Portfolio">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The active book</span></div>
+      <div>16</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 50px;">MAK's developer projects</div>
+    <h2 class="title" style="margin-top: 20px;">Six active developments. <em>Six template families.</em></h2>
+
+    <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; flex: 1;">
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">PROJECT 01</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 30px; font-weight: 400; margin: 12px 0 6px; line-height: 1.1; letter-spacing: -0.015em;">Royal Suburb</h3>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 17px; color: var(--ink-mute); letter-spacing: 0.06em;">Phase 1 · 403 units</div>
+        <ul style="font-size: 19px; line-height: 1.45; color: var(--ink-soft); margin: 18px 0 0; padding-left: 18px;">
+          <li>Freehold · Nairobi/Block 138/841</li>
+          <li>CIArb arbitration · 60-day grace</li>
+          <li>LSK Conditions 2015 incorporated</li>
+          <li>Common Seal execution</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">PROJECT 02</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 30px; font-weight: 400; margin: 12px 0 6px; line-height: 1.1; letter-spacing: -0.015em;">Royal Suburb 2</h3>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 17px; color: var(--ink-mute); letter-spacing: 0.06em;">Phase 2</div>
+        <ul style="font-size: 19px; line-height: 1.45; color: var(--ink-soft); margin: 18px 0 0; padding-left: 18px;">
+          <li>60 BD Title Long Stop</li>
+          <li>Completed Change of User recital</li>
+          <li>Power of Attorney execution</li>
+          <li>NCIA mediation → court</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">PROJECT 03</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 30px; font-weight: 400; margin: 12px 0 6px; line-height: 1.1; letter-spacing: -0.015em;">Royal Suburb 3</h3>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 17px; color: var(--ink-mute); letter-spacing: 0.06em;">Phase 3 · 12 floors</div>
+        <ul style="font-size: 19px; line-height: 1.45; color: var(--ink-soft); margin: 18px 0 0; padding-left: 18px;">
+          <li>Leasehold from Government of Kenya</li>
+          <li>Applied-for Change of User</li>
+          <li>10-day grace · sole discretion</li>
+          <li>APCD 8 May 2025</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">PROJECT 04</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 30px; font-weight: 400; margin: 12px 0 6px; line-height: 1.1; letter-spacing: -0.015em;">Tsavo Divine</h3>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 17px; color: var(--ink-mute); letter-spacing: 0.06em;">Executive Apartments</div>
+        <ul style="font-size: 19px; line-height: 1.45; color: var(--ink-soft); margin: 18px 0 0; padding-left: 18px;">
+          <li>In-process construction recital</li>
+          <li>Highest Stage 2 costs in book</li>
+          <li>Power of Attorney execution</li>
+          <li>APCD 28 February 2026</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">PROJECT 05</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 30px; font-weight: 400; margin: 12px 0 6px; line-height: 1.1; letter-spacing: -0.015em;">Tsavo Rising</h3>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 17px; color: var(--ink-mute); letter-spacing: 0.06em;">Most Vendor-protective</div>
+        <ul style="font-size: 19px; line-height: 1.45; color: var(--ink-soft); margin: 18px 0 0; padding-left: 18px;">
+          <li>180 BD Sale Completion lag</li>
+          <li>7 BD grace (strictest)</li>
+          <li>Bi-annual Service Charge</li>
+          <li>Tenant handover protocol</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--accent); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">PROJECT 06</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 30px; font-weight: 400; margin: 12px 0 6px; line-height: 1.1; letter-spacing: -0.015em;">Tsavo Skywalk</h3>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 17px; color: var(--ink-mute); letter-spacing: 0.06em;">Signing-anchored completion</div>
+        <ul style="font-size: 19px; line-height: 1.45; color: var(--ink-soft); margin: 18px 0 0; padding-left: 18px;">
+          <li>Agreement signing date anchor</li>
+          <li>Schedule of Purchaser's Additional Costs</li>
+          <li>No defects liability period</li>
+          <li>Power of Attorney execution</li>
+        </ul>
+      </div>
+    </div>
+    <div class="botbar"><div>The 6 Active Projects</div><div>16</div></div>
+  </div>
+</section>
+
+<!-- ============ 17. WHAT CHANGES BETWEEN PROJECTS ============ -->
+<section data-label="17 Variant Differences">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Per-project intelligence</span></div>
+      <div>17</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 50px;">Same shell, six contracts</div>
+    <h2 class="title" style="margin-top: 20px;">What the generator <em>switches on.</em></h2>
+    <p class="body" style="margin-top: 14px; font-size: 26px;">
+      Each project has its own clause body. The generator never paraphrases — every word is verbatim from Ann's source templates.
+    </p>
+
+    <table class="tbl" style="margin-top: 28px; font-size: 19px;">
+      <thead>
+        <tr>
+          <th style="width: 16%;">Project</th>
+          <th style="width: 14%;">Tenure</th>
+          <th style="width: 16%;">Dispute</th>
+          <th style="width: 16%;">Grace</th>
+          <th style="width: 16%;">Execution</th>
+          <th>Distinctive</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight: 500; color: var(--ink);">Royal Suburb 1</td><td>Freehold</td><td>CIArb arbitration</td><td>60 calendar days</td><td>Common Seal</td><td>LSK Conditions 2015 · 3% resale fee</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">Royal Suburb 2</td><td>Leasehold (GoK)</td><td>NCIA → court</td><td>Per project</td><td>Power of Attorney</td><td>Completed Change of User · 60 BD long stop</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">Royal Suburb 3</td><td>Leasehold (GoK)</td><td>NCIA → court</td><td>10 days · sole discretion</td><td>Power of Attorney</td><td>Applied-for Change of User · APCD May 2025</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">Tsavo Divine</td><td>Leasehold (GoK)</td><td>NCIA → court</td><td>Per project</td><td>Power of Attorney</td><td>In-process construction · highest Stage 2 costs</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">Tsavo Rising</td><td>Freehold</td><td>NCIA → court</td><td>7 business days</td><td>Power of Attorney</td><td>180 BD completion · tenant handover protocol</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">Tsavo Skywalk</td><td>Leasehold (GoK)</td><td>NCIA → court</td><td>Per project</td><td>Power of Attorney</td><td>Signing-anchored · no DLP</td></tr>
+      </tbody>
+    </table>
+    <div class="botbar"><div>What Changes Between Projects</div><div>17</div></div>
+  </div>
+</section>
+
+<!-- ============ 18. LIVE DEMO — DRAFTING ============ -->
+<section data-label="18 Demo Drafting">
+  <div class="slide deep">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Live demo · we run it now</span></div>
+      <div>18</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 50px;">Live demo</div>
+    <h2 class="title" style="margin-top: 20px;">From <em>instruction</em> to a signed-ready draft.</h2>
+
+    <div style="margin-top: 40px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 60px; flex: 1; align-items: start;">
+      <div class="steps">
+        <div class="step-row" style="border-color: var(--rule);">
+          <div class="step-n">1</div>
+          <div class="step-body">
+            <h3>Open the matter</h3>
+            <div style="margin-top: 8px;"><span class="cmd accent">/new-conveyance</span></div>
+            <p style="font-size: 22px; margin-top: 8px;">Pick the project. Capture buyer, ID/PIN, apartment number, purchase price. Nine milestones land in Calendar automatically.</p>
+          </div>
+        </div>
+        <div class="step-row" style="border-color: var(--rule);">
+          <div class="step-n">2</div>
+          <div class="step-body">
+            <h3>Draft the sale agreement</h3>
+            <div style="margin-top: 8px;"><span class="cmd accent">/draft-conveyance-doc</span></div>
+            <p style="font-size: 22px; margin-top: 8px;">Choose the matter. Choose "Developer Sale Agreement". The plugin pulls the per-project clause body and registry record.</p>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">3</div>
+          <div class="step-body">
+            <h3>Open in Word</h3>
+            <p style="font-size: 22px; margin-top: 8px;">A real .docx file, project-specific, formatted to the firm style. LRA forms, undertakings, and letters come from the same engine.</p>
+          </div>
+        </div>
+      </div>
+      <div style="background: var(--ink); color: var(--bg); padding: 30px; font-family: 'Geist Mono', monospace; font-size: 18px; line-height: 1.55;">
+        <div style="color: #b8ad95; letter-spacing: 0.14em; font-size: 15px;">COWORK CHAT — DRAFTING</div>
+        <div style="margin-top: 22px; color: var(--accent);">You</div>
+        <div style="margin-top: 4px;">/draft-conveyance-doc Tsavo Divine sale agreement</div>
+        <div style="margin-top: 16px; color: #b8ad95;">Conveyancing Manager</div>
+        <div style="margin-top: 4px;">Pulling Tsavo Divine clause body. Purchaser?</div>
+        <div style="margin-top: 16px; color: var(--accent);">You</div>
+        <div style="margin-top: 4px;">David Kipngeno Rotich, ID 67890123, Apt 15D</div>
+        <div style="margin-top: 16px; color: #b8ad95;">Conveyancing Manager</div>
+        <div style="margin-top: 4px;">Drafted. <span style="color: var(--accent);">TsavoDivine-DraftSaleAgreement.docx</span> saved to Drive.</div>
+        <div style="margin-top: 22px; padding-top: 16px; border-top: 1px solid #3a3328; color: #b8ad95; font-size: 15px; letter-spacing: 0.06em;">→ READY FOR REVIEW</div>
+      </div>
+    </div>
+    <div class="botbar"><div>Live Demo · Drafting</div><div>18</div></div>
+  </div>
+</section>
+
+<!-- ============ 19. BEYOND THE SALE AGREEMENT ============ -->
+<section data-label="19 Other Documents">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The full document set</span></div>
+      <div>19</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 50px;">Beyond the sale agreement</div>
+    <h2 class="title" style="margin-top: 20px;">Every document a conveyance needs.</h2>
+    <p class="body" style="margin-top: 14px; font-size: 26px;">
+      Same command. Different document. The per-project intelligence carries through to letters, transfers, and statutory forms.
+    </p>
+
+    <div style="margin-top: 36px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; flex: 1;">
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">CONTRACTUAL</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 26px; font-weight: 400; margin: 12px 0 10px; line-height: 1.1; letter-spacing: -0.015em;">The deal itself</h3>
+        <ul style="font-size: 19px; line-height: 1.5; color: var(--ink-soft); margin: 0; padding-left: 20px;">
+          <li>Developer Sale Agreement (per project)</li>
+          <li>Engagement Letter</li>
+          <li>Fee Note</li>
+          <li>Acknowledgement of Instructions</li>
+          <li>Requisitions on Title</li>
+          <li>Reply to Requisitions</li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">STATUTORY</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 26px; font-weight: 400; margin: 12px 0 10px; line-height: 1.1; letter-spacing: -0.015em;">Land Registry forms</h3>
+        <ul style="font-size: 19px; line-height: 1.5; color: var(--ink-soft); margin: 0; padding-left: 20px;">
+          <li>LRA 33 — Transfer (freehold)</li>
+          <li>LRA 63 — Transfer of Lease</li>
+          <li>LRA 58 — Discharge of Charge</li>
+          <li>LRA 84 — Application for Official Search</li>
+          <li>Any other LRA form via <span class="cmd" style="font-size: 0.8em;">/train-form</span></li>
+        </ul>
+      </div>
+      <div style="background: var(--bg); border: 1.5px solid var(--ink); padding: 26px;">
+        <div class="mono" style="color: var(--accent); font-size: 18px; letter-spacing: 0.14em;">CORRESPONDENCE</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 26px; font-weight: 400; margin: 12px 0 10px; line-height: 1.1; letter-spacing: -0.015em;">Letters & undertakings</h3>
+        <ul style="font-size: 19px; line-height: 1.5; color: var(--ink-soft); margin: 0; padding-left: 20px;">
+          <li>Official Search application letter</li>
+          <li>LCB / NLC consent applications</li>
+          <li>Rates &amp; Rent clearance letters</li>
+          <li>Professional Undertaking</li>
+          <li>Completion Notice</li>
+          <li>Client update letters</li>
+        </ul>
+      </div>
+    </div>
+    <div class="botbar"><div>Beyond the Sale Agreement</div><div>19</div></div>
+  </div>
+</section>
+
+
+<!-- ============ 20. PART 4 OPENER ============ -->
+<section data-label="20 Part 4 Opener">
+  <div class="slide dark">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Section opener</span></div>
+      <div>Part 04 of 04</div>
+    </div>
+    <div class="section-open">
+      <div class="part-num">— Part 04</div>
+      <h2 class="part-title">Daily use, <em>command by command.</em></h2>
+      <p class="part-sub" style="color: #d4c8af;">From a new instruction landing on your desk to balance payment released.</p>
+    </div>
+    <div class="botbar"><div>Daily Use</div><div>20</div></div>
+  </div>
+</section>
+
+<!-- ============ 21. NEW MATTER ============ -->
+<section data-label="21 New Matter">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The most important command</span></div>
+      <div>21</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Opening a new matter</div>
+    <div style="display: flex; align-items: baseline; gap: 24px; margin-top: 28px; flex-wrap: wrap;">
+      <h2 class="title" style="margin: 0;">Run</h2>
+      <span class="cmd accent" style="font-size: 56px; padding: 10px 24px;">/new-conveyance</span>
+    </div>
+
+    <div style="margin-top: 70px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px 100px; flex: 1;">
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">IT ASKS YOU FOR</div>
+        <ul class="bullets" style="margin-top: 20px;">
+          <li style="font-size: 26px;">Buyer &amp; seller full names · IDs · KRA PINs</li>
+          <li style="font-size: 26px;">Property — LR/Title/Plot No. · location · tenure</li>
+          <li style="font-size: 26px;">Purchase price · deposit paid · target completion</li>
+          <li style="font-size: 26px;">Counterpart advocates &amp; whether seller is a developer</li>
+        </ul>
+      </div>
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">IT THEN DOES, AUTOMATICALLY</div>
+        <ul class="bullets" style="margin-top: 20px;">
+          <li style="font-size: 26px;">Creates the matter record in Airtable</li>
+          <li style="font-size: 26px;">Calculates all 9 milestone target dates from today</li>
+          <li style="font-size: 26px;">Creates 9 Calendar reminders · 7-day &amp; 1-day alerts each</li>
+          <li style="font-size: 26px;">Sets the Official Search expiry alert · lodgement + 30 days</li>
+          <li style="font-size: 26px;">Drafts Sale Agreement, Engagement Letter, Fee Note</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size: 26px; color: var(--ink-mute); font-style: italic; font-family: 'Newsreader', serif; margin-top: 30px;">
+      Names and IDs are stored in Airtable — you never re-type them on any future document for this matter.
+    </p>
+    <div class="botbar"><div>Opening a New Matter</div><div>21</div></div>
+  </div>
+</section>
+
+<!-- ============ 22. NINE MILESTONES ============ -->
+<section data-label="22 Nine Milestones">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The schedule, in full</span></div>
+      <div>22</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">The 9-milestone schedule</div>
+    <h2 class="title" style="margin-top: 28px;">Day 0 to Day 80. <em>Same path, every matter.</em></h2>
+
+    <div class="mile-strip">
+      <div class="mile-cell"><div class="num">1</div><div class="day">Day 0</div><div class="name">Instructions &amp; Sale Agreement</div></div>
+      <div class="mile-cell"><div class="num">2</div><div class="day">Day 7</div><div class="name">Official Search</div></div>
+      <div class="mile-cell"><div class="num">3</div><div class="day">Day 14</div><div class="name">LCB / NLC Consent</div></div>
+      <div class="mile-cell"><div class="num">4</div><div class="day">Day 14</div><div class="name">Rates Clearance</div></div>
+      <div class="mile-cell"><div class="num">5</div><div class="day">Day 14</div><div class="name">Rent Clearance</div></div>
+      <div class="mile-cell"><div class="num">6</div><div class="day">Day 45</div><div class="name">Stamp Duty</div></div>
+      <div class="mile-cell"><div class="num">7</div><div class="day">Day 60</div><div class="name">Transfer Documents</div></div>
+      <div class="mile-cell"><div class="num">8</div><div class="day">Day 70</div><div class="name">Registration</div></div>
+      <div class="mile-cell" style="border-color: var(--accent); background: var(--bg);"><div class="num">9</div><div class="day">Day 80</div><div class="name">Completion</div></div>
+    </div>
+
+    <div style="margin-top: auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 50px; padding-top: 50px;">
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">SEARCH WINDOW</div>
+        <p style="font-size: 22px; line-height: 1.4; color: var(--ink-soft); margin-top: 10px;">30-day validity from lodgement. Tracked separately in Calendar.</p>
+      </div>
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">STAMP DUTY GATEWAY</div>
+        <p style="font-size: 22px; line-height: 1.4; color: var(--ink-soft); margin-top: 10px;">Registrar accepts no instrument until it is stamped. Milestone 6 is the bottleneck.</p>
+      </div>
+      <div>
+        <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">TENURE-AWARE</div>
+        <p style="font-size: 22px; line-height: 1.4; color: var(--ink-soft); margin-top: 10px;">Rent clearance and NLC consent skipped automatically for freehold transactions.</p>
+      </div>
+    </div>
+    <div class="botbar"><div>The 9-Milestone Schedule</div><div>22</div></div>
+  </div>
+</section>
+
+<!-- ============ 23. DRAFTING DOCS ============ -->
+<section data-label="23 Drafting Docs">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Drafting</span></div>
+      <div>23</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 50px;">Drafting any document</div>
+    <div style="display: flex; align-items: baseline; gap: 24px; margin-top: 20px; flex-wrap: wrap;">
+      <h2 class="title" style="margin: 0;">Run</h2>
+      <span class="cmd accent" style="font-size: 56px; padding: 10px 24px;">/draft-conveyance-doc</span>
+    </div>
+    <p class="body" style="font-size: 28px; margin-top: 20px; max-width: 1500px;">
+      The command asks <em>which matter</em> and <em>which document.</em> Party and property details are pulled from Airtable automatically — no re-typing.
+    </p>
+
+    <table class="tbl" style="margin-top: 20px; font-size: 21px;">
+      <thead>
+        <tr><th style="width: 30%;">Milestone</th><th>Documents available</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight: 500; color: var(--ink);">M1 — Instructions</td><td>Sale Agreement · Developer Sale Agreement · Engagement Letter · Fee Note · Acknowledgement of Instructions</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">M2 — Official Search</td><td>Official Search application letter · LRA 84 form</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">M3 — Consent</td><td>LCB consent application (agricultural) · NLC consent application (leasehold)</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">M4 / M5 — Clearances</td><td>Rates clearance to County · Rent clearance to NLC (leasehold only)</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">M6 — Stamp Duty</td><td>Stamp duty guidance note to client</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">M7 — Transfer</td><td>LRA 33 (freehold) · LRA 63 (leasehold) · Requisitions · Reply to Requisitions · LRA 58 Discharge of Charge</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">M8 / M9</td><td>Registration covering letter · Completion Notice · Undertaking Letter</td></tr>
+        <tr><td style="font-weight: 500; color: var(--ink);">Any milestone</td><td>Client update letter · Reminder / chase notice to counterpart advocates</td></tr>
+      </tbody>
+    </table>
+    <div class="botbar"><div>Drafting Documents</div><div>23</div></div>
+  </div>
+</section>
+
+<!-- ============ 24. STATUS, COMPLETE, UPDATE ============ -->
+<section data-label="24 Status Complete Update">
+  <div class="slide deep">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>The other three you'll use weekly</span></div>
+      <div>24</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Three more commands · the rhythm</div>
+    <h2 class="title" style="margin-top: 28px;">Check, complete, communicate.</h2>
+
+    <div style="margin-top: 70px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; flex: 1;">
+      <div style="background: var(--paper); border: 1.5px solid var(--ink); padding: 36px;">
+        <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">EVERY MORNING</div>
+        <div class="cmd" style="margin-top: 18px; font-size: 22px;">/conveyance-status</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 38px; font-weight: 400; margin: 24px 0 16px; line-height: 1.1; letter-spacing: -0.015em;">Check overdue and expiring</h3>
+        <p style="font-size: 24px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Dashboard of every active matter — overdue milestones, searches expiring within 10 days, completions due this month.</p>
+      </div>
+      <div style="background: var(--paper); border: 1.5px solid var(--ink); padding: 36px;">
+        <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">AS YOU FINISH STAGES</div>
+        <div class="cmd" style="margin-top: 18px; font-size: 22px;">/complete-milestone</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 38px; font-weight: 400; margin: 24px 0 16px; line-height: 1.1; letter-spacing: -0.015em;">Mark and advance</h3>
+        <p style="font-size: 24px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Marks the milestone done in Airtable, advances the matter, offers to draft the next stage's documents.</p>
+      </div>
+      <div style="background: var(--paper); border: 1.5px solid var(--accent); padding: 36px;">
+        <div class="mono" style="color: var(--accent); font-size: 20px; letter-spacing: 0.14em;">AT EACH MILESTONE</div>
+        <div class="cmd" style="margin-top: 18px; font-size: 22px;">/send-client-update</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 38px; font-weight: 400; margin: 24px 0 16px; line-height: 1.1; letter-spacing: -0.015em;">Plain-English update</h3>
+        <p style="font-size: 24px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Drafts and sends a no-jargon progress note to the client via Outlook. Keeps the relationship warm without writing letters from scratch.</p>
+      </div>
+    </div>
+    <div class="botbar"><div>Completing Milestones &amp; Client Updates</div><div>24</div></div>
+  </div>
+</section>
+
+<!-- ============ 25. TRAIN-FORM ============ -->
+<section data-label="25 Train Form">
+  <div class="slide">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>Extending the system</span></div>
+      <div>25</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Teaching new LRA forms</div>
+    <div style="display: flex; align-items: baseline; gap: 24px; margin-top: 28px; flex-wrap: wrap;">
+      <h2 class="title" style="margin: 0;">Run</h2>
+      <span class="cmd accent" style="font-size: 56px; padding: 10px 24px;">/train-form</span>
+    </div>
+
+    <div style="margin-top: 60px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; flex: 1; align-items: start;">
+      <div>
+        <p class="body" style="font-size: 30px;">
+          Out of the box, the plugin generates LRA 33, 63, 58, and 84. For any other LRA form you need, run <span class="cmd" style="font-size: 0.85em;">/train-form</span> — the system auto-downloads the official template from the Ministry of Lands website, analyses its structure, and saves a schema.
+        </p>
+        <p class="body" style="font-size: 30px; margin-top: 28px;">
+          Once trained, the form is permanently available in <span class="cmd" style="font-size: 0.85em;">/draft-conveyance-doc.</span> You never train the same form twice.
+        </p>
+      </div>
+      <div class="steps">
+        <div class="step-row" style="border-color: var(--rule);">
+          <div class="step-n">1</div>
+          <div class="step-body"><h3>Type the form number</h3><p style="font-size: 22px;">e.g. "LRA 42"</p></div>
+        </div>
+        <div class="step-row" style="border-color: var(--rule);">
+          <div class="step-n">2</div>
+          <div class="step-body"><h3>Say "no file"</h3><p style="font-size: 22px;">Let the system fetch from the Ministry of Lands.</p></div>
+        </div>
+        <div class="step-row" style="border-color: var(--rule);">
+          <div class="step-n">3</div>
+          <div class="step-body"><h3>Review the analysis</h3><p style="font-size: 22px;">Confirm or correct field details.</p></div>
+        </div>
+        <div class="step-row">
+          <div class="step-n">4</div>
+          <div class="step-body"><h3>Approve the test document</h3><p style="font-size: 22px;">Form is now permanently available.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="botbar"><div>Teaching New LRA Forms</div><div>25</div></div>
+  </div>
+</section>
+
+<!-- ============ 26. TROUBLESHOOTING ============ -->
+<section data-label="26 Troubleshooting">
+  <div class="slide paper">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>When things misbehave</span></div>
+      <div>26</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Troubleshooting</div>
+    <h2 class="title" style="margin-top: 28px;">If something looks wrong, <em>here's where to look first.</em></h2>
+
+    <table class="tbl" style="margin-top: 36px; font-size: 22px;">
+      <thead>
+        <tr><th style="width: 42%;">If you see…</th><th>Do this</th></tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">"Cannot find Airtable base"</td><td>Confirm the base is named exactly Kenya Conveyancing Manager. Rename, then re-run /setup-conveyancing.</td></tr>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">"AIRTABLE_API_KEY not set"</td><td>CoWork → Settings → Environment Variables. Confirm the key is saved with the correct value.</td></tr>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">Document downloaded is empty / tiny</td><td>The npm package failed. Re-run /setup-conveyancing to reinstall dependencies.</td></tr>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">Plugin not showing in CoWork</td><td>Click the plugin icon — confirm Kenya Conveyancing Manager is toggled ON for this conversation.</td></tr>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">Names on the LRA form are wrong</td><td>Edit the Conveyance row in Airtable to match the title register, then regenerate the document.</td></tr>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">Search expiry not in Calendar</td><td>CoWork → Settings → Connectors. Reconnect Outlook Calendar, re-run /setup-conveyancing.</td></tr>
+        <tr><td style="font-family: 'Geist Mono', monospace; color: var(--accent-deep); font-size: 22px;">Anything else</td><td>Send the error to Robin Muthomi · WhatsApp +254 799 157 696 · robinmutiga@gmail.com</td></tr>
+      </tbody>
+    </table>
+    <div class="botbar"><div>Troubleshooting &amp; Support</div><div>26</div></div>
+  </div>
+</section>
+
+<!-- ============ 27. OPEN QUESTION ============ -->
+<section data-label="27 Open Question">
+  <div class="slide deep">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>One thing left to decide</span></div>
+      <div>27</div>
+    </div>
+    <div class="eyebrow" style="margin-top: 60px;">Open question to resolve before launch</div>
+    <h2 class="title" style="margin-top: 28px; max-width: 1500px;">How does each firm <em>duplicate the Airtable base?</em></h2>
+
+    <div style="margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; align-items: start;">
+      <div style="background: var(--paper); border: 1.5px solid var(--ink); padding: 36px;">
+        <div class="mono" style="color: var(--accent); font-size: 22px; letter-spacing: 0.14em;">OPTION A · TEMPLATE LINK</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 40px; font-weight: 400; margin: 18px 0 16px; line-height: 1.1; letter-spacing: -0.015em;">Robin shares one Airtable template URL.</h3>
+        <p style="font-size: 24px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Admin clicks "Use this template" → base appears with all four tables and fields pre-built. Fastest, lowest error rate. Recommended.</p>
+        <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: 'Geist Mono', monospace; font-size: 20px; color: var(--ink-mute); letter-spacing: 0.06em;">
+          STATUS · TEMPLATE LINK TO BE PREPARED
+        </div>
+      </div>
+      <div style="background: var(--paper); border: 1.5px solid var(--rule); padding: 36px;">
+        <div class="mono" style="color: var(--ink-mute); font-size: 22px; letter-spacing: 0.14em;">OPTION B · MANUAL BUILD</div>
+        <h3 style="font-family: 'Newsreader', serif; font-size: 40px; font-weight: 400; margin: 18px 0 16px; line-height: 1.1; letter-spacing: -0.015em;">Admin creates the base from scratch.</h3>
+        <p style="font-size: 24px; line-height: 1.4; color: var(--ink-soft); margin: 0;">Add the four tables — Conveyances, Milestones, Parties, Documents — using the field schema in the playbook. Slower, more error-prone. Fallback only.</p>
+        <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); font-family: 'Geist Mono', monospace; font-size: 20px; color: var(--ink-mute); letter-spacing: 0.06em;">
+          STATUS · DOCUMENTED IN PLAYBOOK
+        </div>
+      </div>
+    </div>
+    <p style="margin-top: 30px; font-family: 'Newsreader', serif; font-size: 30px; font-style: italic; color: var(--ink); max-width: 1500px;">
+      Robin to confirm the duplication path before the team session — so we don't have anyone hand-building tables on the day.
+    </p>
+    <div class="botbar"><div>Open Question — Airtable Base Duplication</div><div>27</div></div>
+  </div>
+</section>
+
+<!-- ============ 28. Q&A / END ============ -->
+<section data-label="28 QA End">
+  <div class="slide dark">
+    <div class="topbar">
+      <div class="firm"><span class="dot"></span><span>End of session</span></div>
+      <div>28</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 1600px;">
+      <div class="eyebrow" style="color: #b8ad95;">You're done</div>
+      <h2 class="title" style="margin-top: 28px; font-size: 124px; line-height: 0.98; max-width: 1500px;">
+        Open a conversation. Type <em>/new-conveyance.</em>
+      </h2>
+      <p style="margin-top: 50px; font-family: 'Newsreader', serif; font-size: 44px; line-height: 1.25; font-style: italic; color: #d4c8af; max-width: 1300px;">
+        Pick the next real instruction on your desk and let's run it together.
+      </p>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 60px; padding-top: 40px; border-top: 1px solid #3a3328;">
+      <div>
+        <div class="mono" style="color: #8c8270; font-size: 20px; letter-spacing: 0.14em;">SUPPORT</div>
+        <div style="margin-top: 14px; font-family: 'Newsreader', serif; font-size: 30px; color: var(--dark-ink); line-height: 1.2;">Robin Muthomi Mutiga<br>Robin Advisory Group</div>
+      </div>
+      <div>
+        <div class="mono" style="color: #8c8270; font-size: 20px; letter-spacing: 0.14em;">REACH OUT</div>
+        <div style="margin-top: 14px; font-family: 'Geist Mono', monospace; font-size: 22px; color: var(--dark-ink); line-height: 1.6;">robinmutiga@gmail.com<br>WhatsApp +254 799 157 696</div>
+      </div>
+      <div>
+        <div class="mono" style="color: #8c8270; font-size: 20px; letter-spacing: 0.14em;">HOURS</div>
+        <div style="margin-top: 14px; font-family: 'Newsreader', serif; font-size: 30px; color: var(--dark-ink); line-height: 1.2;">Monday to Friday<br>9am — 6pm</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+<script src="image-slot.js"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#b04a2a",
+  "bg": "#f4eee3",
+  "ink": "#1a1812"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [t, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--accent', t.accent);
+    document.documentElement.style.setProperty('--bg', t.bg);
+    document.documentElement.style.setProperty('--ink', t.ink);
+  }, [t]);
+
+  return (
+    <window.TweaksPanel title="Tweaks">
+      <window.TweakSection title="Palette">
+        <window.TweakColor
+          label="Accent"
+          value={t.accent}
+          onChange={(v) => setTweak('accent', v)}
+          options={['#b04a2a', '#1f5f4a', '#2a4a7a', '#7a3318']}
+        />
+        <window.TweakColor
+          label="Background"
+          value={t.bg}
+          onChange={(v) => setTweak('bg', v)}
+          options={['#f4eee3', '#f5f1e8', '#ebe4d2', '#fbf7ef']}
+        />
+        <window.TweakColor
+          label="Ink"
+          value={t.ink}
+          onChange={(v) => setTweak('ink', v)}
+          options={['#1a1812', '#22201a', '#0e0d0a', '#2a2620']}
+        />
+      </window.TweakSection>
+    </window.TweaksPanel>
+  );
+}
+
+const root = document.createElement('div');
+document.body.appendChild(root);
+ReactDOM.createRoot(root).render(<App />);
+</script>
+
+</body>
+</html>
