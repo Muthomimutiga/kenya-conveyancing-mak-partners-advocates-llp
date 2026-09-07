@@ -4,8 +4,12 @@ description: >
   Drafts all conveyancing documents for Kenyan property transactions — Sale
   Agreement, LRA 33 Transfer, LRA 63 Transfer of Lease, LRA 58 Discharge of
   Charge, Requisitions on Title, Completion Notice, Undertaking Letter, consent
-  application letters, rates clearance applications, and client update letters.
-  Triggered by /draft-conveyance-doc, /new-conveyance, and /complete-milestone.
+  application letters, engagement letters, fee notes, and client update letters.
+  Triggered by /draft-conveyance-doc, /draft-engagement-letter, /new-conveyance,
+  and /complete-milestone. Also trigger from natural-language requests such as
+  “draft a letter of engagement”, “draft an LRA 63”, “draft a transfer”,
+  “draft a client update”, “draft an undertaking”, or “draft a conveyancing
+  letter”, even when the user does not invoke a slash command.
 version: 0.1.0
 ---
 

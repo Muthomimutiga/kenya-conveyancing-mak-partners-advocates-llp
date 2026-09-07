@@ -7,7 +7,7 @@
 
 const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-  Footer, AlignmentType, BorderStyle, WidthType, VerticalAlign,
+  Footer, Header, AlignmentType, BorderStyle, WidthType, VerticalAlign,
   UnderlineType, LineRuleType, ShadingType, PageNumber, TabStopType, PageBreak,
   ImageRun, LevelFormat,
 } = require('docx');
@@ -110,6 +110,8 @@ function loadDeveloperProject(slug) {
 const A4_W = 11906;
 const A4_H = 16838;
 const LRA_TYPES     = ['lra_33', 'lra_63', 'lra_58', 'lra_84'];
+// Keep a restrained top margin so the letterhead and every page's body text
+// have a small amount of breathing room from the physical page edge.
 const MARGIN_TOP    = 1440;
 const MARGIN_BOTTOM = 1440;
 const MARGIN_SIDE   = 1440;
@@ -125,6 +127,7 @@ const FIRM_CITY    = (firmConfig.firm_city || 'NAIROBI').toUpperCase();
 // ─── Font config (from firm) ─────────────────────────────────────────────────
 const FONT_BODY         = firmConfig.font_correspondence || 'Garamond';
 const FONT_PLEADINGS    = firmConfig.font_court          || 'Book Antiqua';
+const FONT_LRA_COVER    = 'Maiandra GD';
 
 // ─── Letterhead config ────────────────────────────────────────────────────────
 const LH_MODE           = firmConfig.letterhead_mode || 'generated';
@@ -141,7 +144,9 @@ const FIRM_MONOGRAM     = firmConfig.firm_monogram
 
 const LH_HEADER_IMG = (() => {
   if (LH_MODE === 'image') {
-    for (const [ext, type] of [['jpeg','jpg'],['jpg','jpg'],['png','png']]) {
+    const cropped = path.join(__dirname, 'assets', 'letterhead-header-cropped.png');
+    if (fs.existsSync(cropped)) return { data: fs.readFileSync(cropped), type: 'png' };
+    for (const [ext, type] of [['png','png'],['jpeg','jpg'],['jpg','jpg']]) {
       const p = path.join(__dirname, 'assets', `letterhead-header.${ext}`);
       if (fs.existsSync(p)) return { data: fs.readFileSync(p), type };
     }
@@ -152,7 +157,7 @@ const LH_HEADER_IMG = (() => {
 })();
 const LH_FOOTER_IMG = (() => {
   if (LH_MODE === 'image') {
-    for (const [ext, type] of [['jpeg','jpg'],['jpg','jpg'],['png','png']]) {
+    for (const [ext, type] of [['png','png'],['jpeg','jpg'],['jpg','jpg']]) {
       const p = path.join(__dirname, 'assets', `letterhead-footer.${ext}`);
       if (fs.existsSync(p)) return { data: fs.readFileSync(p), type };
     }
@@ -209,6 +214,7 @@ function spacerSm() {
 
 // ─── Letterhead ───────────────────────────────────────────────────────────────
 function buildLetterhead() {
+  if (['conveyance_letter', 'engagement_letter'].includes(d.doc_type)) return [];
   const noBorder  = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
   const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
 
@@ -225,8 +231,9 @@ function buildLetterhead() {
 
   if (LH_MODE === 'image' && LH_HEADER_IMG) {
     return [new Paragraph({
-      children: [new ImageRun({ data: LH_HEADER_IMG.data, transformation: { width: 624, height: 123 }, type: LH_HEADER_IMG.type })],
-      spacing: { before: 0, after: 120 }
+      children: [new ImageRun({ data: LH_HEADER_IMG.data, transformation: { width: 740, height: 105 }, type: LH_HEADER_IMG.type })],
+      indent: { left: -MARGIN_SIDE },
+      spacing: { before: 100, after: 80 }
     })];
   }
 
@@ -259,6 +266,17 @@ function buildLetterhead() {
   return [headerTable, goldLine, addressLine];
 }
 
+function buildFirstPageLetterhead() {
+  if (!LH_HEADER_IMG) return null;
+  return new Header({
+    children: [new Paragraph({
+      children: [new ImageRun({ data: LH_HEADER_IMG.data, transformation: { width: 740, height: 105 }, type: LH_HEADER_IMG.type })],
+      indent: { left: -MARGIN_SIDE },
+      spacing: { before: 0, after: 0 }
+    })]
+  });
+}
+
 // ─── Plain page-number footer (for registry documents) ───────────────────────
 function buildPageNumberFooter() {
   return new Footer({
@@ -279,7 +297,11 @@ function buildLetterheadFooter() {
   if (LH_FOOTER_IMG) {
     return new Footer({
       children: [
-        new Paragraph({ children: [new ImageRun({ data: LH_FOOTER_IMG.data, transformation: { width: 624, height: 134 }, type: LH_FOOTER_IMG.type })], spacing: { before: 0, after: 0 } })
+        new Paragraph({
+          children: [new ImageRun({ data: LH_FOOTER_IMG.data, transformation: { width: 800, height: 254 }, type: LH_FOOTER_IMG.type })],
+          indent: { left: -MARGIN_SIDE },
+          spacing: { before: 0, after: 0 }
+        })
       ]
     });
   }
@@ -1037,57 +1059,76 @@ function buildConveyanceLetter() {
 
   // Letterhead
   items.push(...buildLetterhead());
-  items.push(spacer());
+  items.push(spacerSm());
 
-  // Date left-aligned
   const TEXT_WIDTH = A4_W - (2 * MARGIN_SIDE); // 9026 DXA
-  items.push(new Paragraph({
-    children: [antiqua(d.date || '')],
-    spacing: spacingB(80)
+  // Correspondence reference block: bold labels/values, then a divider before
+  // the recipient block so the opening reads as a deliberate unit.
+  const refNoBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 480 } }));
+  items.push(new Table({
+    width: { size: TEXT_WIDTH, type: WidthType.DXA },
+    columnWidths: [3600, 2800, 2626],
+    borders: {
+      top: refNoBorder,
+      left: refNoBorder,
+      right: refNoBorder,
+      insideH: refNoBorder,
+      insideV: refNoBorder,
+      bottom: refNoBorder
+    },
+    rows: [new TableRow({
+      children: [
+        new TableCell({
+          width: { size: 3600, type: WidthType.DXA },
+          borders: { top: refNoBorder, left: refNoBorder, right: refNoBorder, bottom: refNoBorder },
+          children: [new Paragraph({ children: [antiqua(`Our Ref: ${d.ref || 'TBD'}`, { bold: true, size: 20 })], spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO } })]
+        }),
+        new TableCell({
+          width: { size: 2800, type: WidthType.DXA },
+          borders: { top: refNoBorder, left: refNoBorder, right: refNoBorder, bottom: refNoBorder },
+          children: [new Paragraph({ children: [antiqua(`Your Ref: ${d.your_ref || 'TBD'}`, { bold: true, size: 20 })], spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO }, alignment: AlignmentType.CENTER })]
+        }),
+        new TableCell({
+          width: { size: 2626, type: WidthType.DXA },
+          borders: { top: refNoBorder, left: refNoBorder, right: refNoBorder, bottom: refNoBorder },
+          children: [new Paragraph({ children: [antiqua(`Date: ${d.date || ''}`, { bold: true, size: 20 })], spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO }, alignment: AlignmentType.RIGHT })]
+        })
+      ]
+    })]
   }));
-  items.push(spacer());
-
-  // Our Ref (left) — Your Ref (right) on same line
-  items.push(new Paragraph({
-    children: [
-      antiqua(`Our Ref: ${d.ref || 'TBD'}`),
-      new TextRun({ text: '\t', font: 'Garamond', size: 24 }),
-      antiqua(`Your Ref: ${d.your_ref || 'TBD'}`)
-    ],
-    tabStops: [{ type: TabStopType.RIGHT, position: TEXT_WIDTH }],
-    spacing: spacingB(80)
-  }));
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 160 } }));
 
   // Recipient block
   if (d.recipient_lines && d.recipient_lines.length) {
     d.recipient_lines.forEach(line => {
       items.push(new Paragraph({
         children: [antiqua(line)],
-        spacing: spacingB(80)
+        spacing: { before: 0, after: line === d.recipient_lines[d.recipient_lines.length - 1] && !d.attn ? 160 : 0, line: 240, lineRule: LineRuleType.AUTO }
       }));
     });
     // Attention line
     if (d.attn) {
       items.push(new Paragraph({
         children: [antiqua(`Attn: ${d.attn}`)],
-        spacing: spacingB(80)
+        spacing: { before: 0, after: 160, line: 240, lineRule: LineRuleType.AUTO }
       }));
     }
-    items.push(spacer());
   }
 
   // Salutation
   items.push(new Paragraph({
     children: [antiqua(d.salutation || 'Dear Sir/Madam,')],
-    spacing: spacingB(80)
+    spacing: { before: 0, after: 180, line: 240, lineRule: LineRuleType.AUTO }
   }));
 
-  // Subject line — bold, underlined, justified
+  // Subject line — bold with the MAK yellow rule used by the reference letter.
   if (d.subject) {
     items.push(new Paragraph({
-      children: [antiqua(d.subject, { bold: true, underline: { type: UnderlineType.SINGLE } })],
-      spacing: spacingB(200),
-      alignment: AlignmentType.JUSTIFIED
+      children: [antiqua(d.subject, { bold: true })],
+      spacing: { before: 0, after: 200, line: 240, lineRule: LineRuleType.AUTO },
+      alignment: AlignmentType.JUSTIFIED,
+      border: { bottom: { style: BorderStyle.SINGLE, size: 8, space: 1, color: 'FFDD16' } }
     }));
   }
 
@@ -1215,6 +1256,87 @@ function buildUndertakingLetter() {
 
 // ─── Shared transfer form builder (LRA 33, LRA 63, …) ────────────────────────
 // opts: { formNo, regulation, docTitle, buildDetailRows, buildBody }
+// MAK's statutory-form cover is a plain, centered title sheet. It is separate
+// from the correspondence letterhead and is shared by every LRA instrument.
+function buildLraCoverPage(opts = {}) {
+  const titleNo = d.title_no || d.title_number || d.property_lr_no || '';
+  const text = (value, extra = {}) => new TextRun({
+    text: String(value ?? ''), font: FONT_LRA_COVER, size: 24, color: BLACK, ...extra
+  });
+  const para = (runs, extra = {}) => new Paragraph({
+    children: Array.isArray(runs) ? runs : [text(runs)],
+    alignment: AlignmentType.CENTER,
+    spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO },
+    ...extra,
+  });
+  const gap = (after) => new Paragraph({ children: [], spacing: { before: 0, after } });
+  const rule = () => new Paragraph({
+    children: [],
+    spacing: { before: 80, after: 80 },
+    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: BLACK, space: 1 } },
+  });
+  const partyName = (field, fallback) => {
+    if (opts[field]) return opts[field];
+    const list = d[field === 'coverTransferorName' ? 'transferors' : 'transferees'];
+    if (Array.isArray(list) && list.length) return list.map(p => p.company_name || p.name || '').filter(Boolean).join(', ');
+    return fallback || '';
+  };
+  const transferor = partyName('coverTransferorName', d.vendor_name || '');
+  const transferee = partyName('coverTransfereeName', d.purchaser_name || '');
+  const propertyLines = opts.propertyLines || d.cover_property_description_lines;
+  const propertyDescription = d.cover_property_description || [
+    `All that Property known as ${d.apartment_number ? `Apartment Number ${d.apartment_number} ` : ''}Title Number ${titleNo}`,
+    d.property_location ? `situated at ${d.property_location}` : '',
+  ].filter(Boolean).join(', ');
+  const lines = Array.isArray(propertyLines) && propertyLines.length ? propertyLines : [propertyDescription];
+  const logoPath = path.join(__dirname, 'assets', 'sale-agreement-logo.png');
+  const logo = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
+  const items = [gap(80)];
+
+  if (transferor) {
+    items.push(para([text(transferor, { bold: true })]));
+    items.push(gap(520));
+    items.push(para([text(opts.transferorRole || '(as Transferor)', { bold: true })]));
+    items.push(gap(520));
+    items.push(para([text('AND', { bold: true })]));
+    items.push(gap(520));
+    items.push(para([text(transferee || '[*]', { bold: true })]));
+    items.push(gap(520));
+    items.push(para([text(opts.transfereeRole || '(as Transferee)', { bold: true })]));
+    items.push(gap(260));
+  }
+  items.push(rule());
+  items.push(gap(80));
+  items.push(para([text(opts.coverTitle || 'TRANSFER', { bold: true })]));
+  if (opts.coverSubtitle !== false) items.push(para([text(opts.coverSubtitle || '(Sectional Title)', { bold: true })]));
+  items.push(para([text(opts.coverRelation || 'in respect of', { bold: true })]));
+  items.push(gap(80));
+  lines.forEach(line => items.push(para([text(line, { bold: true })])));
+  items.push(gap(80));
+  items.push(rule());
+  items.push(gap(180));
+  items.push(para([text('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
+  items.push(gap(80));
+  if (logo) items.push(new Paragraph({
+    children: [new ImageRun({ data: logo, transformation: { width: 166, height: 69 }, type: 'png' })],
+    alignment: AlignmentType.CENTER,
+    spacing: { before: 0, after: 0 },
+  }));
+  [
+    '4th Floor, Victoria at Two Rivers,',
+    'Two Rivers Development, Limuru Road,',
+    'P.O Box 10644 - 00100, Nairobi, Kenya',
+    `E: ${FIRM_EMAIL}`,
+    firmConfig.firm_website || 'www.makadvocates.com',
+  ].forEach(line => items.push(new Paragraph({
+    children: [new TextRun({ text: line, font: FONT_LRA_COVER, size: 24, bold: true, color: BLACK })],
+    alignment: AlignmentType.CENTER,
+    spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO },
+  })));
+  items.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
+  return items;
+}
+
 function buildTransferForm(opts) {
   const items = [];
   const TW = 8600;
@@ -1236,6 +1358,8 @@ function buildTransferForm(opts) {
   function lettered(l, text) {
     return new Paragraph({ children: [antiqua(`${l}.\t${text}`)], spacing: spacingB(80), indent: { left: 720, hanging: 360 } });
   }
+
+  items.push(...buildLraCoverPage(opts.cover || opts));
 
   // ── Form header ──────────────────────────────────────────────────────────────
   items.push(new Paragraph({
@@ -1651,15 +1775,6 @@ function buildTransferForm(opts) {
     items.push(lp('Signature: \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026'));
   }
 
-  // ── DRAWN BY ─────────────────────────────────────────────────────────────────
-  items.push(spacer());
-  items.push(new Paragraph({ children: [antiqua('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })], spacing: spacingB(80) }));
-  items.push(lp(FIRM_NAME_TC + ','));
-  items.push(lp(FIRM_LINE2 + ','));
-  items.push(lp(FIRM_PO + '.'));
-  items.push(lp('Tel. ' + FIRM_TEL));
-  items.push(new Paragraph({ children: [antiqua(FIRM_EMAIL, { underline: { type: UnderlineType.SINGLE } })], spacing: spacingB(80) }));
-
   return items;
 }
 
@@ -1670,6 +1785,13 @@ function buildLRA33() {
     formNo: 'LRA 33',
     regulation: '(r. 49(1))',
     docTitle: 'TRANSFER OF INTEREST IN LAND',
+    cover: {
+      coverTransferorName: d.vendor_name || (d.transferors || []).map(p => p.company_name || p.name || '').join(', '),
+      coverTransfereeName: d.purchaser_name || (d.transferees || []).map(p => p.company_name || p.name || '').join(', '),
+      coverTitle: 'TRANSFER',
+      coverSubtitle: '(Sectional Title)',
+      propertyLines: d.cover_property_description_lines,
+    },
     buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }) {
       return [
         detailRow2('Date of Transfer', ''),
@@ -1706,6 +1828,13 @@ function buildLRA63() {
     formNo: 'LRA 63',
     regulation: '(r. 63(1))',
     docTitle: 'TRANSFER OF LEASE',
+    cover: {
+      coverTransferorName: d.vendor_name || (d.transferors || []).map(p => p.company_name || p.name || '').join(', '),
+      coverTransfereeName: d.purchaser_name || (d.transferees || []).map(p => p.company_name || p.name || '').join(', '),
+      coverTitle: 'TRANSFER',
+      coverSubtitle: '(Sectional Title)',
+      propertyLines: d.cover_property_description_lines,
+    },
     buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }) {
       return [
         detailRow2('Date of Transfer', ''),
@@ -1747,6 +1876,13 @@ function buildLRA58() {
     formNo: 'LRA 58',
     regulation: '(r. 74(1))',
     docTitle: 'DISCHARGE OF CHARGE',
+    cover: {
+      coverTransferorName: chargees.map(c => c.company_name || c.name || '').join(', '),
+      coverTransfereeName: chargors.map(c => c.company_name || c.name || '').join(', '),
+      coverTitle: 'DISCHARGE OF CHARGE',
+      coverSubtitle: false,
+      propertyLines: d.cover_property_description_lines,
+    },
     roleLabels: {
       transferor: 'Chargee(s)', transferorSingle: 'Chargee',
       transferee: 'Chargor(s)', transfereeSingle: 'Chargor',
@@ -1820,6 +1956,11 @@ function buildLRA84() {
   });
   const dots = '\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026';
 
+  items.push(...buildLraCoverPage({
+    coverTitle: 'APPLICATION FOR OFFICIAL SEARCH',
+    coverSubtitle: false,
+    propertyLines: d.cover_property_description_lines,
+  }));
   // ── Form header — identical pattern to LRA 33/63/58 ──────────────────────────
   function lp84(text, opts2 = {}) {
     return new Paragraph({ children: Array.isArray(text) ? text : [antiqua(text, opts2)], spacing: spacingB(80) });
@@ -2023,6 +2164,11 @@ function buildGenericLRAForm(schema) {
       transferee:       schema.party_roles.transferee       || 'Transferee(s)',
       transfereeSingle: schema.party_roles.transferee_single || 'Transferee',
     } : undefined,
+    cover: {
+      coverTitle: schema.cover_title || schema.doc_title || 'TRANSFER',
+      coverSubtitle: schema.cover_subtitle || false,
+      propertyLines: d.cover_property_description_lines,
+    },
 
     buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }) {
       return (schema.detail_rows || []).map(row => {
@@ -2056,181 +2202,117 @@ function buildGenericLRAForm(schema) {
 
 // ─── Build Engagement Letter ─────────────────────────────────────────────────
 function buildEngagementLetter() {
-  requireFields(['client_name', 'property_lr_no', 'purchase_price_figures', 'legal_fees', 'legal_fees_vat', 'engagement_total'], 'engagement_letter');
-  assertVat(d.legal_fees, d.legal_fees_vat, 'engagement_letter');
+  const client = d.client_name || d.purchaser_name || '';
+  const pronoun = d.client_pronoun || (d.client_gender === 'company' ? 'its' : 'his/her');
+  const matterTitle = d.matter_title || `SALE AND PURCHASE OF LAND COMPRISED IN TITLE NO. ${d.property_lr_no || ''}`;
+  requireFields(['client_name', 'date', 'ref', 'subject', 'background', 'scope_of_work', 'professional_fee', 'deposit_amount'], 'engagement_letter');
+
   const items = [];
-  const tw = (text, opts = {}) => new TextRun({ text: String(text || ''), font: FONT_BODY, size: 22, color: BLACK, ...opts });
-  const para = (children, opts = {}) => new Paragraph({ children: Array.isArray(children) ? children : [tw(children)], spacing: { before: 60, after: 60 }, alignment: AlignmentType.JUSTIFIED, ...opts });
-  const boldHead = (text) => para([tw(text, { bold: true, size: 22, underline: { type: UnderlineType.SINGLE } })], { spacing: { before: 200, after: 80 } });
-  const bp = (text, opts = {}) => para([tw(text)], opts);
-  const bpB = (text) => para([tw(text, { bold: true })]);
-  const gap = () => new Paragraph({ children: [], spacing: { before: 0, after: 120 } });
-  const bullet = (text) => new Paragraph({ children: [tw(text)], bullet: { level: 0 }, spacing: { before: 40, after: 40 }, alignment: AlignmentType.JUSTIFIED });
-
-  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
-  const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
-  const feeCell = (text, isHeader = false) => new TableCell({
-    children: [new Paragraph({ children: [tw(text, { bold: isHeader })], spacing: { before: 60, after: 60 }, indent: { left: 80 } })],
-    shading: isHeader ? { type: ShadingType.CLEAR, fill: 'E8E8E8' } : undefined,
-    borders: { top: { style: BorderStyle.SINGLE, size: 4, color: 'CCCCCC' }, bottom: { style: BorderStyle.SINGLE, size: 4, color: 'CCCCCC' }, left: { style: BorderStyle.SINGLE, size: 4, color: 'CCCCCC' }, right: { style: BorderStyle.SINGLE, size: 4, color: 'CCCCCC' } },
+  const tw = (text, opts = {}) => new TextRun({ text: String(text ?? ''), font: 'Tw Cen MT', size: 24, color: BLACK, ...opts });
+  const money = (value) => String(value ?? '').replace(/^\s*(?:KES|Kshs?\.?)\s*/i, '').trim();
+  const body = (children, opts = {}) => new Paragraph({
+    children: Array.isArray(children) ? children : [tw(children)],
+    spacing: { before: 120, after: 120, line: 276, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED,
+    indent: { left: 360 },
+    ...opts
   });
-  const feeRow = (label, value) => new TableRow({ children: [feeCell(label), feeCell(value)] });
-  const feeTable = (rows) => new Table({ width: { size: 60, type: WidthType.PERCENTAGE }, rows });
+  const opening = (children, opts = {}) => new Paragraph({
+    children: Array.isArray(children) ? children : [tw(children)],
+    spacing: { before: 120, after: 120, line: 240, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED,
+    ...opts
+  });
+  const heading = (n, title) => new Paragraph({
+    children: [tw(`${n}.  ${title}`, { bold: true })],
+    spacing: { before: 120, after: 120, line: 259, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED
+  });
+  const listItem = (text, label, level = 0) => new Paragraph({
+    children: [tw(`${label}  `, { bold: false }), tw(text)],
+    spacing: { before: 0, after: 0, line: 276, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED,
+    indent: { left: level ? 1080 : 360 }
+  });
+  const gap = () => new Paragraph({ children: [], spacing: { before: 0, after: 120 } });
+  const roman = (n) => ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'][n] || `${n + 1}`;
+  const paragraphList = (value, marker) => (Array.isArray(value) ? value : []).map((text, i) => listItem(text, marker === 'mak-roman' ? `${roman(i)}.` : `${String.fromCharCode(97 + i)}.`, 0));
+  const mixed = (parts) => parts.map(part => typeof part === 'string' ? tw(part) : tw(part.text, part));
 
-  // ── Letterhead header ───────────────────────────────────────────────────────
   items.push(...buildLetterhead());
-  items.push(gap());
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 480 } }));
+  items.push(new Paragraph({
+    children: [tw(`Our Ref: ${d.ref}`, { bold: true }), tw('\t'), tw(`Your Ref: ${d.your_ref || 'TBA'}`, { bold: true }), tw('\t'), tw(`Date: ${d.date}`, { bold: true })],
+    tabStops: [
+      { type: TabStopType.CENTER, position: 4513 },
+      { type: TabStopType.RIGHT, position: 9026 }
+    ],
+    spacing: { before: 0, after: 160, line: 240, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.LEFT,
+  }));
+  (d.recipient_lines || []).forEach((line, index, lines) => items.push(new Paragraph({
+    children: [tw(line)],
+    spacing: { before: 0, after: index === lines.length - 1 ? 160 : 0, line: 240, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED
+  })));
+  if (d.client_email) items.push(new Paragraph({
+    children: [tw(`Email: ${d.client_email}`)],
+    spacing: { before: 0, after: 180, line: 240, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED
+  }));
+  items.push(opening(`Dear ${d.salutation || 'Madam/Sir'},`, { indent: undefined, spacing: { before: 0, after: 180, line: 240, lineRule: LineRuleType.AUTO } }));
+  items.push(new Paragraph({
+    children: [tw(`RE: LETTER OF ENGAGEMENT – ${matterTitle}`, { bold: true })],
+    spacing: { before: 0, after: 160, line: 240, lineRule: LineRuleType.AUTO },
+    alignment: AlignmentType.JUSTIFIED,
+    border: { bottom: { style: BorderStyle.SINGLE, size: 8, space: 1, color: 'FFDD16' } }
+  }));
+  items.push(opening(d.opening || 'The above matter refers. Please read through this letter carefully and then sign and return the enclosed copy of this letter to us.', { indent: undefined }));
+  items.push(opening('The terms of this engagement shall be as provided below:', { indent: undefined }));
 
-  // ── Ref / date line ─────────────────────────────────────────────────────────
-  items.push(para([
-    tw('Our Ref: ', { bold: true }), tw(d.ref || 'TBA'),
-    tw('          Your Ref: TBA          Date: ', { bold: true }), tw(d.date || ''),
-  ], { alignment: AlignmentType.LEFT }));
-  items.push(gap());
+  items.push(heading(1, 'Terms of Engagement'));
+  items.push(body(mixed([
+    client, ' (', { text: '“the Client”', bold: true }, ') hereby appoints ', { text: FIRM_NAME_TC, bold: true },
+    ' (“', { text: 'the Law Firm', bold: true }, '”) to act on ', pronoun,
+    ' behalf in matters relating to the Scope of Work provided below and other related matters.'
+  ])));
+  items.push(heading(2, 'Commencement'));
+  items.push(body(d.commencement || 'This Engagement Letter shall commence upon execution by the Client and shall terminate upon full payment of fees as agreed under Clause 5 below or shall terminate earlier in accordance with Clause 7 below.'));
+  items.push(body(d.termination_short || 'Either party may terminate the Engagement Letter by issuing seven (7) days\' written notice to the other party to that effect. Termination shall not affect completion of any outstanding assignment or payment of accrued fees, including the minimum stipulated in Clause 5.'));
 
-  // ── Salutation ─────────────────────────────────────────────────────────────
-  items.push(bp(`Dear ${d.salutation || 'Sir/Madam'},`, { alignment: AlignmentType.LEFT }));
-  items.push(gap());
+  items.push(heading(3, 'Background'));
+  items.push(body(d.background));
+  items.push(heading(4, 'Scope of Work'));
+  items.push(body(d.scope_intro || 'Based on the above background, we understand that our Scope of Work will be as follows:'));
+  items.push(...paragraphList(d.scope_of_work, 'mak-alpha'));
 
-  // ── Subject ────────────────────────────────────────────────────────────────
-  items.push(bpB(`RE: ENGAGEMENT LETTER FOR SALE AND PURCHASE OF LAND COMPRISED IN TITLE NO. ${d.property_lr_no || ''}`));
-  items.push(gap());
+  items.push(heading(5, 'Professional Fees and Disbursements'));
+  items.push(body(mixed(['Our professional fee for the above scope of work shall be ', { text: `Kshs ${money(d.professional_fee)}`, bold: true }, ' (exclusive of VAT and disbursements). This fee will cover the following:'])));
+  items.push(...paragraphList(d.fee_inclusions || [], 'mak-roman'));
+  items.push(body(d.additional_expenditure || 'Where the Law Firm anticipates additional expenditure beyond the Scope of Work, the Law Firm shall seek prior authorisation from the Client before incurring the additional cost. Any work undertaken outside the agreed Scope of Work shall be chargeable based on the Law Firm’s hourly rates.'));
+  items.push(body(d.fee_notes || 'The Law Firm shall issue the Client with Fee Notes periodically, providing a breakdown of legal fees and disbursements accrued during the relevant period.'));
+  items.push(body(`It is the Law Firm's policy to request payment on account of fees and disbursements expected to be incurred when acting for clients. Upon acceptance of instructions, we may request payments on account as the matter progresses. To this end, we shall request a deposit of KES ${money(d.deposit_amount)} to allow us to commence the above Scope of Work.`));
 
-  // ── Opening ────────────────────────────────────────────────────────────────
-  items.push(bp('We refer to the above matter.'));
-  items.push(gap());
-  items.push(para([
-    tw(d.purchaser_name || d.client_name || ''), tw(' ('), tw('"the Client"', { bold: true }), tw(') hereby appoints '), tw('MAK & Partners Advocates LLP', { bold: true }),
-    tw(' ('), tw('"the Law Firm"', { bold: true }), tw(') to act on '),
-    tw(d.client_gender === 'company' ? 'its' : 'his/her'),
-    tw(' behalf in matters relating to the purchase of the above Property. Please read through this letter carefully and then sign and return the enclosed copy to us.'),
-  ]));
-  items.push(gap());
-  items.push(bp('The terms of this engagement shall be as provided below:'));
-  items.push(gap());
-
-  // ── 1. Commencement ────────────────────────────────────────────────────────
-  items.push(boldHead('1.  COMMENCEMENT'));
-  items.push(bp('This Engagement Letter shall commence upon execution by the Client and shall terminate on completion of the purchase of the Property.'));
-  items.push(bp('Either party may terminate this Engagement Letter through issuance of a seven (7) day written notice to the other party.'));
-  items.push(gap());
-
-  // ── 2. Background ──────────────────────────────────────────────────────────
-  items.push(boldHead('2.  BACKGROUND'));
-  items.push(para([
-    tw(d.purchaser_name || d.client_name || ''), tw(' has entered into an agreement with '), tw(d.vendor_name || ''),
-    tw(' (The Vendor) to purchase all that property of title number '), tw(d.property_lr_no || '', { bold: true }),
-    tw(' situate at '), tw(d.property_location || ''), tw('.'),
-  ]));
-  items.push(para([
-    tw('The Vendor is the registered proprietor of all that parcel of land known as '), tw(d.property_lr_no || '', { bold: true }),
-    tw(` (the "Property") at the purchase price of Kenya Shillings ${d.purchase_price_words || ''} (Kshs. ${d.purchase_price_figures || ''}/-).`),
-  ]));
-  items.push(gap());
-
-  // ── 3. Scope of Work ───────────────────────────────────────────────────────
-  items.push(boldHead('3.  SCOPE OF WORK'));
-  items.push(para([
-    tw('Specifically, our Scope of Work will entail, but is not limited to, the following. The Law Firm will act on behalf of '),
-    tw(d.purchaser_name || d.client_name || ''),
-    tw(' regarding the Purchase of the Property and ensuring that the process is conducted properly:'),
-  ]));
-  [
-    'Reviewing and witnessing the Sale Agreement;',
-    'Following up on the progress and status of the transaction;',
-    'Negotiating the terms of the Sale Agreement on your behalf;',
-    'Advising on the costs related to the transfer;',
-    'Facilitating the valuation for stamp duty assessment;',
-    'Advising on applicable stamp duty (subject to change based on market value);',
-    'Attending to the payment of stamp duty on the transfer;',
-    'Attending to the registration of the transfer and the issuance of the title in your favour; and',
-    'Generally safeguarding and protecting your legal interests throughout the transaction.',
-  ].forEach(s => items.push(bullet(s)));
-  items.push(gap());
-
-  // ── 4. Assumptions ─────────────────────────────────────────────────────────
-  items.push(boldHead('4.  ASSUMPTIONS'));
-  items.push(bp('Our scope of work is limited to the matters set out in paragraph 3 above. Any work undertaken outside the agreed scope will be subject to a separate fee agreement.'));
-  items.push(bp('We will not be required to respond to questions or clarifications outside the agreed scope of work.'));
-  items.push(gap());
-
-  // ── 5. Professional Fees and Disbursements ─────────────────────────────────
-  items.push(boldHead('5.  PROFESSIONAL FEES AND DISBURSEMENTS'));
-  items.push(bp('Based on our understanding of the above scope, our fees shall be as set out below.'));
-  items.push(gap());
-  items.push(bpB('LEGAL FEES FOR THE TRANSACTION'));
-  items.push(gap());
-  items.push(feeTable([
-    new TableRow({ children: [feeCell('ITEM', true), feeCell('COST (Kshs)', true)] }),
-    feeRow('Legal fees', d.legal_fees || ''),
-    feeRow('VAT 16%', d.legal_fees_vat || ''),
-    feeRow('Disbursements', d.disbursements || ''),
-    feeRow('TOTAL', d.engagement_total || ''),
-  ]));
-  items.push(gap());
-  items.push(bpB('COSTS TO CATER FOR THE REGISTRATION MODALITIES'));
-  items.push(gap());
-  items.push(feeTable([
-    new TableRow({ children: [feeCell('ITEM', true), feeCell('COST (Kshs)', true)] }),
-    feeRow('Disbursements', ''),
-    feeRow('Valuation and Assessment of stamp duty', ''),
-    feeRow('Stamp Duty', 'Subject to advisement by the Valuer'),
-    feeRow('Attending to the Registration Formalities', ''),
-    feeRow('Ensuring the Procuring and Processing of the Title in your favour', ''),
-  ]));
-  items.push(gap());
-  items.push(bp('A deposit of 50% of the legal fees shall be payable upon commencement of our services, specifically at the stage of reviewing and witnessing the Sale Agreement. The balance shall be payable prior to completion.'));
-  items.push(gap());
-
-  // ── 6. Confidentiality ─────────────────────────────────────────────────────
-  items.push(boldHead('6.  CONFIDENTIALITY'));
-  items.push(bp('The Law Firm and its personnel shall not at any time during or after the termination of this engagement use or disclose any confidential information relating to the Client except as required for the performance of this engagement or as required by law.'));
-  items.push(gap());
-
-  // ── 7. Communication ───────────────────────────────────────────────────────
-  items.push(boldHead('7.  COMMUNICATION'));
-  items.push(bp('There shall be free flow of communication between the parties and the Law Firm shall keep the Client informed of all pertinent developments relating to the transaction.'));
-  items.push(para([
-    tw('Our Managing Partner, '), tw('Kennedy Ashimosi', { bold: true }),
-    tw(', shall oversee this matter and will be assisted by '), tw('Ann Wayodi', { bold: true }),
-    tw(', an Associate Advocate.'),
-  ]));
-  items.push(para([
-    tw('Any correspondence to the Law Firm shall be copied to '), tw('admin@makadvocates.com', { bold: true }),
-    tw(' and '), tw('annwayodi@makadvocates.com', { bold: true }), tw('.'),
-  ]));
-  items.push(gap());
-  items.push(bpB('Response Times'));
-  items.push(bp('The Law Firm shall acknowledge all communications within twenty-four (24) hours by email and respond substantively within forty-eight (48) hours by phone or email.'));
-  items.push(gap());
-
-  // ── 8. Governing Law ───────────────────────────────────────────────────────
-  items.push(boldHead('8.  GOVERNING LAW AND DISPUTE RESOLUTION'));
-  items.push(bp('This letter of Engagement shall be governed by Kenyan law. Any disputes shall be resolved through good faith negotiations. If the parties fail to reach an amicable settlement within thirty (30) days, the matter shall be referred to a single arbitrator under the Arbitration Act.'));
-  items.push(gap());
-
-  // ── 9. Acceptance ──────────────────────────────────────────────────────────
-  items.push(boldHead('9.  ACCEPTANCE'));
-  items.push(bp('Kindly confirm your acceptance of this letter of Engagement by signing duplicate copies of this letter and returning one signed copy to us. We look forward to hearing from you.'));
-  items.push(gap());
-  items.push(bp('Yours faithfully,'));
-  items.push(gap());
-  items.push(new Paragraph({ children: [], spacing: { before: 400, after: 0 } }));
-  items.push(bp('For MAK & PARTNERS ADVOCATES LLP', { alignment: AlignmentType.LEFT }));
-  items.push(gap());
-  items.push(bp('_______________________'));
-  items.push(bp('ASSOCIATE'));
-  items.push(gap());
-  items.push(gap());
-
-  // ── Acceptance block ───────────────────────────────────────────────────────
-  items.push(bpB('ACCEPTANCE'));
-  items.push(gap());
-  items.push(bp('I/We, the undersigned, hereby accept the above terms of engagement:'));
-  items.push(gap());
-  items.push(bp(`Name: ${d.purchaser_name || d.client_name || '___________________________'}`));
-  items.push(bp('Signature: ___________________________'));
-  items.push(bp('Date: ___________________________'));
+  items.push(heading(6, 'Assumptions'));
+  items.push(body(d.assumptions_intro || 'The fee set out above is subject to the following assumptions:'));
+  items.push(...paragraphList(d.assumptions || [], 'mak-alpha'));
+  items.push(heading(7, 'Termination'));
+  items.push(body(d.termination || 'Either party may terminate this Engagement by issuing seven (7) days\' written notice to the other party to that effect. Termination shall not affect completion of any outstanding assignment or payment of any accrued fees. The Client shall remain liable for all charges incurred up to the date of termination.'));
+  items.push(heading(8, 'Confidentiality'));
+  items.push(body(d.confidentiality || 'The Law Firm and its personnel shall not at any time during or after the termination of this agreement or engagement use or disclose to any third parties any confidential information concerning the Client which the Law Firm or its staff may acquire in the course of this engagement, except with the Client’s written consent or as required by law.'));
+  items.push(heading(9, 'Communication'));
+  items.push(body(d.communication || 'There shall be free flow of communication between the parties, and the Law Firm shall keep the Client informed of all pertinent developments in relation to this matter.'));
+  items.push(body(mixed(['For this engagement, ', d.responsible_partner || FIRM_PARTNER, ', ', d.responsible_role || 'Managing Partner', ' (', d.responsible_email || FIRM_EMAIL, ') will be responsible for the day-to-day conduct of the matter. The responsible partner will be assisted by other lawyers within the Law Firm.'])));
+  items.push(heading(10, 'Governing Law and Dispute Resolution'));
+  items.push(body(d.governing_law || 'This Letter of Engagement shall be governed by the laws of Kenya. Any disputes shall be resolved through good faith negotiations. If the parties fail to reach an amicable settlement within fifteen (15) days of the dispute arising, the dispute shall be referred to arbitration under the Arbitration Act, 1995. The tribunal shall consist of a single arbitrator appointed by the Chairman for the time being of the Chartered Institute of Arbitrators, Kenya Branch.'));
+  items.push(heading(11, 'Acceptance of Terms'));
+  items.push(body(d.acceptance_text || 'Kindly confirm your acceptance of this Letter of Engagement by signing duplicate copies of this letter and returning one counterpart to us as soon as possible to enable us to proceed with the engagement.'));
+  items.push(body('For and on behalf of', { indent: { left: 360 }, children: [tw('For and on behalf of', { bold: true })] }));
+  items.push(body(FIRM_NAME.toUpperCase(), { children: [tw(FIRM_NAME.toUpperCase(), { bold: true })] }));
+  items.push(new Paragraph({ children: [tw('ACCEPTANCE', { bold: true, underline: { type: UnderlineType.SINGLE } })], spacing: { before: 360, after: 120, line: 276, lineRule: LineRuleType.AUTO }, indent: { left: 360 }, alignment: AlignmentType.LEFT }));
+  items.push(body(`I ${client} of ID No. ${d.client_id || '……………………'} confirm that I have read and understood the contents of this Letter of Engagement and accept the said terms.`, { indent: { left: 360 } }));
+  items.push(body('………………………………', { indent: { left: 360 } }));
+  items.push(body('Signature', { indent: { left: 360 } }));
 
   return items;
 }
@@ -3535,7 +3617,7 @@ const doc = new Document({
   styles: {
     default: {
       document: {
-        run: { font: 'Book Antiqua', size: 24, color: BLACK },
+        run: { font: FONT_BODY, size: 24, color: BLACK },
         paragraph: { spacing: { after: 0, line: 240 } }
       }
     }
@@ -3544,19 +3626,27 @@ const doc = new Document({
   sections: [
     {
       properties: {
+        ...( ['conveyance_letter', 'engagement_letter'].includes(d.doc_type) ? { titlePage: true } : {} ),
         page: {
           size: { width: A4_W, height: A4_H },
           margin: {
             top: MARGIN_TOP,
             right: MARGIN_SIDE,
             bottom: MARGIN_BOTTOM,
-            left: MARGIN_SIDE
+            left: MARGIN_SIDE,
+            header: 864
           },
           ...(pageBordersConfig ? { borders: pageBordersConfig } : {}),
         }
       },
-      ...(!['sale_agreement', 'developer_sale_agreement'].includes(d.doc_type) && {
-        footers: { default: (LRA_TYPES.includes(d.doc_type) || d._isGenericLraForm) ? buildPageNumberFooter() : buildLetterheadFooter() },
+      ...( ['conveyance_letter', 'engagement_letter'].includes(d.doc_type) && LH_HEADER_IMG
+        ? { headers: { first: buildFirstPageLetterhead() } }
+        : {} ),
+      ...(!['sale_agreement', 'developer_sale_agreement'].includes(d.doc_type) && !(LRA_TYPES.includes(d.doc_type) || d._isGenericLraForm) && {
+        footers: {
+          default: buildLetterheadFooter(),
+          ...(['conveyance_letter', 'engagement_letter'].includes(d.doc_type) ? { first: buildLetterheadFooter() } : {})
+        },
       }),
       children: flatChildren
     }

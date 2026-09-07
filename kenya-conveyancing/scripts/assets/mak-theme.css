@@ -1,0 +1,87 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   MAK & Partners Advocates — dark house theme for the Conveyancing Tracker.
+   MAK marketplace copy only. Injected after the base styles by
+   apply-mak-theme.js as a mak-theme style block at the end of the document
+   head, so it wins on source order at equal specificity.
+   Palette: MAK brand black (#000000) + MAK gold (#FFDD16), per firm-config
+   (brand_navy / brand_gold). True black page, near-black lifted panels, warm
+   ivory ink, gold as accent (not wallpaper). Matches the Litigation Brief so
+   MAK's two dashboards read as one house.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: dark;
+  --paper:       #000000;   /* page — MAK black */
+  --paper-2:     #0e0e0e;   /* lifted panels / cards */
+  --paper-3:     #141414;   /* deepest lift */
+  --paper-hover: #181818;
+  --ink:         #f5f1e6;   /* primary — warm ivory */
+  --ink-soft:    #cbc3b2;   /* secondary */
+  --muted:       #94897a;   /* caps micro-labels */
+  --muted-2:     #6f6658;
+  --rule:        #2a2a2a;   /* borders, visible on black */
+  --rule-soft:   #1b1b1b;
+  --accent:      #ffdd16;   /* MAK gold */
+  --accent-soft: rgba(255,221,22,0.14);
+  --alert:       #ff6a5c;   /* overdue red, lifted for black */
+  --ok:          #46c07a;
+  --info:        #7f9bef;
+  --plum:        #bd93e8;
+}
+
+/* second :root in the base sheet re-sets --accent to copper; this wins by order */
+html, body { background: #000000; }
+
+/* ═════════ MASTHEAD — swap the firm-name text for the MAK logo ═════════ */
+.mast-firm {
+  font-size: 0 !important;
+  line-height: 0;
+  height: 72px;
+  margin: 16px 0 12px;
+  background-image: url("__MAK_LOGO_DATAURI__");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.mast-firm .amp { display: none; }
+
+/* ═════════ DEGRADED / STALE BANNER ═════════ */
+.degraded { background: #1c0f0e; border-color: #4d2621; color: #ff8a80; }
+
+/* ═════════ SECTION HEAD (red variant) ═════════ */
+.sec-head.red .l::before { color: #4d2621; }
+
+/* ═════════ BADGES ═════════ */
+.b-leasehold { color: var(--info); border-color: #2a355e; background: #12183a; }
+.b-freehold  { color: var(--ok);   border-color: #1d4a34; background: #0e2416; }
+.b-active    { color: var(--accent); border-color: #4a3c14; background: #171106; }
+
+/* ═════════ MILESTONE TIMELINE ═════════ */
+.ms:hover .ms-dot { box-shadow: 0 0 0 6px rgba(255,221,22,0.14); }
+.ms-dot.cur { box-shadow: 0 0 0 5px rgba(255,221,22,0.16); }
+.ms-dot.cur-late { background: #1c0f0e; border-color: var(--alert); box-shadow: 0 0 0 5px rgba(255,106,92,0.14); }
+.ms-dot.overdue { background: #1c0f0e; border-color: #6e3a34; }
+.ms-dot.overdue::after { color: var(--alert); }
+.ms-label.overdue  { color: var(--alert); }
+.modal-ms-dot.late { background: #1c0f0e; border-color: var(--alert); }
+
+/* ═════════ TOOLTIP — invert to dark (base uses var(--ink) bg, now light) ═════════ */
+#conv-tip { background: #1e1e1e; color: var(--ink); box-shadow: 0 8px 24px -4px rgba(0,0,0,0.6); }
+#conv-tip::after { border-top-color: #1e1e1e; }
+
+/* ═════════ FEE-EARNER ALLOCATION (V5) — invert the scoped --fe-* palette ═════════ */
+#sec-allocation {
+  --fe-rust:      #ffdd16;                 /* accent → MAK gold */
+  --fe-rust-soft: rgba(255,221,22,0.13);   /* hover wash */
+  --fe-tan:       #1e1e1e;                  /* avatar circle — dark */
+  --fe-ink:       #f5f1e6;                  /* primary text — ivory */
+  --fe-soft:      #cbc3b2;                  /* secondary text */
+  --fe-mut:       #94897a;                  /* muted */
+  --fe-rule:      #2a2a2a;                  /* borders */
+  --fe-green:     #46c07a;                  /* ok */
+  --fe-red:       #ff6a5c;                  /* alert */
+}
+/* active avatar is now gold; white initials would vanish — set them black */
+#sec-allocation .fe-ava.on .fe-ini { color: #000000; }
+#sec-allocation .fe-ava:hover { box-shadow: 0 5px 16px -5px rgba(255,221,22,0.45); }
+#sec-allocation .fe-matter:hover, #sec-allocation .fe-alert:hover { background: rgba(255,221,22,0.10); }

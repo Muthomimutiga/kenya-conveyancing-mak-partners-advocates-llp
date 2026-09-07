@@ -390,7 +390,7 @@
     } else if (st === 'Pending' && late) {
       const n = K.daysDiff(td, today);
       dotCls = 'overdue'; lblCls = 'overdue';
-      dateHtml = `<span style="color:#c06060">${fmtShort(td)}</span><span class="late-flag" style="color:#c06060">${n}d late</span>`;
+      dateHtml = `<span style="color:var(--alert)">${fmtShort(td)}</span><span class="late-flag" style="color:var(--alert)">${n}d late</span>`;
       tipStat  = n + 'd late';
     } else {
       dotCls = ''; lblCls = '';

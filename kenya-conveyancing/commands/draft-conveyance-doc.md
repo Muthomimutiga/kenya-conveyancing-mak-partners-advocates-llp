@@ -2,6 +2,13 @@
 
 **Purpose:** Draft any conveyancing document for a specific matter, informed by the current milestone.
 
+This workflow is also invoked by natural-language requests. If an associate
+says “draft an LRA 63”, “draft a transfer”, “draft a letter of engagement”,
+“draft a client update”, “draft an undertaking”, or “draft a conveyancing
+letter”, route the request here even when `/draft-conveyance-doc` was not
+typed. Identify the document type, then follow the same matter lookup,
+required-field, generator, and render checks below.
+
 ---
 
 ## Step 1 — Identify Matter

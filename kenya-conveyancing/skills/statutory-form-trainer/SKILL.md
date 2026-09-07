@@ -258,6 +258,7 @@ These fields are always passed through from the user's JSON and available in bod
 - `purchase_price_words`, `purchase_price_figures`
 - `date`
 - Any array: `transferors[]`, `transferees[]` with `name`, `id_no`, `pin`, `company_name`, `is_company`, `reg_no`
+- LRA cover fields: `cover_property_description`, `cover_property_description_lines`, `apartment_number`, `title_no`, `title_number`
 
 ---
 
