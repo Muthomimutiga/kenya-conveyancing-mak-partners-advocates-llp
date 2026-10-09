@@ -81,12 +81,27 @@ Milestones run on two clocks. Never count all nine forward from the instructions
 
 For a ready unit (Tsavo Skywalk) the two clusters sit together. For an off-plan unit (Tsavo
 Rising) the back cluster sits months away, near practical completion: stamp duty scheduled 45
-days after instructions on an off-plan matter is the mistake this prevents. If a back-cluster
-date falls on or before Milestone 5, move it to Milestone 5 + 1 business day. The official
+days after instructions on an off-plan matter is the mistake this prevents. On a short cycle,
+keep the back cluster in order with minimum gaps rather than collapsing it: Stamp Duty (M6) at
+least Milestone 5 + 1 business day; Transfer (M7) at least M6 + 5; Registration (M8) at least
+M7 + 5; Completion (M9) at least M8 + 10. Where "Completion Date minus offset" would put two
+milestones on the same day or out of order, these minimum gaps govern. The official
 search taken at Milestone 2 will lapse long before completion on an off-plan matter: note on
 the Milestone 2 record that a fresh search is needed close to completion. Record the basis in
 the Conveyance's Notes: "Completion basis: [anchor type] [anchor date] + [lag] business days
 ([project display name])."
+
+## 2b. No engagement letter on a developer-project matter
+
+MAK already acts for the developer under a standing engagement covering every unit in a
+registered project, so a new engagement letter on a developer-project matter would contradict
+the engagement in force. In /new-conveyance, skip the engagement letter for such a matter: do
+not ask for its figures, write no Documents row for it, and add to the Conveyance's Notes:
+"Engagement letter not issued, matter falls under the standing engagement for [project display
+name]." Say the same in the final summary. The matter gets the Developer Sale Agreement and the
+Fee Note (the fee note bills this client for this unit and still runs). The generator enforces
+the same rule: an engagement letter run with a registered `project_slug` writes no file and
+prints "Engagement letter skipped: ...". That is the expected outcome, not an error.
 
 ## 3. Drafting the agreement
 

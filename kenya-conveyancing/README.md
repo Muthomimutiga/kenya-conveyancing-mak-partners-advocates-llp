@@ -152,13 +152,14 @@ Ask for a form by number ("draft an LRA 67") or by what you need it for ("I need
 1. Create the firm's Airtable base using the guide in `skills/airtable-conveyances/references/airtable-setup.md`.
 2. Run `/setup-conveyancing` to connect the base and record yourself in the firm directory (your name and P.105 in the Team Members table, through your own Airtable connection; nothing is stored on the machine). Every drafting command signs in to the directory first and says who it is signing as.
 3. Run `/setup-conveyancing-artifact` to register the live Conveyancing Tracker dashboard.
-4. Connect the firm's mail and calendar through Claude's own connectors (Settings > Connectors): Microsoft 365 for firms on Outlook, or Gmail and Google Calendar for firms on Google Workspace. The plugin ships no connectors of its own; Airtable, mail and calendar all come from the connectors each person signs in to.
+4. Connect the firm's mail and calendar through Claude's own connectors (Settings > Connectors): Microsoft 365, signed in with each person's work account. The plugin ships no connectors of its own; Airtable, mail and calendar all come from the connectors each person signs in to.
 
 ## Firm extensions
 
 A firm's own precedents never go into this template. A client build may carry `scripts/firm-extensions/`, laid over the template by the client generator from the firm's inputs (`store/rag-docs/<firm>/overlay/`), so it survives every regeneration:
 
 - `<doc_type>.js` serves a document type that no built-in builder and no library form claims (for example a developer's sale agreement drawn from the firm's own precedents). Built-in types and registry forms cannot be taken over.
+- `engagement-letter.js` is the firm's own letter of engagement in place of the neutral default. It is built from the letter page's parts (reference line, sign-off, clause numbering), so the letterhead and margins stay the template's.
 - `registry-cover.js` returns a cover sheet placed before a registry instrument. The generator adds the page break and keeps the page number off the cover; `"cover_page": false` in the data file skips it.
 
 An extension receives the docx library and the data, the firm config and the asset directory in one context object and requires nothing itself, because the plugin directory has no `node_modules` at a client. The template ships none, and with none present the generator behaves exactly as before.

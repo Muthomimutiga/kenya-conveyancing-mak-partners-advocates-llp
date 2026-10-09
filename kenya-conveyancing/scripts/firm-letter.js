@@ -266,4 +266,4 @@ const numberingConfig = [
   { reference: NUM.roman, levels: [{ level: 0, format: LevelFormat.LOWER_ROMAN, text: '%1.', alignment: AlignmentType.START, style: { run: { font: FONT, color: BLACK }, paragraph: { indent: { left: 1080, hanging: 360 } } } }] },
 ];
 
-module.exports = { sectionProps, firstPageSpacer, buildLetter, buildEngagementLetter, signOff, refLine, numberingConfig, tw, FONT, MARGIN_BOTTOM, FIRST_PAGE_CLEARANCE, HEADER_IMG, FOOTER_IMG };
+module.exports = { sectionProps, firstPageSpacer, buildLetter, buildEngagementLetter, signOff, refLine, numberingConfig, NUM, tw, P, gap, asRuns, FONT, MARGIN_BOTTOM, FIRST_PAGE_CLEARANCE, HEADER_IMG, FOOTER_IMG };

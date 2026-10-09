@@ -17,8 +17,6 @@ const demo = {
   '__FIRM_NAME__':           'Sample Advocates LLP',
   '__BRIEF_TZ__':            'Africa/Nairobi',
   '__AT_SERVER_UUID__':      'demoAT',
-  '__GCAL_SERVER_UUID__':    '__GCAL_UUID_ABSENT__',
-  '__GMAIL_SERVER_UUID__':   '__GMAIL_UUID_ABSENT__',
   '__CONV_BASE_ID__':        'demoConvBase',
   '__CONV_CONVEYANCES_TBL__':'tblConveyances',
   '__CONV_MILESTONES_TBL__': 'tblMilestones',

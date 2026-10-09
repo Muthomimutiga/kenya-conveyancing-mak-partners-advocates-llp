@@ -4,5 +4,11 @@
   "tools": [
     "mcp____AT_SERVER_UUID____list_records_for_table"
   ],
+  "servers": {
+    "AT": "__AT_SERVER_UUID__"
+  },
+  "serverNames": [
+    "Airtable"
+  ],
   "title": "The Conveyancing Tracker"
 }

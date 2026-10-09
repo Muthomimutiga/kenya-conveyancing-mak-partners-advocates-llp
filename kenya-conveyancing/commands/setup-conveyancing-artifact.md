@@ -19,10 +19,9 @@ Call `mcp__<AT>__ping` (or any lightweight Airtable tool) to confirm the Airtabl
 MCP is connected. If it fails, tell the user to connect Airtable in CoWork
 settings and stop.
 
-Note whether Gmail and Calendar MCPs are connected. The tracker does not use
-them, but the shell template requires their UUIDs, so use the sentinels
-`__GCAL_UUID_ABSENT__` and `__GMAIL_UUID_ABSENT__` regardless of which calendar
-or mail system the firm runs.
+The tracker reads only Airtable. Its page carries no mail or calendar server
+tokens at all, so there is nothing to map for them, whichever mail and calendar
+system the firm runs.
 
 ---
 
@@ -77,8 +76,7 @@ unmapped token.
 ## Step 4, Retrieve server UUIDs
 
 Read the Airtable UUID from the tool names visible in this session: the segment
-between `mcp__` and `__list_records_for_table`. Use the absent sentinels for
-Calendar and Gmail unless those connectors are actually in use.
+between `mcp__` and `__list_records_for_table`. No other server id is needed.
 
 ---
 
@@ -97,8 +95,6 @@ Write the full token map to `/tmp/conv-artifact-ids.json`, every token in
 ```json
 {
   "__AT_SERVER_UUID__":          "<airtable-uuid>",
-  "__GCAL_SERVER_UUID__":        "__GCAL_UUID_ABSENT__",
-  "__GMAIL_SERVER_UUID__":       "__GMAIL_UUID_ABSENT__",
   "__FIRM_NAME__":               "MAK & Partners Advocates LLP",
   "__BRIEF_TZ__":                "Africa/Nairobi",
   "__CONV_BASE_ID__":            "<base-id>",

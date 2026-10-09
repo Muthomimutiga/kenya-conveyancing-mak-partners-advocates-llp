@@ -6,13 +6,13 @@ production.
 
 ---
 
+The Tracker page is built by `scripts/artifact/build-template.js`, which routes only the servers named in `meta.json` (`AT` here). It carries no mail or calendar server tokens.
+
 ## Core kit tokens (required by every plugin)
 
 | Token | Source | Description |
 |---|---|---|
 | `__AT_SERVER_UUID__` | MCP tool list | Airtable server UUID |
-| `__GCAL_SERVER_UUID__` | MCP tool list | Google Calendar UUID, or `__GCAL_UUID_ABSENT__` |
-| `__GMAIL_SERVER_UUID__` | MCP tool list | Gmail UUID, or `__GMAIL_UUID_ABSENT__` |
 | `__FIRM_NAME__` | Firm config | Display name shown in the masthead |
 | `__BRIEF_TZ__` | Firm config | IANA timezone (default: `Africa/Nairobi`) |
 

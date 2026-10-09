@@ -44,7 +44,11 @@ Do NOT send without explicit confirmation.
 
 ## Step 4, Send from the firm's mailbox
 
-On confirmation: send the letter to the client's email on file in Airtable through whichever mail connector this person has connected in CoWork: the Microsoft 365 (Outlook) connector if the firm is on Microsoft 365, or the Gmail connector if it is on Google Workspace. Use the one whose tools are actually present in this session; do not guess.
+On confirmation: send the letter to the client's email on file in Airtable through the Microsoft 365 (Outlook) connector this person has connected in CoWork, and only if its tools are actually present in this session; do not guess.
+
+**On Microsoft 365:** create the email in the advocate's own Outlook with `outlook_create_draft` (To = the client's email on file, the approved subject and body), then send it with `outlook_send_draft` if that tool is present; the confirmation in Step 3 is the explicit go. The connector cannot attach files, so if the update is a letter on the letterhead, leave it as a draft, tell the advocate to attach the DOCX and send it from Outlook, and wait for them to confirm it went before recording it as sent.
+
+**A write refused for permissions** (the connection holds `Mail.Read` but not the ReadWrite scope, or "access denied") is treated exactly as no mail connector, with one added line: "Your firm's administrator needs to re-approve the mail connector for write access." Do not walk the advocate through the admin console themselves.
 
 If no mail connector is connected, do NOT claim the update was sent. Say so plainly, give the person the final letter to send from their own mail client, and record the Documents row with Status = "Drafted" instead of "Sent".
 

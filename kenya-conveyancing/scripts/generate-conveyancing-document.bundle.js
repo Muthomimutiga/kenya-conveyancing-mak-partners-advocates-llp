@@ -23370,7 +23370,7 @@ var require_firm_letter = __commonJS({
       { reference: NUM.letters, levels: [{ level: 0, format: LevelFormat2.LOWER_LETTER, text: "%1.", alignment: AlignmentType2.START, style: { run: { font: FONT, color: BLACK2 }, paragraph: { indent: { left: 1080, hanging: 360 } } } }] },
       { reference: NUM.roman, levels: [{ level: 0, format: LevelFormat2.LOWER_ROMAN, text: "%1.", alignment: AlignmentType2.START, style: { run: { font: FONT, color: BLACK2 }, paragraph: { indent: { left: 1080, hanging: 360 } } } }] }
     ];
-    module2.exports = { sectionProps, firstPageSpacer, buildLetter, buildEngagementLetter: buildEngagementLetter2, signOff, refLine, numberingConfig, tw, FONT, MARGIN_BOTTOM: MARGIN_BOTTOM2, FIRST_PAGE_CLEARANCE, HEADER_IMG, FOOTER_IMG };
+    module2.exports = { sectionProps, firstPageSpacer, buildLetter, buildEngagementLetter: buildEngagementLetter2, signOff, refLine, numberingConfig, NUM, tw, P, gap, asRuns: asRuns2, FONT, MARGIN_BOTTOM: MARGIN_BOTTOM2, FIRST_PAGE_CLEARANCE, HEADER_IMG, FOOTER_IMG };
   }
 });
 
@@ -35380,7 +35380,14 @@ function buildEngagementLetter() {
   if (!d.client_pronoun) d.client_pronoun = d.client_gender === "company" ? "its" : "their";
   if (!d.assumptions || !d.assumptions.length) d.assumptions = void 0;
   if (!d.responsible_email && !hasUserAdvocate()) d.responsible_email = advocateEmail();
-  return FirmLetter.buildEngagementLetter(d, hasUserAdvocate() ? { assistedBy: advocateName() + ", Advocate" } : {});
+  const loeCtx = hasUserAdvocate() ? { assistedBy: advocateName() + ", Advocate" } : {};
+  const loeExt = loadFirmExtension("engagement-letter");
+  if (loeExt) {
+    const items = loeExt({ ...extensionContext(), letter: FirmLetter, assistedBy: loeCtx.assistedBy });
+    if (!Array.isArray(items) || items.length === 0) refuse("firm extension engagement-letter.js returned no letter.");
+    return items;
+  }
+  return FirmLetter.buildEngagementLetter(d, loeCtx);
 }
 var DEFAULT_FEE_NOTE_SERVICES = {
   purchaser: [

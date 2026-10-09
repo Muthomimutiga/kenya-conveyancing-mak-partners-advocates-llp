@@ -134,14 +134,18 @@ For each active (non-skipped) milestone, create a calendar event via the connect
 - Title (summary): `[Matter Name], Milestone [#]: [Milestone Type]`
 - Start: the target date from Step 2 at 07:00, timezone Africa/Nairobi
 - Reminders: a popup 7 days before and 1 day before (e.g. `overrideReminders: [{method:'popup', minutes:10080}, {method:'popup', minutes:1440}]`)
-- Save the returned event ID back to the Milestone record (Calendar Event ID).
+- Save the returned event ID back to the Milestone record (Calendar Event ID). If a call errors, quote it, list that milestone's date for manual entry, and carry on.
+
+**On Microsoft 365** the tool is `outlook_create_event`. Pass the time zone `Africa/Nairobi` explicitly and end the event at 07:30. Outlook keeps ONE reminder per event (`reminderMinutesBeforeStart`): use 10080 (7 days before) for milestones and say once that each carries a single 7-day reminder. The tool appears only once the firm has turned on connector write actions, and even then a call can be refused if the firm's Microsoft 365 (Entra) admin has not consented to the write scopes.
+
+**A write refused for permissions** (for example the connection holds `Calendars.Read` but not `Calendars.ReadWrite`, or the reply is "access denied"): do not try the remaining milestones. Give the full dated list once and say "Your firm's administrator needs to re-approve the calendar connector for write access." Do not walk the advocate through the admin console themselves.
 
 Create 1 additional reminder:
 - Title: `[Matter Name], OFFICIAL SEARCH EXPIRES`
 - Start: the Official Search Expiry date at 07:00
 - Reminders: popups 7 days, 3 days, and 1 day before.
 
-**Which calendar:** the command uses whichever calendar connector the firm connects in CoWork. On Microsoft 365, connect a Microsoft/Outlook calendar connector; on Google Workspace the Google Calendar connector is used. There is no plugin-bundled calendar server, so it never silently writes to a dead endpoint.
+**Which calendar:** the firm is on Microsoft 365, so the command writes to each person's own Outlook calendar through the Microsoft 365 connector. There is no plugin-bundled calendar server, so it never silently writes to a dead endpoint.
 
 ---
 

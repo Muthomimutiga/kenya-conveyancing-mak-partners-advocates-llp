@@ -1,6 +1,6 @@
 <!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">
 { "name": "The Conveyancing Tracker", "schemaVersion": 1, "description": "Live conveyancing cycle tracker showing all active transactions, per-matter milestone progress, overdue detection, official-search expiry countdown, and a due-this-week digest.",
-  "mcpTools": [ "mcp____AT_SERVER_UUID____list_records_for_table" ], "mcpServerNames": [ "Airtable", "Google Calendar", "Gmail" ] }
+  "mcpTools": [ "mcp____AT_SERVER_UUID____list_records_for_table" ], "mcpServerNames": [ "Airtable" ] }
 </script>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Conveyancing Tracker &middot; __FIRM_NAME__</title>
@@ -1208,11 +1208,11 @@ html, body { background: #000000; }
 (async () => {
   const K = window.ArtifactKit, V = window.ArtifactView;
   const TZ = '__BRIEF_TZ__';
-  const AT='__AT_SERVER_UUID__', GCAL='__GCAL_SERVER_UUID__', GMAIL='__GMAIL_SERVER_UUID__';
+  const AT='__AT_SERVER_UUID__';
   const today = K.nairobiDate(new Date(), TZ), tomorrow = K.addDays(today, 1);
   const ctx = { today, tomorrow, tz: TZ, K };
   let raw = {};
-  try { raw = await window.cowork.callMcpTool ? await K.runQueries(V.queries, { cowork: window.cowork, uuids: { AT, GCAL, GMAIL } }) : (window.__cwMock || {}); } catch (e) {}
+  try { raw = await window.cowork.callMcpTool ? await (V.runQueries || K.runQueries)(V.queries, { cowork: window.cowork, uuids: { AT }, K }) : (window.__cwMock || {}); } catch (e) {}
   // edition (optional)
   let edition = { note: null, stale: false, health: null };
   if (V.edition && raw[V.edition.id]) edition = K.selectEdition((raw[V.edition.id].records) || [], { today, F: V.edition.fields });
@@ -1236,7 +1236,7 @@ html, body { background: #000000; }
     const sc = e.target.closest('[data-scroll]');
     if (sc) { const t = document.getElementById(sc.getAttribute('data-scroll')); if (t) { t.scrollIntoView({ behavior: 'smooth', block: 'start' }); t.classList.add('pulse'); setTimeout(() => t.classList.remove('pulse'), 1200); } return; }
     const act = e.target.closest('[data-act]');
-    if (act && V.actions) { const fn = V.actions[act.getAttribute('data-act')]; if (fn) { await fn(act, { ...ctx, cowork: window.cowork, AT, GCAL, GMAIL, doWrite: K.doWrite }); close(); location.reload(); } return; }
+    if (act && V.actions) { const fn = V.actions[act.getAttribute('data-act')]; if (fn) { await fn(act, { ...ctx, cowork: window.cowork, AT, doWrite: K.doWrite }); close(); location.reload(); } return; }
     const row = e.target.closest('[data-modal]');
     if (row && V.modals) { const b = V.modals[row.getAttribute('data-modal')]; if (b) open(b(row.getAttribute('data-id'), { ...ctx, shaped })); }
   });

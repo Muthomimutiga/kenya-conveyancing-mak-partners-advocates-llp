@@ -158,6 +158,9 @@ function refuse(reason) {
 //
 //   <doc_type>.js      serves a doc_type that no built-in builder and no library form claims.
 //                      module.exports = (ctx) => ({ children: [...], numbering: [...]?, pageBorders: {...}? })
+//   engagement-letter.js  the firm's own letter of engagement, in place of the neutral default.
+//                      module.exports = (ctx) => [...paragraphs]; ctx also carries letter (the letter
+//                      page's parts: refLine, signOff, firstPageSpacer, tw, P, gap, NUM) and assistedBy.
 //   registry-cover.js  returns a cover sheet placed before a registry instrument (the generator
 //                      adds the page break and keeps the page number off the cover), or null for none.
 //                      module.exports = (ctx) => [...] | null
@@ -2849,7 +2852,17 @@ function buildEngagementLetter() {
   // although her own was to hand. Where a fee earner drafts, the firm address is correct,
   // because the partner's own is not in the data file.
   if (!d.responsible_email && !hasUserAdvocate()) d.responsible_email = advocateEmail();
-  return FirmLetter.buildEngagementLetter(d, hasUserAdvocate() ? { assistedBy: advocateName() + ', Advocate' } : {});
+  const loeCtx = hasUserAdvocate() ? { assistedBy: advocateName() + ', Advocate' } : {};
+  // A firm with its own letter of engagement supplies it as firm-extensions/engagement-letter.js. It
+  // gets the letter page's own parts (ref line, sign-off, the clause numbering) so the letterhead,
+  // margins and numbering stay the template's, and only the wording is the firm's.
+  const loeExt = loadFirmExtension('engagement-letter');
+  if (loeExt) {
+    const items = loeExt({ ...extensionContext(), letter: FirmLetter, assistedBy: loeCtx.assistedBy });
+    if (!Array.isArray(items) || items.length === 0) refuse('firm extension engagement-letter.js returned no letter.');
+    return items;
+  }
+  return FirmLetter.buildEngagementLetter(d, loeCtx);
 }
 
 // A fee note's service list is the firm's own description of what it did. These neutral defaults

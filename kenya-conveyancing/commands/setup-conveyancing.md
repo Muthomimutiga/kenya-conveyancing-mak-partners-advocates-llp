@@ -293,7 +293,7 @@ When you run `/new-conveyance`, Claude computes the target date for each milesto
 
 **Tracker shows no data:** The tracker reads live from Airtable. If it shows nothing, either no Active matters exist yet, or the Airtable connection dropped. Re-run `/setup-conveyancing-artifact` to reconnect.
 
-**Calendar events missing:** Confirm a calendar connector is connected in CoWork settings (Microsoft/Outlook if the firm is on Microsoft 365, or Google Calendar). If it was disconnected after `/new-conveyance` ran, create the calendar events manually for that matter from the dates in its milestone schedule.
+**Calendar events missing:** Confirm the Microsoft 365 connector is connected in CoWork settings and the firm has turned on its write actions. If it was disconnected after `/new-conveyance` ran, create the calendar events manually for that matter from the dates in its milestone schedule.
 
 ---
 
