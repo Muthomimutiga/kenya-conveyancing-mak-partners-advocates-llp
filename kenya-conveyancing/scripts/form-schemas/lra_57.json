@@ -1,0 +1,227 @@
+{
+  "form_id": "lra_57",
+  "form_number": "LRA-57",
+  "regulation": "(r. 73)",
+  "doc_title": "TRANSFER OF CHARGE",
+  "doc_title_official": "TRANSFER OF CHARGE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-57-TRANSFER-OF-CHARGE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-57.txt"
+  },
+  "category": "instrument",
+  "when_used": "A chargee transfers a registered charge to a new chargee for a consideration, with the chargor confirming the outstanding amount where the chargor is made a party. The outgoing chargee is passed as the transferor and the incoming one as the transferee, each as a natural person signing by its own duly authorised attorneys, and the chargor signs personally.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Transferor",
+    "transferor_single": "Transferor",
+    "transferee": "Transferee",
+    "transferee_single": "Transferee"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of this Transfer:",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Charge(s)",
+      "value_field": "charge_date"
+    },
+    {
+      "label": "Charge(s) registered in the Register as Entry Number(s):",
+      "value_field": "charge_entry_numbers"
+    },
+    {
+      "label": "Transferor: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Transferee: Give full name(s) and company’s registration number, if any",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Chargor Give full name(s) and company’s registration number, if any",
+      "value_field": "chargor_name"
+    },
+    {
+      "label": "Consideration for the Transfer (Receipt is hereby acknowledged by the Transferor)",
+      "value_template": "Kenya Shillings {{purchase_price_words}} (Kshs. {{purchase_price_figures}}/=)"
+    },
+    {
+      "label": "The Principal Amount Secured Under the Charge",
+      "value_field": "principal_amount"
+    },
+    {
+      "label": "Outstanding Amount as confirmed by the Chargor*",
+      "value_field": "outstanding_amount"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Transferor being the Chargee of the Charge(s) registered as above in the Encumbrances Section of the Register of the above-mentioned Title HEREBY TRANSFERS to the Transferee the interest of the Transferor in the Charge(s)."
+    },
+    {
+      "type": "plain",
+      "text": "The Chargor confirms the outstanding amount as set out above*."
+    },
+    {
+      "type": "plain",
+      "text": "Additional Conditions for the Transfer if any:"
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_conditions}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF the Transferor and the Transferee (and the Chargor) have signed this Transfer as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Transferor",
+    "verification": true,
+    "signed_label": "SIGNED and SEALED by the duly authorised attorney(s) of the",
+    "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act",
+    "signatory_cell": "attorney",
+    "verification_variant": "attorney",
+    "signing_recital": {
+      "transferor": "under and by virtue of Powers of Attorney registered at: {{transferor_poa_lands_registry}} Lands registry as number {{transferor_poa_lands_no_1}} and {{transferor_poa_lands_no_2}} and at the registry of Documents at Nairobi as Number {{transferor_poa_docs_no_1}} and {{transferor_poa_docs_no_2}} respectively",
+      "transferee": "under and by virtue of Powers of Attorney registered at: {{transferee_poa_lands_registry}} Lands registry as number {{transferee_poa_lands_no_1}} and {{transferee_poa_lands_no_2}} and at the registry of Documents at Nairobi as Number {{transferee_poa_docs_no_1}} and {{transferee_poa_docs_no_2}} respectively"
+    },
+    "extra_blocks": [
+      {
+        "signed_label": "SIGNED and SEALED by the",
+        "signer_label": "Chargor",
+        "verification": true,
+        "name_field": "chargor_name",
+        "signing_recital": "",
+        "signatory_cell": "default",
+        "verification_variant": "default"
+      }
+    ]
+  },
+  "registry_block": "default",
+  "foot_notes": [
+    "Notes:",
+    "*where the Chargor is made a party",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number."
+  ],
+  "custom_fields": [
+    {
+      "name": "charge_date",
+      "label": "Date of the Charge",
+      "prompt": "The date of the charge or charges being transferred",
+      "required": true
+    },
+    {
+      "name": "charge_entry_numbers",
+      "label": "Entry number of the Charge",
+      "prompt": "The entry number or numbers under which the charge is registered in the register",
+      "required": true
+    },
+    {
+      "name": "chargor_name",
+      "label": "The Chargor",
+      "prompt": "Full name of the chargor and, if corporate, the company's registration number",
+      "required": true
+    },
+    {
+      "name": "principal_amount",
+      "label": "Principal amount secured under the Charge",
+      "prompt": "The principal amount secured under the charge being transferred",
+      "required": true
+    },
+    {
+      "name": "outstanding_amount",
+      "label": "Outstanding amount",
+      "prompt": "The amount still outstanding under the charge, as the chargor confirms it",
+      "required": true
+    },
+    {
+      "name": "additional_conditions",
+      "label": "Additional conditions for the transfer",
+      "prompt": "Any additional conditions agreed for the transfer of the charge, one condition per line",
+      "required": false
+    },
+    {
+      "name": "transferor_poa_lands_registry",
+      "label": "Lands registry the Transferor’s powers of attorney are registered at",
+      "prompt": "Which lands registry are the Transferor’s powers of attorney registered at, for example Nairobi",
+      "required": true
+    },
+    {
+      "name": "transferor_poa_lands_no_1",
+      "label": "First power of attorney number at the lands registry for the Transferor",
+      "prompt": "What number is the Transferor’s first power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "transferor_poa_lands_no_2",
+      "label": "Second power of attorney number at the lands registry for the Transferor",
+      "prompt": "What number is the Transferor’s second power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "transferor_poa_docs_no_1",
+      "label": "First power of attorney number at the registry of Documents for the Transferor",
+      "prompt": "What Number is the Transferor’s first power of attorney registered under at the registry of Documents at Nairobi",
+      "required": true
+    },
+    {
+      "name": "transferor_poa_docs_no_2",
+      "label": "Second power of attorney number at the registry of Documents for the Transferor",
+      "prompt": "What Number is the Transferor’s second power of attorney registered under at the registry of Documents at Nairobi",
+      "required": true
+    },
+    {
+      "name": "transferee_poa_lands_registry",
+      "label": "Lands registry the Transferee’s powers of attorney are registered at",
+      "prompt": "Which lands registry are the Transferee’s powers of attorney registered at, for example Nairobi",
+      "required": true
+    },
+    {
+      "name": "transferee_poa_lands_no_1",
+      "label": "First power of attorney number at the lands registry for the Transferee",
+      "prompt": "What number is the Transferee’s first power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "transferee_poa_lands_no_2",
+      "label": "Second power of attorney number at the lands registry for the Transferee",
+      "prompt": "What number is the Transferee’s second power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "transferee_poa_docs_no_1",
+      "label": "First power of attorney number at the registry of Documents for the Transferee",
+      "prompt": "What Number is the Transferee’s first power of attorney registered under at the registry of Documents at Nairobi",
+      "required": true
+    },
+    {
+      "name": "transferee_poa_docs_no_2",
+      "label": "Second power of attorney number at the registry of Documents for the Transferee",
+      "prompt": "What Number is the Transferee’s second power of attorney registered under at the registry of Documents at Nairobi",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

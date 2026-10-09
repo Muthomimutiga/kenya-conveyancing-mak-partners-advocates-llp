@@ -1,0 +1,67 @@
+{
+  "form_id": "lra_94",
+  "form_number": "LRA 94",
+  "regulation": "(r. 94(3))",
+  "doc_title": "APPLICATION FOR RECTIFICATION OF REGISTER PURSUANT TO A COURT ORDER",
+  "doc_title_official": "APPLICATION FOR RECTIFICATION OF REGISTER PURSUANT TO A COURT ORDER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-94-APPLICATION-FOR-RECTIFICATION-OF-REGISTER-PURSUANT-TO-A-COURT-ORDER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-94.txt"
+  },
+  "category": "application",
+  "when_used": "An applicant lodges a court order for registration so that the register of a title is rectified in the manner the order sets out, attaching a certified true copy of the order.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "The Applicant: Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport/Company Registration No. (if any)",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Date of Court Order",
+      "value_field": "order_date"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES to the Land Registrar for the registration of the above mentioned Court Order for the rectification of the Register of the above named Land in the manner set out in the Order."
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application the Applicant attaches a Certified True copy of the Court Order."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "order_date",
+      "label": "Date of the Court Order",
+      "prompt": "The date of the court order to be registered",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

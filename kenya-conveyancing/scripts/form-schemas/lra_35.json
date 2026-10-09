@@ -1,0 +1,170 @@
+{
+  "form_id": "lra_35",
+  "form_number": "LRA-35",
+  "regulation": "(r. 51(1))",
+  "doc_title": "TRANSFER OF UNDIVIDED SHARE",
+  "doc_title_official": "TRANSFER OF UNDIVIDED SHARE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-35-TRANSFER-OF-UNDIVIDED-SHARE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-35.txt"
+  },
+  "category": "instrument",
+  "when_used": "One of several registered proprietors transfers an undivided share in the title, leaving the continuing proprietors on the register.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Transferor",
+    "transferor_single": "Transferor",
+    "transferee": "Transferee",
+    "transferee_single": "Transferee"
+  },
+  "title_label": "TITLE NO",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date",
+      "value_blank": true
+    },
+    {
+      "label": "Registered Proprietors",
+      "value_template": "{{registered_proprietors}}"
+    },
+    {
+      "label": "Transferor (s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Transferee(s)",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Consideration",
+      "value_template": "Kenya Shillings {{purchase_price_words}} (Kshs. {{purchase_price_figures}}/=)"
+    },
+    {
+      "label": "Undivided Share(s) Being Transferred",
+      "value_template": "{{undivided_share_transferred}}"
+    },
+    {
+      "label": "Continuing Proprietor(s)",
+      "value_template": "{{continuing_proprietors}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "This TRANSFER OF UNDIVIDED SHARE witnesses as follows:"
+    },
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "The Transferor(s) HEREBY TRANSFERS the above ({{undivided_share_transferred}}) undivided share(s) in the above property"
+    },
+    {
+      "type": "numbered",
+      "number": 2,
+      "text": "The Transfer is subject to the following:"
+    },
+    {
+      "type": "lettered",
+      "letter": "a",
+      "text": "The provisions of The Land Registration Act (No 3 of 2012) and The Land Act(No 6 of 2012);"
+    },
+    {
+      "type": "lettered",
+      "letter": "b",
+      "text": "The interests noted in the Register of the Title."
+    },
+    {
+      "type": "numbered",
+      "number": 3,
+      "text": "The Transfer is also subject to the following additional provisions, if any:"
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_provisions}}"
+    },
+    {
+      "type": "numbered",
+      "number": 4,
+      "text": "The Transferee(s) and the Continuing Proprietor(s) declare that they shall hold the property comprised in the above Title in trust for each other as:-"
+    },
+    {
+      "type": "lettered",
+      "letter": "a",
+      "text": "Tenants in common in the following shares:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{tenancy_in_common_shares}}"
+    },
+    {
+      "type": "lettered",
+      "letter": "b",
+      "text": "Joint Tenants"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS the Transferor and the Transferee (and the Continuing Proprietor) have signed this Transfer as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Transferor",
+    "verification": true,
+    "extra_blocks": [
+      {
+        "signed_label": "SIGNED as a deed by the",
+        "signer_label": "Continuing Proprietor",
+        "verification": true,
+        "name_field": "continuing_proprietors",
+        "frame": "deed",
+        "verification_heading": "Certificate of Verification"
+      }
+    ],
+    "verification_heading": "Certificate of Verification"
+  },
+  "registry_block": "default",
+  "foot_notes": [
+    "Notes:",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "registered_proprietors",
+      "label": "Registered Proprietors",
+      "prompt": "Full names of every proprietor registered on the title before this transfer",
+      "required": true
+    },
+    {
+      "name": "undivided_share_transferred",
+      "label": "Undivided share being transferred",
+      "prompt": "The undivided share the transferor is transferring, for example one half or 1/4",
+      "required": true
+    },
+    {
+      "name": "continuing_proprietors",
+      "label": "Continuing Proprietor(s)",
+      "prompt": "Full names of the proprietors who remain registered on the title after this transfer",
+      "required": true
+    },
+    {
+      "name": "additional_provisions",
+      "label": "Additional provisions",
+      "prompt": "Any further provisions the transfer is subject to, or leave empty where there are none",
+      "required": false
+    },
+    {
+      "name": "tenancy_in_common_shares",
+      "label": "Shares held in common",
+      "prompt": "Where the transferee and the continuing proprietor hold as tenants in common, the shares each holds",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

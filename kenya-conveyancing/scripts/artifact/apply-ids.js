@@ -1,6 +1,6 @@
 // Values setup writes when an optional integration is not connected. They look
 // like tokens but are intentional, so the leftover-token check must ignore them.
-const ABSENT_SENTINELS = new Set(['__GMAIL_UUID_ABSENT__', '__GCAL_UUID_ABSENT__']);
+const ABSENT_SENTINELS = new Set(['__GMAIL_UUID_ABSENT__', '__GCAL_UUID_ABSENT__', '__MS_SERVER_ABSENT__']);
 
 function applyIds(template, map) {
   let out = template;

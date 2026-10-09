@@ -1,0 +1,150 @@
+{
+  "form_id": "lra_6",
+  "form_number": "LRA 6",
+  "regulation": "(r. 18)",
+  "doc_title": "SPECIFIC POWER OF ATTORNEY",
+  "doc_title_official": "SPECIFIC POWER OF ATTORNEY",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-6-SPECIFIC-POWER-OF-ATTORNEY.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-6.txt"
+  },
+  "category": "deed",
+  "when_used": "A registered proprietor appoints an attorney to do only the specific acts listed in the form in relation to the proprietor's interest in a title.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Donor",
+    "transferor_single": "Donor",
+    "transferee": "Donee",
+    "transferee_single": "Donee"
+  },
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument",
+      "value_blank": true
+    },
+    {
+      "label": "Registered *Proprietor/Donor",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN No.",
+      "value_field": "donor_pin"
+    },
+    {
+      "label": "The Donee: Name",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Registration No.( if applicable)",
+      "value_template": "{{donee_registration_no}}"
+    },
+    {
+      "label": "Postal Address:",
+      "value_template": "{{donee_postal_address}}"
+    },
+    {
+      "label": "Address for Service:",
+      "value_template": "{{donee_address_for_service}}"
+    },
+    {
+      "label": "Tel. No:",
+      "value_template": "{{donee_tel_no}}"
+    },
+    {
+      "label": "Email address:",
+      "value_template": "{{donee_email_address}}"
+    },
+    {
+      "label": "Power limited to the following",
+      "value_template": "Donee has power to do the following specific acts in the name of the Donor:** {{specific_powers}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Donor HEREBY APPOINT(S) the Donee to be the attorney of the Donor and to perform the specific acts noted above in relation to the Donor’s interest in the above-mentioned Title and within this scope in the name of the Donor to execute all such instruments and to do all such acts, matters and things as may be necessary or expedient for carrying out the powers hereby given."
+    },
+    {
+      "type": "plain",
+      "text": "SIGNED as a Deed by the Donor ………day of ……...……………20…"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this power of Attorney has been duly executed this........................…. day of……………………………….…..20…………"
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Donor",
+    "verification": true,
+    "signed_label": "SIGNED and SEALED by the"
+  },
+  "registry_block": [
+    "REGISTERED in the Register of Powers of Attorney as No....................... this …………………...... day of …………………...........................20…….",
+    "SIGNED:",
+    "LAND REGISTRAR",
+    "Seal………………………………………………….",
+    "Name:………………………… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "Notes",
+    "indicate: Name; I.D/Passport No./PIN. If corporate body provide registration details.",
+    "Give specific details of the powers donated to the Donee."
+  ],
+  "custom_fields": [
+    {
+      "name": "donor_pin",
+      "label": "PIN of the Donor",
+      "prompt": "Personal Identification Number of the registered proprietor giving the power",
+      "required": true
+    },
+    {
+      "name": "donee_registration_no",
+      "label": "Registration number of the Donee",
+      "prompt": "Company or other registration number of the Donee, where the Donee is a body corporate",
+      "required": false
+    },
+    {
+      "name": "donee_postal_address",
+      "label": "Postal address of the Donee",
+      "prompt": "Postal address of the Donee, for example 1-00100 Nairobi",
+      "required": true
+    },
+    {
+      "name": "donee_address_for_service",
+      "label": "Address for service of the Donee",
+      "prompt": "Address within Kenya at which documents may be served on the Donee",
+      "required": true
+    },
+    {
+      "name": "donee_tel_no",
+      "label": "Telephone number of the Donee",
+      "prompt": "Telephone number of the Donee",
+      "required": false
+    },
+    {
+      "name": "donee_email_address",
+      "label": "Email address of the Donee",
+      "prompt": "Email address of the Donee",
+      "required": false
+    },
+    {
+      "name": "specific_powers",
+      "label": "Specific acts the Donee may do",
+      "prompt": "The specific acts the Donee is authorised to do in the name of the Donor, listed in full",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

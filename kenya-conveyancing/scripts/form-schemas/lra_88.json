@@ -1,0 +1,87 @@
+{
+  "form_id": "lra_88",
+  "form_number": "LRA 88",
+  "regulation": "(r. 91(2))",
+  "doc_title": "CONSENT TO RECTIFY THE REGISTER BY A COMPANY",
+  "doc_title_official": "CONSENT TO RECTIFY THE REGISTER BY A COMPANY",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-88-CONSENT-TO-RECTIFY-THE-REGISTER-BY-A-COMPANY.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-88.txt"
+  },
+  "category": "consent",
+  "when_used": "A company affected by an intended rectification of the register consents to it under its common seal, so that the Registrar may rectify. The Ministry prints this form for a company only, so the party giving consent is always a body corporate and the form is drawn with its registration number and its common seal.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Company",
+    "transferor_single": "Company",
+    "transferee": "Proprietor",
+    "transferee_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of consent:",
+      "value_blank": true
+    },
+    {
+      "label": "Name of Proprietor",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Name of party giving consent:",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Registration No:",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Nature of rectification Consented:",
+      "value_field": "nature_of_rectification"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The above named being the affected party hereby acknowledges and declares that :-"
+    },
+    {
+      "type": "plain",
+      "text": "It has full knowledge of the intended rectification; and"
+    },
+    {
+      "type": "plain",
+      "text": "It has understood the nature and effect of this Consent;"
+    },
+    {
+      "type": "plain",
+      "text": "AND the Company HEREBY CONSENTS to the rectification of the register."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS the Company has signed this Consent as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "transferor",
+    "signer_label": "Company",
+    "verification": true,
+    "verification_heading": "Certificate of Verification"
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "nature_of_rectification",
+      "label": "Nature of the rectification consented to",
+      "prompt": "What is to be rectified in the register, set out as the entry to be corrected and the correction sought",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

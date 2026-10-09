@@ -1,0 +1,215 @@
+{
+  "transaction_id": "cautions_and_restrictions",
+  "name": "Cautions and restrictions, and their removal",
+  "summary": "Protecting an unregistered interest on the register, and getting an entry off again. The cheapest instrument in conveyancing and the one with the sharpest personal consequence for getting it wrong.",
+  "triggers": [
+    "A client holds a right to obtain an interest in land and needs it protected before it can be registered",
+    "Or a client's title carries a caution or restriction that has to come off"
+  ],
+  "not_this_if": [
+    {
+      "fact": "A court has ordered that dealings be prevented",
+      "use": null,
+      "why": "That is an inhibition under section 68, registered on LRA 66."
+    },
+    {
+      "fact": "The interest is capable of immediate registration",
+      "use": null,
+      "why": "Section 71(4) lets the Registrar reject a caution whose purpose could be achieved by registering the instrument itself."
+    }
+  ],
+  "statutory_basis": [
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.71(3)",
+      "quote": "A caution shall be in the prescribed form, and the Registrar may require the cautioner to support the caution by a statutory declaration",
+      "effect": "The caution is a prescribed form, LRA 67, and the Registrar may require a statutory declaration with it. That is why the caution and the declaration are prepared together rather than the declaration being an afterthought."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.71(4)",
+      "quote": "The Registrar may reject a caution that is unnecessary or whose purpose can be effected by the registration of an instrument under this Act",
+      "effect": "A caution is not a substitute for registering the instrument. If the interest can simply be registered, the caution can be rejected."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.72(2)",
+      "quote": "A disposition that is inconsistent with the caution shall not be registered while the caution is still registered except with the consent of the cautioner or by the order of the court",
+      "effect": "This is what the caution buys: an inconsistent dealing cannot register while it stands, unless the cautioner consents or the court orders."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.73(1)",
+      "quote": "A caution may be withdrawn by the cautioner or removed by order of the court or, subject to subsection (2), by order of the Registrar",
+      "effect": "Three exits: the cautioner withdraws on LRA 69, a third party applies to the Registrar on LRA 70, or the court orders removal."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.75",
+      "quote": "Any person who lodges or maintains a caution wrongfully and without reasonable cause shall be liable, in an action for damages",
+      "effect": "A caution lodged or kept without reasonable cause sounds in damages at the suit of anyone who suffers. Note the words: maintaining one is as actionable as lodging it, so a caution left on after the reason for it has gone is its own exposure."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.76(2)",
+      "quote": "A restriction may be expressed to endure",
+      "effect": "A restriction may run for a period, until an event, or until further order, and may stop all dealings or only those that fail specified conditions. A restriction is the more flexible instrument."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.77(2)",
+      "quote": "An instrument that is inconsistent with a restriction shall not be registered while the restriction is still registered except by order of the court or of the Registrar",
+      "effect": "The restriction's effect, and note the difference from a caution: a restriction is lifted by the court or the Registrar, not by the consent of whoever asked for it."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.78(1)",
+      "quote": "order the removal or variation of a restriction",
+      "effect": "The Registrar may remove or vary a restriction on application or on the Registrar's own motion, after giving those affected a hearing. LRA 78 is the application."
+    }
+  ],
+  "bundle": [
+    {
+      "form_id": "lra_9",
+      "role": "Cover application",
+      "order": 1,
+      "required": true,
+      "why": "The entry is presented for registration like any instrument."
+    },
+    {
+      "form_id": "lra_67",
+      "role": "Caution",
+      "order": 2,
+      "required": false,
+      "condition": "An unregistered interest is being protected",
+      "alternative_to": "lra_75",
+      "why": "The prescribed form under section 71(3)."
+    },
+    {
+      "form_id": "lra_75",
+      "role": "Application for a restriction",
+      "order": 2,
+      "required": false,
+      "condition": "The protection sought is a restriction on dealings rather than a caution",
+      "alternative_to": "lra_67",
+      "why": "Section 76 gives the Registrar power to restrict dealings for prevention of fraud or improper dealing or other sufficient cause. It is the better instrument where the need is to condition dealings rather than forbid them."
+    },
+    {
+      "form_id": "lra_47",
+      "role": "Statutory declaration supporting the caution",
+      "order": 3,
+      "required": false,
+      "condition": "The Registrar requires the caution supported by declaration, which is usual",
+      "why": "Section 71(3) expressly allows the Registrar to require it, so it is prepared with the caution rather than after a query."
+    },
+    {
+      "form_id": "lra_69",
+      "role": "Withdrawal of caution by the cautioner",
+      "order": 4,
+      "required": false,
+      "condition": "The cautioner is taking their own caution off",
+      "why": "The first of the three exits in section 73(1)."
+    },
+    {
+      "form_id": "lra_70",
+      "role": "Application to remove a caution",
+      "order": 4,
+      "required": false,
+      "condition": "Someone other than the cautioner wants the caution removed",
+      "why": "Starts the Registrar's notice procedure under section 73(2). The cautioner may object on LRA 72."
+    },
+    {
+      "form_id": "lra_78",
+      "role": "Application to remove or vary a restriction",
+      "order": 4,
+      "required": false,
+      "condition": "A restriction is to be lifted or changed",
+      "why": "Section 78(1)."
+    }
+  ],
+  "alternatives": [
+    {
+      "choose_between": [
+        "lra_67",
+        "lra_75"
+      ],
+      "decided_by": "Whether the client needs to forbid dealings outright or to condition them, and whether the interest claimed is one section 71 recognises",
+      "why": "A caution protects a claimed interest and can be withdrawn by the cautioner. A restriction is the Registrar's instrument, is lifted only by the Registrar or the court, and can be shaped to endure for a period or until an event."
+    }
+  ],
+  "drafted_together": [
+    {
+      "forms": [
+        "lra_67",
+        "lra_47"
+      ],
+      "why": "Section 71(3) lets the Registrar require a statutory declaration in support, so the caution and the declaration are prepared as one piece of work."
+    }
+  ],
+  "consents": [
+    {
+      "name": "Consent of the cautioner to an inconsistent dealing",
+      "when_required": "A dealing inconsistent with a registered caution is to be registered while the caution stands",
+      "when_not_required": "The caution has been withdrawn or removed, or the court has ordered otherwise",
+      "authority": "The cautioner",
+      "provision": "Land Registration Act s.72(2)",
+      "deadline": null,
+      "consequence_if_missed": "The dealing is not registrable while the caution stands."
+    }
+  ],
+  "clearances": [],
+  "sequence": [
+    "Ask first whether the interest can simply be registered. Section 71(4) lets the Registrar reject a caution whose purpose could be achieved that way.",
+    "Choose between a caution and a restriction on what the client actually needs.",
+    "Prepare the supporting statutory declaration with the caution, not after a query.",
+    "Lodge, and diarise the reason for the caution so it comes off when the reason ends.",
+    "On removal, use the route that matches who wants it off."
+  ],
+  "traps": [
+    {
+      "trap": "Leaving a caution on after the reason for it has gone",
+      "why_wrong": "Section 75 makes maintaining a caution wrongfully and without reasonable cause actionable in damages, not only lodging one. The exposure grows the longer it sits.",
+      "provision": "Land Registration Act s.75"
+    },
+    {
+      "trap": "Using a caution where the instrument could simply be registered",
+      "why_wrong": "Section 71(4) lets the Registrar reject it as unnecessary, and the client has paid for nothing.",
+      "provision": "Land Registration Act s.71(4)"
+    },
+    {
+      "trap": "Assuming a restriction comes off the way a caution does",
+      "why_wrong": "A caution can be withdrawn by the cautioner. A restriction is removed or varied by the Registrar or the court under section 78.",
+      "provision": "Land Registration Act s.78(1)"
+    },
+    {
+      "trap": "Lodging a second caution on the same matter",
+      "why_wrong": "Section 74 lets the Registrar refuse a further caution by the same person on the same matter.",
+      "provision": "Land Registration Act s.74"
+    }
+  ],
+  "practice_varies": [
+    {
+      "step": "Whether a statutory declaration is demanded",
+      "note": "Section 71(3) makes it discretionary. Most registries ask. Record what yours does."
+    },
+    {
+      "step": "Time given in a removal notice",
+      "note": "Section 73(2) leaves the period to the Registrar. Record what yours allows."
+    }
+  ],
+  "milestone": 4,
+  "verified_by": {
+    "status": "APPROVED",
+    "by": "Robin Muthomi Mutiga, Advocate",
+    "date": "2026-09-28",
+    "note": "Bundles, sequence, alternatives and traps approved. Every statutory quote is proved against cached primary law by scripts/procedures/lint.js on each build; the readings remain ED's, approved by the advocate above. 2026-09-28: Robin agreed the supporting declaration is LRA 47 (general form of statutory declaration), not LRA 16 (lost-title declaration)."
+  }
+}

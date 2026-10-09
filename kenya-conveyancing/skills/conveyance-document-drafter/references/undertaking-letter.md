@@ -1,11 +1,11 @@
-# Undertaking Letter — Purchaser's Advocate Undertaking
+# Undertaking Letter: Purchaser's Advocate Undertaking
 
 ## Output Category
 
-**Category A — Letterhead Document.** Begin output with:
-`[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Category A: Letterhead Document.** Begin output with:
+`[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -21,11 +21,11 @@ This gives the Vendor's Advocates assurance that funds are available, while prot
 
 ---
 
-## Undertaking Letter — Template
+## Undertaking Letter: Template
 
 ```
 ══════════════════════════════════════════════════════════
-[PRINT ON FIRM LETTERHEAD — MAK & PARTNERS ADVOCATES LLP]
+[PRINT ON FIRM LETTERHEAD: MAK & PARTNERS ADVOCATES LLP]
 ══════════════════════════════════════════════════════════
 
 [DATE]
@@ -36,7 +36,7 @@ This gives the Vendor's Advocates assurance that funds are available, while prot
 
 Dear [VENDOR'S ADVOCATE NAME / "Sirs"],
 
-RE: [PROPERTY DESCRIPTION — e.g., "LAND REFERENCE NUMBER 209/4491 —
+RE: [PROPERTY DESCRIPTION, e.g., "LAND REFERENCE NUMBER 209/4491:
     TRANSFER FROM [VENDOR NAME] TO [PURCHASER NAME]"]
     PURCHASER'S ADVOCATES' UNDERTAKING
 
@@ -80,7 +80,7 @@ We hereby IRREVOCABLY UNDERTAKE as follows:
    of any conflict, [FINANCIER NAME]'s instructions shall prevail.
 
 This undertaking shall be effective from the date hereof until [LONG STOP
-DATE — typically 30 days after Completion Date].
+DATE, typically 30 days after Completion Date].
 
 Yours faithfully,
 
@@ -94,8 +94,8 @@ ADVOCATES FOR THE PURCHASER
 
 ## Drafting Notes
 
-- This is a professional undertaking — the firm (not the client) is personally liable to honour it.
+- This is a professional undertaking. The firm (not the client) is personally liable to honour it.
 - Only issue when funds are actually in the client account and cleared.
 - The "long stop date" should allow enough time for registration. 30 days from Completion Date is standard.
-- Where the Purchaser is being financed by a bank/mortgage, the undertaking is often given by the Financier's Advocates (the bank's lawyers) directly to the Vendor's Advocates. In that case, our firm may not issue this undertaking — check the financing arrangements first.
+- Where the Purchaser is being financed by a bank/mortgage, the undertaking is often given by the Financier's Advocates (the bank's lawyers) directly to the Vendor's Advocates. In that case, our firm may not issue this undertaking. Check the financing arrangements first.
 - After issuing, record in Airtable Documents table: Document Type = "Undertaking", Status = "Sent".

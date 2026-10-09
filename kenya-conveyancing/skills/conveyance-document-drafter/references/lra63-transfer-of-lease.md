@@ -1,17 +1,17 @@
-# LRA 63 — Transfer of Lease (Leasehold Assignments)
+# LRA 63: Transfer of Lease (Leasehold Assignments)
 
 ## Output Category
 
-**Category B — Registry Document.** Begin output with:
-`[REGISTRY DOCUMENT — No letterhead. File at Land Registry. Check title details before filing.]`
+**Category B: Registry Document.** Begin output with:
+`[REGISTRY DOCUMENT: No letterhead. File at Land Registry. Check title details before filing.]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
 ## When to Use
 
-LRA 63 is the prescribed form for transferring (assigning) a leasehold interest in registered land. Use this form whenever the interest being sold is leasehold — not freehold.
+LRA 63 is the prescribed form for transferring (assigning) a leasehold interest in registered land. Use this form whenever the interest being sold is leasehold, not freehold.
 
 **Key differences from freehold (LRA 33):**
 - NLC consent is required for ALL leasehold dealings (ss.55–56 LRA). Without it, registration is refused.
@@ -23,16 +23,16 @@ LRA 63 is the prescribed form for transferring (assigning) a leasehold interest 
 
 ---
 
-## LRA 63 — Transfer of Lease
+## LRA 63: Transfer of Lease
 
 ```
 REPUBLIC OF KENYA
 
 LAND REGISTRATION ACT, 2012
 
-LRA 63 — TRANSFER OF LEASE
+LRA 63: TRANSFER OF LEASE
 
-[Registry Stamp — for official use]
+[Registry Stamp: for official use]
 
 TITLE NO. / LEASE NO.: ____________________________________________
 
@@ -123,7 +123,7 @@ Date of Payment: [DATE]
 
 EXECUTION BY ASSIGNOR:
 
-[Same individual / company execution blocks as LRA 33 — see lra33-transfer.md]
+[Same individual / company execution blocks as LRA 33: see lra33-transfer.md]
 
 ---
 
@@ -139,14 +139,14 @@ SPOUSAL CONSENT (s.45 LRA 2012):
 
 ---
 
-LODGEMENT CHECKLIST (remove before filing — for office use):
+LODGEMENT CHECKLIST (remove before filing, for office use):
 
-[ ] LRA 9 (General Application) — quadruplicate
-[ ] LRA 63 — two counterparts (Reg. 22)
+[ ] LRA 9 (General Application): quadruplicate
+[ ] LRA 63: two counterparts (Reg. 22)
 [ ] Original Certificate of Lease
-[ ] Stamped instrument (stamp duty paid — KRA iTax)
-[ ] NLC Consent (MANDATORY for leasehold — original)
-[ ] Land Rent Clearance Certificate (MANDATORY — s.55(b) LRA)
+[ ] Stamped instrument (stamp duty paid: KRA iTax)
+[ ] NLC Consent (MANDATORY for leasehold: original)
+[ ] Land Rent Clearance Certificate (MANDATORY: s.55(b) LRA)
 [ ] Rates Clearance Certificate (valid 21+ days)
 [ ] Assignee: National ID copy (certified)
 [ ] Assignee: KRA PIN copy
@@ -155,7 +155,7 @@ LODGEMENT CHECKLIST (remove before filing — for office use):
 [ ] Assignee: Certificate of Incorporation + CR12 (if company)
 [ ] Power of Attorney (LRA 5 or LRA 6) if signing through attorney
 [ ] LRA 58 Discharge of Charge (if leasehold was charged)
-[ ] Registration fee — KES 1,000
+[ ] Registration fee: KES 1,000
 [ ] Spousal Consent (if LRA 10 noted)
 ```
 
@@ -163,8 +163,8 @@ LODGEMENT CHECKLIST (remove before filing — for office use):
 
 ## Drafting Notes
 
-- NLC consent is a hard requirement — there is no exception for leasehold dealings (ss.55–56 LRA). If consent is not obtained, lodgement will be rejected.
-- The assignee takes subject to all covenants in the original head lease — always review the head lease for onerous covenants before advising the client.
+- NLC consent is a hard requirement. There is no exception for leasehold dealings (ss.55–56 LRA). If consent is not obtained, lodgement will be rejected.
+- The assignee takes subject to all covenants in the original head lease. Always review the head lease for onerous covenants before advising the client.
 - If the head lease contains a restriction on alienation (common in Government leases), NLC consent operates as the mechanism to lift that restriction.
 - Land rent clearance certificate: must show all arrears are paid. Obtain this simultaneously with NLC consent.
 - Stamp duty: same rates as freehold (Urban 4%, Rural 2%). Base = higher of consideration or market value.

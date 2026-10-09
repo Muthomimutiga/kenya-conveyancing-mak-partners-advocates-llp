@@ -65,3 +65,8 @@ production.
 - The `__CONV_F_MS_SEARCHEXPIRY__` field only needs a value on the Official Search milestone row; it can be blank on all other milestone rows.
 - All `__CONV_F_*__` tokens are Airtable field IDs (format: `fldXXXXXXXXXXXXXX`), not field names. Use `list_tables_for_base` to discover them.
 - The `__CONV_BASE_ID__` token covers both the Conveyances and Milestones tables (they live in the same base).
+
+---
+
+Known limit: the Tracker and Brief kit (`kit.js`) carries only the older system's transport (`window.cowork.callMcpTool`); under the updated system they open static until the kit gains `window.claude.use('mcp')`.
+

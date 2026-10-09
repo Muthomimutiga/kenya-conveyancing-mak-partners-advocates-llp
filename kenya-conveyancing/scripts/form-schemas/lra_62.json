@@ -1,0 +1,151 @@
+{
+  "form_id": "lra_62",
+  "form_number": "LRA 62",
+  "regulation": "(r. 76(1))",
+  "doc_title": "LEASE",
+  "doc_title_official": "LEASE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-62-LEASE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-62.txt"
+  },
+  "category": "instrument",
+  "when_used": "A lessor leases demised premises to a lessee for a term at a rent, on the registry form lodged for registration against the title.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Lessor",
+    "transferor_single": "Lessor",
+    "transferee": "Lessee",
+    "transferee_single": "Lessee"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Lease",
+      "value_blank": true
+    },
+    {
+      "label": "Lessor",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Lessee",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Demised Premises (details to include as applicable coordinates of the land, the area of the demised premises and the number of the floor. Provide the survey plan registered as provided in the Act)",
+      "value_field": "demised_premises"
+    },
+    {
+      "label": "Term",
+      "value_field": "term"
+    },
+    {
+      "label": "Rent / Stand Premium",
+      "value_field": "rent_or_stand_premium"
+    },
+    {
+      "label": "Service Charge",
+      "value_field": "service_charge"
+    },
+    {
+      "label": "Cadastral Plan of the Demised Premises (where applicable)",
+      "value_field": "cadastral_plan"
+    },
+    {
+      "label": "Sectional Plan(s) of the Demised Premises (where applicable)",
+      "value_field": "sectional_plan"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "THIS LEASE witnesses as follows:"
+    },
+    {
+      "type": "plain",
+      "text": "The Lessor as legal and or beneficial owner of the above noted Title HEREBY LEASES to the Lessee the Demised Premises for the Term subject to the payment of the Rent and the Service Charge and subject to the conditions set out in this Lease."
+    },
+    {
+      "type": "plain",
+      "text": "Insert Additional Provisions as required by the law and the contract between the parties including in the case of long term leases provisions on extension of lease and transfer of reversionary interest."
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_provisions}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS this Lease has been duly executed as a deed by the parties hereto the day and year mentioned above."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Lessor",
+    "verification": true,
+    "signed_label": "SIGNED by the"
+  },
+  "registry_block": [
+    "REGISTERED this ………………. day of …………………………. 20…",
+    "Seal…………………………………………………..",
+    "LAND REGISTRAR",
+    "Name:…………………………… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "All parties including the Guarantor(s) must execute.",
+    "Notes:",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "demised_premises",
+      "label": "Demised premises",
+      "prompt": "The premises let, with the coordinates of the land, the area and the floor number where applicable, and the registered survey plan",
+      "required": true
+    },
+    {
+      "name": "term",
+      "label": "Term of the lease",
+      "prompt": "The term granted, with its commencement date, for example five years and six months from 1st October 2026",
+      "required": true
+    },
+    {
+      "name": "rent_or_stand_premium",
+      "label": "Rent or stand premium",
+      "prompt": "The rent or stand premium reserved, and when it is payable",
+      "required": true
+    },
+    {
+      "name": "service_charge",
+      "label": "Service charge",
+      "prompt": "The service charge payable under the lease, if any",
+      "required": false
+    },
+    {
+      "name": "cadastral_plan",
+      "label": "Cadastral plan of the demised premises",
+      "prompt": "The cadastral plan number for the demised premises, where applicable",
+      "required": false
+    },
+    {
+      "name": "sectional_plan",
+      "label": "Sectional plan(s) of the demised premises",
+      "prompt": "The sectional plan number(s) for the demised premises, where applicable",
+      "required": false
+    },
+    {
+      "name": "additional_provisions",
+      "label": "Additional provisions",
+      "prompt": "The additional provisions the law and the contract between the parties require, one per line",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

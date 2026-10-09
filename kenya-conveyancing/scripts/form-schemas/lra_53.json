@@ -1,0 +1,166 @@
+{
+  "form_id": "lra_53",
+  "form_number": "LRA-53",
+  "regulation": "(r. 67(1))",
+  "doc_title": "CHARGE",
+  "doc_title_official": "CHARGE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-53-CHARGE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-53.txt"
+  },
+  "category": "instrument",
+  "when_used": "A chargor charges its interest in a title to a chargee as security for the payment and discharge in full of all monies and liabilities covenanted to be paid under the charge. The chargor is passed as the transferor and the chargee as the transferee, both as company parties, with the chargee's attorneys in its attorneys list, so the chargor seals under its common seal and the chargee signs by its duly authorised attorneys as the official execution prints them.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Chargor",
+    "transferor_single": "Chargor",
+    "transferee": "Chargee",
+    "transferee_single": "Chargee"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Issue:",
+      "value_blank": true
+    },
+    {
+      "label": "The Chargor: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "The Chargee: Give full name(s) and company’s registration number, if any",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Principal Amount:",
+      "value_field": "principal_amount"
+    },
+    {
+      "label": "Borrower Include where lending is to secure a third party. Give full name(s) and if corporate the registration number, if any",
+      "value_field": "borrower_name"
+    },
+    {
+      "label": "Supplemental / Collateral to debenture (delete as appropriate) Insert details of : the principal instrument(s); amount secured; duty paid and; stamp duty receipt number.",
+      "value_field": "supplemental_collateral"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "THIS CHARGE witnesses as follows:"
+    },
+    {
+      "type": "plain",
+      "text": "The Chargor as legal and or beneficial owner HEREBY CHARGES to the Chargee the interest of the Chargor in the above Title as [a continuing security/term loan security] for the payment and discharge in full of all monies, obligations and liabilities covenanted to be paid or discharged or otherwise secured by this Charge."
+    },
+    {
+      "type": "plain",
+      "text": "The Chargor hereby authorises the Bank and its agents to register the security created by this Charge in accordance with the provisions of the Land Act, 2012 and the Land Registration Act, 2012 to the satisfaction of the Chargee."
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_provisions}}"
+    },
+    {
+      "type": "plain",
+      "text": "Acknowledgement of Effect of Section 90 of the Land Act, 2012"
+    },
+    {
+      "type": "plain",
+      "text": "Pursuant to the provisions of section 56 of the Land Registration Act, 2012, we, the Chargor hereby acknowledge that we understand the effect of Section 90 of the Land Act, 2012 and the chargee’s remedies under this Charge. This acknowledgement is signed on behalf of the Chargor by the persons witnessing the affixing of the Common Seal of the Chargor to this Charge."
+    },
+    {
+      "type": "plain",
+      "text": "…………………………………................................................"
+    },
+    {
+      "type": "plain",
+      "text": "Director"
+    },
+    {
+      "type": "plain",
+      "text": "………………………………...................................................."
+    },
+    {
+      "type": "plain",
+      "text": "Director/Secretary"
+    },
+    {
+      "type": "plain",
+      "text": "………………………………………………………………...."
+    },
+    {
+      "type": "plain",
+      "text": "Attorneys’ signatures"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this Charge has been duly executed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Chargor",
+    "verification": true,
+    "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act",
+    "company_seal": false
+  },
+  "registry_block": [
+    "REGISTERED this ………………. day of ………………..20....................",
+    "ENTRY in Encumbrances Section Number:…………....................",
+    "Seal……………………………………………….",
+    "LAND REGISTRAR",
+    "Name:………………………………… Registrar’s Stamp / No……………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "All parties including the Borrower(s) must execute.",
+    "Notes:",
+    "* Provide full name(s) and registered number Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.",
+    "*** Attach a survey plan."
+  ],
+  "custom_fields": [
+    {
+      "name": "principal_amount",
+      "label": "Principal amount",
+      "prompt": "The principal amount secured by the charge, in figures and words",
+      "required": true
+    },
+    {
+      "name": "borrower_name",
+      "label": "The Borrower",
+      "prompt": "Full name of the borrower and, if corporate, the registration number, where the lending secures a third party. Leave blank where the chargor is the borrower",
+      "required": false
+    },
+    {
+      "name": "supplemental_collateral",
+      "label": "Supplemental or collateral to a debenture",
+      "prompt": "Details of the principal instrument or instruments, the amount secured, the duty paid and the stamp duty receipt number, where this charge is supplemental or collateral to a debenture",
+      "required": false
+    },
+    {
+      "name": "additional_provisions",
+      "label": "Additional provisions",
+      "prompt": "The additional provisions the law and the contract between the parties require, one paragraph per line",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

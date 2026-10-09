@@ -1,0 +1,230 @@
+{
+  "transaction_id": "transfer_by_personal_representative_to_beneficiary",
+  "name": "Transfer by a personal representative to a beneficiary",
+  "summary": "A sole proprietor or proprietor in common has died. The personal representative, holding a grant, passes the land to the person entitled under the will or on intestacy, either in one step on a confirmed grant (LRA 50) or in two steps: registration of the representative on the grant (LRA 39), then a transfer to the beneficiary after confirmation (LRA 42).",
+  "triggers": [
+    "The registered proprietor has died",
+    "The proprietor held solely or as a proprietor in common, not as a joint proprietor",
+    "A grant of probate or letters of administration has issued",
+    "The transfer is to a beneficiary under the will or on intestacy, not to a purchaser"
+  ],
+  "not_this_if": [
+    {
+      "fact": "The proprietor held as a joint proprietor with a survivor",
+      "use": "removal_of_deceased_joint_proprietor",
+      "why": "Survivorship applies. The surviving proprietor applies to remove the deceased's name rather than taking a transfer from an estate."
+    },
+    {
+      "fact": "The personal representative is selling to a purchaser",
+      "use": "transfer_by_personal_representative_to_purchaser",
+      "why": "LRA 43 is the transfer to a purchaser. LRA 42 is the transfer to a person entitled under a will or on intestacy."
+    }
+  ],
+  "statutory_basis": [
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.61(1)",
+      "quote": "the proprietor's personal representative shall, on application to the Registrar in the prescribed form and on the production to the Registrar of the grant, be entitled to be registered by transmission as proprietor in the place of the deceased",
+      "effect": "The representative may be registered as proprietor in the deceased's place, on the prescribed form and on production of the grant. This is the first step of the two-step route, and the form is LRA 39."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.61(2)",
+      "quote": "Upon confirmation of a grant, and on production of the grant the Registrar may, without requiring the personal representative to be registered, register by transmission",
+      "effect": "Once the grant is confirmed the representative does not have to be registered as proprietor first: the Registrar may register the transmission to the person entitled directly. This is the one-step route, and the form is LRA 50."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.6(3)(a)",
+      "quote": "the transmission of land by virtue of the will or intestacy of a deceased person, unless that transmission would result in the division of the land into two or more parcels to be held under separate titles",
+      "effect": "Transmission on death is outside the consent regime, so a transfer to a single beneficiary of the whole parcel needs no Land Control Board consent. The exception bites the moment the estate is divided into separate titles: then it is a controlled transaction like any other."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.6(1)",
+      "quote": "is void for all purposes unless the land control board for the land control area or division in which the land is situated has given its consent in respect of that transaction in accordance with this Act",
+      "effect": "Where consent is required and not obtained, the transaction is void. Not voidable, and not curable by registration."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.8(1)",
+      "quote": "within six months of the making of the agreement for the controlled transaction",
+      "effect": "Where consent is required, the application runs on a six month clock from the agreement. The High Court may extend it for sufficient reason, which is a remedy and not a plan."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.7",
+      "quote": "that money or consideration shall be recoverable as a debt by the person who paid it from the person to whom it was paid",
+      "effect": "If the transaction becomes void, anything paid is recoverable as a debt. The client's money becomes a claim."
+    },
+    {
+      "act": "Land Control Regulations",
+      "source": "land-control-regulations",
+      "provision": "r.2(1)",
+      "quote": "An application for consent to a controlled transaction shall be in Form 1 in the Schedule and be accompanied by a fee of one thousand shillings",
+      "effect": "The application is a prescribed form with a prescribed fee, not a letter. Regulation 3 then gives the board's consent in Form 2, in duplicate, and the original marked Registration Copy must accompany the instrument when it is presented for registration."
+    }
+  ],
+  "bundle": [
+    {
+      "form_id": "lcb_1",
+      "role": "Application for the consent of the land control board, in the prescribed form",
+      "order": -1,
+      "required": false,
+      "condition": "The land is agricultural, within a land control area, AND this transmission divides it into two or more parcels under separate titles",
+      "why": "Section 8(1) of the Land Control Act requires the application to be made in the prescribed form, which is Form 1 in the Schedule to the Land Control Regulations, in triplicate, with the prescribed fee. A letter of application is not that form. It goes before everything else because without the consent there is no transaction to register."
+    },
+    {
+      "form_id": "lra_9",
+      "role": "Cover application listing the instruments lodged in order of priority",
+      "order": 1,
+      "required": true,
+      "why": "Every instrument presented for registration goes under a general application. In the two-step route, each lodgement has its own."
+    },
+    {
+      "form_id": "lra_50",
+      "role": "Application to be registered as proprietor by transmission: the one-step route",
+      "order": 2,
+      "required": false,
+      "condition": "One-step route: the grant is confirmed and the land passes straight to the person entitled, without registering the representative first",
+      "why": "Section 61(2) lets the Registrar register by transmission on a confirmed grant without requiring the representative to be registered. LRA 50 is the form built for that: it records the date of confirmation and names the person entitled as transferee."
+    },
+    {
+      "form_id": "lra_39",
+      "role": "Transfer to the personal representative as executor or administrator: first step of the two-step route",
+      "order": 2,
+      "required": false,
+      "condition": "Two-step route: the representative is to be registered on the title first, on production of the grant, whether or not it is yet confirmed",
+      "why": "Section 61(1) entitles the representative, on production of the grant, to be registered by transmission in the deceased's place. LRA 39 records the date of the grant and names the representative as transferee."
+    },
+    {
+      "form_id": "lra_42",
+      "role": "Transfer by the personal representative to the person entitled: second step of the two-step route",
+      "order": 3,
+      "required": false,
+      "condition": "Two-step route, after LRA 39 has registered and the grant is confirmed",
+      "why": "The registered representative passes the land to the beneficiary. It is a separate lodgement from LRA 39."
+    },
+    {
+      "form_id": "lra_47",
+      "role": "Statutory declaration in support",
+      "order": 3,
+      "required": false,
+      "condition": "The registry asks for a declaration of the facts of the death, the grant or the identity of the beneficiary",
+      "why": "Practice varies. Some registries want the facts on oath even where the grant is produced."
+    }
+  ],
+  "drafted_together": [
+    {
+      "forms": [
+        "lra_9",
+        "lra_50"
+      ],
+      "why": "One-step route: a single lodgement on the confirmed grant."
+    },
+    {
+      "forms": [
+        "lra_9",
+        "lra_39"
+      ],
+      "why": "Two-step route, first lodgement: the representative is registered on the grant."
+    },
+    {
+      "forms": [
+        "lra_9",
+        "lra_42"
+      ],
+      "why": "Two-step route, second lodgement: after LRA 39 has registered and the grant is confirmed, the representative transfers to the beneficiary."
+    }
+  ],
+  "consents": [
+    {
+      "name": "Land Control Board consent",
+      "when_required": "The land is agricultural and within a land control area, AND this transmission divides it into two or more parcels to be held under separate titles",
+      "when_not_required": "The whole parcel passes to one beneficiary without subdivision, because section 6(3)(a) takes transmission on death outside the consent regime",
+      "authority": "The land control board for the area or division where the land is situated",
+      "provision": "Land Control Act s.6(1) and s.6(3)(a)",
+      "deadline": "Six months from the making of the agreement, extendable by the High Court for sufficient reason",
+      "deadline_provision": "Land Control Act s.8(1)",
+      "consequence_if_missed": "The transaction is void for all purposes under s.6(1), and anything paid becomes recoverable as a debt under s.7. Registration does not cure it."
+    }
+  ],
+  "clearances": [
+    {
+      "name": "Land rent clearance",
+      "authority": "The land registry or the county, depending on tenure",
+      "when_required": "Leasehold from the Government, where rent is payable"
+    },
+    {
+      "name": "Land rates clearance",
+      "authority": "The county government",
+      "when_required": "Where the parcel attracts rates"
+    }
+  ],
+  "sequence": [
+    "Establish whether the grant is confirmed, and put the two routes to the advocate: one step on a confirmed grant (LRA 50), or two steps (LRA 39 on the grant now, then LRA 42 after confirmation). The advocate chooses.",
+    "Establish whether the land is agricultural and within a land control area, and whether the estate is being divided into separate titles. That single question decides whether Board consent is needed at all.",
+    "Obtain consent, if required, and watch the six month clock from the agreement.",
+    "Obtain the clearances that apply to the tenure.",
+    "Draft and lodge the bundle together."
+  ],
+  "traps": [
+    {
+      "trap": "Registering the personal representative first on a confirmed grant without meaning to",
+      "why_wrong": "Section 61(2) makes that step optional once the grant is confirmed: LRA 50 passes the land in one lodgement. The two-step route (LRA 39 then LRA 42) is a legitimate choice, but on a confirmed grant it costs an extra registration, fee and time, so it should be chosen deliberately.",
+      "provision": "Land Registration Act s.61(2)"
+    },
+    {
+      "trap": "Assuming no Land Control Board consent is needed because it is a succession matter",
+      "why_wrong": "True only while the land is not divided. The moment the estate is split into separate titles for two or more beneficiaries, s.6(3)(a) stops protecting it and the transaction is controlled. Getting this wrong makes the transfer void, not merely irregular.",
+      "provision": "Land Control Act s.6(3)(a)"
+    },
+    {
+      "trap": "Using LRA 42 where the transferee is buying",
+      "why_wrong": "LRA 43 is the transfer by a personal representative to a purchaser. LRA 42 is to a person entitled under a will or on intestacy.",
+      "provision": null
+    },
+    {
+      "trap": "Treating a joint proprietorship as an estate matter",
+      "why_wrong": "On the death of a joint proprietor the interest passes by survivorship and the route is the removal of the deceased's name, not a transfer out of an estate.",
+      "provision": "Land Registration Act s.60"
+    }
+  ],
+  "practice_varies": [
+    {
+      "step": "Supporting statutory declaration",
+      "note": "Some registries require a declaration of the facts of death and entitlement even where a confirmed grant is produced. Record what your own registry asks for."
+    },
+    {
+      "step": "Certified copies of the grant",
+      "note": "The number of certified copies wanted with the lodgement differs by registry."
+    },
+    {
+      "step": "One step or two steps",
+      "note": "Two routes, and the advocate on the matter chooses. One step: on a confirmed grant, lodge LRA 9 with LRA 50 and the land passes straight to the beneficiary. Two steps: lodge LRA 9 with LRA 39 on the grant so the representative is registered, then, after confirmation, lodge LRA 9 with LRA 42. The two-step route can begin before confirmation; the transfer to the beneficiary cannot. Weigh the time to confirmation against the extra lodgement, fee and delay."
+    }
+  ],
+  "milestone": 7,
+  "verified_by": {
+    "status": "APPROVED",
+    "by": "Robin Muthomi Mutiga, Advocate",
+    "date": "2026-09-23",
+    "note": "Bundles, sequence, alternatives and traps approved. Every statutory quote is proved against cached primary law by scripts/procedures/lint.js on each build; the readings remain ED's, approved by the advocate above. 2026-09-28: Robin directed that the LRA 42 timing on an unconfirmed grant be put to the advocate as two routes, not decided by the plugin. 2026-09-28: Robin agreed the supporting declaration is LRA 47 (general form of statutory declaration), not LRA 16 (lost-title declaration). 2026-09-28: Robin chose option (a), following the Ministry's forms: two-step route LRA 39 then LRA 42 after confirmation; one-step route on a confirmed grant LRA 50. Replaces the 23 Sep bundle of LRA 9 + LRA 42 under s.61(2)."
+  },
+  "alternatives": [
+    {
+      "choose_between": [
+        "lra_50",
+        "lra_39"
+      ],
+      "decided_by": "Whether the advocate takes the one-step route on a confirmed grant (LRA 50) or registers the representative first (LRA 39, then LRA 42 after confirmation)",
+      "why": "Both are routes the Act provides: section 61(2) for one step on a confirmed grant, section 61(1) for registering the representative on the grant. The advocate on the matter chooses; the plugin does not."
+    }
+  ]
+}

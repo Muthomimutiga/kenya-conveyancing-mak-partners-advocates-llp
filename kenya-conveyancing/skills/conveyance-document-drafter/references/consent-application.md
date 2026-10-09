@@ -1,20 +1,20 @@
-# Consent Applications — Templates
+# Consent Applications: Templates
 
 Two templates in this file:
-1. LCB Consent Application (agricultural land — Land Control Act Cap. 302)
-2. Lessor's Consent Application (leasehold — to the County Government or the Cabinet Secretary as lessor; required where the lease contains a covenant against alienation without consent, s.55 Land Registration Act 2012)
+1. LCB Consent Application (agricultural land, Land Control Act Cap. 302)
+2. Lessor's Consent Application (leasehold: to the County Government or the Cabinet Secretary as lessor; required where the lease contains a covenant against alienation without consent, s.55 Land Registration Act 2012)
 
-Both are **Category A — Letterhead Documents.**
+Both are **Category A: Letterhead Documents.**
 
 ---
 
-## Template 1 — LCB Consent Application (Agricultural Land)
+## Template 1: LCB Consent Application (Agricultural Land)
 
-**Output Category:** `[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Output Category:** `[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Lexend 12pt, single spaced, justified.
+**Typography:** the firm's correspondence font (`font_correspondence` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
-**When to use:** The land is outside a municipality, township, or gazetted non-agricultural area AND is used for agricultural purposes. If in doubt, apply for LCB consent — the cost of refusal at the registry (void transaction) far exceeds the cost of an unnecessary application.
+**When to use:** The land is outside a municipality, township, or gazetted non-agricultural area AND is used for agricultural purposes. If in doubt, apply for LCB consent. The cost of refusal at the registry (void transaction) far exceeds the cost of an unnecessary application.
 
 **Statutory basis:** s.6 Land Control Act Cap. 302. Without LCB consent, any controlled dealing in agricultural land is VOID for all purposes. Apply within SIX MONTHS of the date of the agreement (s.8(1) Land Control Act); failure renders the controlled transaction void, subject only to High Court extension for sufficient reason.
 
@@ -22,7 +22,7 @@ Both are **Category A — Letterhead Documents.**
 
 ```
 ══════════════════════════════════════════════════════════
-[PRINT ON FIRM LETTERHEAD — MAK & PARTNERS ADVOCATES LLP]
+[PRINT ON FIRM LETTERHEAD: MAK & PARTNERS ADVOCATES LLP]
 ══════════════════════════════════════════════════════════
 
 [DATE]
@@ -48,7 +48,7 @@ PARTICULARS OF THE PROPOSED DEALING
 
 1. Nature of transaction: Sale and Transfer of freehold agricultural land
 
-2. Property: [FULL PROPERTY DESCRIPTION — LR No., physical location,
+2. Property: [FULL PROPERTY DESCRIPTION: LR No., physical location,
    area, county/district]
 
 3. Vendor: [VENDOR FULL NAME(S)], holding National Identity Card No.
@@ -60,10 +60,10 @@ PARTICULARS OF THE PROPOSED DEALING
 5. Purchase price: Kenya Shillings [PURCHASE PRICE IN WORDS]
    (Kshs. [PURCHASE PRICE IN FIGURES])
 
-6. Current use of the land: [STATE USE — e.g., "mixed farming / coffee
+6. Current use of the land: [STATE USE, e.g., "mixed farming / coffee
    farming / smallholder agriculture"]
 
-7. Intended use by Purchaser: [STATE INTENDED USE — e.g., "continued
+7. Intended use by Purchaser: [STATE INTENDED USE, e.g., "continued
    agricultural use / residential development after obtaining necessary
    approvals"]
 
@@ -80,31 +80,31 @@ the earliest opportunity.
 Yours faithfully,
 
 _______________________
-[NAME OF SIGNING ADVOCATE — e.g. KEN ASHIMOSI]
+[SIGNING ADVOCATE]
 MAK & PARTNERS ADVOCATES LLP
 ADVOCATES FOR THE PARTIES
 ```
 
 ---
 
-## Template 2 — Lessor's Consent Application (Leasehold)
+## Template 2: Lessor's Consent Application (Leasehold)
 
-**Output Category:** `[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Output Category:** `[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Lexend 12pt, single spaced, justified.
+**Typography:** the firm's correspondence font (`font_correspondence` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
-**When to use:** The land is leasehold (Government or county leasehold) AND the lease contains a covenant (express or implied) against transfer/charge/sublease without the lessor's consent. Consent is conditional on that anti-alienation covenant — check the lease and the official search note before assuming consent is needed; it is not automatic for all leasehold dealings (s.55 LRA is conditional). Where consent is required, it is sought from the lessor: post-2016 that is the County Government or the relevant Cabinet Secretary (Lands office), not the National Land Commission. The Commissioner of Lands route is historical. Also request the Land Rent Clearance Certificate simultaneously.
+**When to use:** The land is leasehold (Government or county leasehold) AND the lease contains a covenant (express or implied) against transfer/charge/sublease without the lessor's consent. Consent is conditional on that anti-alienation covenant. Check the lease and the official search note before assuming consent is needed; it is not automatic for all leasehold dealings (s.55 LRA is conditional). Where consent is required, it is sought from the lessor: post-2016 that is the County Government or the relevant Cabinet Secretary (Lands office), not the National Land Commission. The Commissioner of Lands route is historical. Also request the Land Rent Clearance Certificate simultaneously.
 
 **Statutory basis:** s.55 Land Registration Act 2012 (lessor's consent where the lease so requires) + Land Act 2012. Direct the application to the County Government or the Cabinet Secretary as lessor, as applicable.
 
 ```
 ══════════════════════════════════════════════════════════
-[PRINT ON FIRM LETTERHEAD — MAK & PARTNERS ADVOCATES LLP]
+[PRINT ON FIRM LETTERHEAD: MAK & PARTNERS ADVOCATES LLP]
 ══════════════════════════════════════════════════════════
 
 [DATE]
 
-[THE LESSOR — direct to the County Government (e.g. "The County Secretary,
+[THE LESSOR: direct to the County Government (e.g. "The County Secretary,
 [COUNTY] County Government, Department of Lands") or to the Cabinet Secretary
 responsible for Lands (e.g. "The Cabinet Secretary, Ministry of Lands, Ardhi
 House, 1st Ngong Avenue, P.O. Box 30450-00100, Nairobi"), as the lessor of
@@ -133,7 +133,7 @@ PARTICULARS OF THE PROPOSED DEALING
 
 1. Nature of transaction: Assignment / Transfer of leasehold interest
 
-2. Property: [FULL LEASEHOLD TITLE DESCRIPTION — Title No., LR No., or
+2. Property: [FULL LEASEHOLD TITLE DESCRIPTION: Title No., LR No., or
    Plot No.; physical location; county; area]
 
 3. Original Lease: dated [DATE], for a term of [LEASE TERM] years from
@@ -179,7 +179,7 @@ ADVOCATES FOR THE PARTIES
 
 ## Drafting Notes
 
-- **LCB:** Determine which District Land Control Board has jurisdiction — it is the board for the district where the land is situated, not where the applicant lives.
+- **LCB:** Determine which District Land Control Board has jurisdiction. It is the board for the district where the land is situated, not where the applicant lives.
 - **Lessor's consent (leasehold):** Direct it to the lessor. Post-2016 that is the County Government or the Cabinet Secretary responsible for Lands, not the National Land Commission (the Commissioner of Lands / NLC route is historical). Confirm the specific Lands office for the county where the land sits.
 - **Both consents:** Apply immediately on receiving instructions. Both the LCB (agricultural) and the lessor's consent (leasehold) have processing timelines that drive the overall matter timeline.
 - **Dual application:** Apply for the Land Rent Clearance Certificate simultaneously with the lessor's consent. They are typically processed together and require the same documents.

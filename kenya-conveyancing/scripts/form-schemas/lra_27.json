@@ -1,0 +1,157 @@
+{
+  "form_id": "lra_27",
+  "form_number": "LRA-27",
+  "regulation": "(r. 43(2)(b), 44(2)(f), 45(2)(e))",
+  "regulation_official": "(r. 43(2(b), 44(2)(f), 45(2)(e))",
+  "doc_title": "MUTATION FORM",
+  "doc_title_official": "MUTATION FORM",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-27-MUTATION-FORM.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-27.txt"
+  },
+  "category": "application",
+  "when_used": "The registered proprietors instruct a surveyor to subdivide, re-parcel, combine, partition or change the boundaries of the parcels in a title, and sign Part A of the form while the surveyor completes Part B, the Government Surveyor Part C and the Land Registrar Part D.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Proprietor(s)",
+    "transferor_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": [
+    "(This form is to be completed in triplicate.)",
+    "Part A: Title Details and Registered Proprietor(s) instructions to the Surveyor",
+    "TITLE NUMBER(S): {{property_lr_no}}"
+  ],
+  "title_label": "TITLE NUMBER(S)",
+  "detail_rows": [
+    {
+      "label": "Registered Proprietor(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Address",
+      "value_field": "proprietors_address"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "table",
+      "columns": [
+        "Title No.",
+        "Approximate Area (Hectares)",
+        "Cadastral Map Sheet No."
+      ],
+      "rows_field": "parcel_schedule"
+    },
+    {
+      "type": "plain",
+      "text": "Instructions of Registered Proprietor(s) to the Surveyor*"
+    },
+    {
+      "type": "plain",
+      "text": "The Proprietor(s) of the above noted Parcel(s) HEREBY instructs the Surveyor to carry out the following (tick as appropriate):"
+    },
+    {
+      "type": "plain",
+      "text": "Subdivide the parcel as shown on page two/as per attached approved scheme plan"
+    },
+    {
+      "type": "plain",
+      "text": "Re-parcel the parcels noted above as shown on page two/as per attached approved scheme plan"
+    },
+    {
+      "type": "plain",
+      "text": "Combine the parcels noted above as shown on page two/as per attached approved scheme plan."
+    },
+    {
+      "type": "plain",
+      "text": "Partition the parcel noted above as shown on page two/as per attached approved scheme plan."
+    },
+    {
+      "type": "plain",
+      "text": "Change the common boundaries of the parcels noted above as shown on page two/as per attached approved scheme plan."
+    },
+    {
+      "type": "plain",
+      "text": "The boundaries are to be surveyed according to the area(s) as shown on page two/as per attached approved scheme plan."
+    },
+    {
+      "type": "plain",
+      "text": "The boundaries are to be surveyed as they exist on the ground as shown on page two/as per attached approved scheme plan."
+    },
+    {
+      "type": "plain",
+      "text": "(An Approved Scheme Plan may be attached)"
+    },
+    {
+      "type": "plain",
+      "text": "Name ………………………… ID No. …………… Signature/Thumb Print ……………."
+    },
+    {
+      "type": "plain",
+      "text": "Name ………………………... ID No. …………… Signature/Thumb Print ……………"
+    },
+    {
+      "type": "plain",
+      "text": "Name ………………………... ID No. …………… Signature/Thumb Print ……………"
+    },
+    {
+      "type": "plain",
+      "text": "Name ………………………... ID No. …………… Signature/Thumb Print ……………"
+    },
+    {
+      "type": "plain",
+      "text": "Name ……………………….. ID No. …………… Signature/Thumb Print ……………"
+    },
+    {
+      "type": "plain",
+      "text": "Certificate of Verification"
+    },
+    {
+      "type": "plain",
+      "text": "CERTIFY that the above-named Proprietor(s) appeared before me on the ….……. day of ….……………… 20……. and being known to me/being identified by"
+    },
+    {
+      "type": "plain",
+      "text": "…………………………………………… of ………………....................... acknowledged the above signature(s) or mark(s) to be his/hers/theirs and that he/she/they had freely and voluntarily executed this instrument ."
+    }
+  ],
+  "execution": {
+    "mode": "none",
+    "signer": "transferor",
+    "signer_label": "Proprietor(s)"
+  },
+  "registry_block": [
+    "Part D: Registration by the Land Registrar",
+    "REGISTERED this ….….day…………..............................20............................",
+    "Entry No…………………………………….Property Section.",
+    "Name of Land Registrar:……………………………….…………..........…….",
+    "Signature and Number of Land Registrar………………….…………………",
+    "Seal of the Land Registry......................"
+  ],
+  "foot_notes": [
+    "*The person certifying should be a Surveyor or an Advocate of the High Court of Kenya or Licensed Physical Planner"
+  ],
+  "custom_fields": [
+    {
+      "name": "proprietors_address",
+      "label": "Address of the registered proprietor(s)",
+      "prompt": "Postal address of the registered proprietor or proprietors, as the title carries it",
+      "required": true
+    },
+    {
+      "name": "parcel_schedule",
+      "label": "Schedule of the parcels",
+      "prompt": "One row per line, cells separated by a pipe: title number | approximate area in hectares | cadastral map sheet number",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": false
+}

@@ -1,0 +1,1723 @@
+{
+  "built": "2026-10-09",
+  "forms": [
+    {
+      "form_id": "lcb_1",
+      "form_number": "1",
+      "doc_title": "APPLICATION FOR CONSENT OF LAND CONTROL BOARD",
+      "regulation": "(r. 2)",
+      "party_roles": {
+        "transferor": "Present registered holders of interest",
+        "transferor_single": "Present registered holder of interest",
+        "transferee": "Proposed purchasers or transferees",
+        "transferee_single": "Proposed purchaser or transferee"
+      },
+      "category": "application",
+      "party_mode": "two_party",
+      "when_used": "Applies to the land control board for consent to a controlled transaction in agricultural land within a land control area. Section 6(1) of the Land Control Act makes the transaction void for all purposes without that consent, and section 8(1) requires the application within six months of the agreement, in this prescribed form.",
+      "custom_fields": [
+        "land_control_board",
+        "vendor_nationality",
+        "vendor_address",
+        "purchaser_nationality",
+        "purchaser_address",
+        "transaction_nature",
+        "acreage",
+        "county",
+        "purchase_price_figures",
+        "official_reference",
+        "purchaser_company_particulars",
+        "purchaser_certificate_no",
+        "transaction_term",
+        "rent",
+        "gift_value",
+        "loan_amount",
+        "interest_rate",
+        "crops_information",
+        "improvements",
+        "other_consideration",
+        "development_programme",
+        "intends_to_reside",
+        "other_land_parcels",
+        "other_land_acreage",
+        "other_land_owner",
+        "other_land_interest",
+        "other_land_contiguous",
+        "disposed_land_parcels",
+        "disposed_land_district",
+        "disposed_land_acres",
+        "farming_experience"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_5",
+      "form_number": "LRA-5",
+      "doc_title": "GENERAL POWER OF ATTORNEY",
+      "regulation": "(r. 17)",
+      "party_roles": {
+        "transferor": "Donor",
+        "transferor_single": "Donor",
+        "transferee": "Donee",
+        "transferee_single": "Donee"
+      },
+      "category": "deed",
+      "party_mode": "two_party",
+      "when_used": "A registered proprietor appoints an attorney to do anything in relation to the proprietor's interest in a title that the proprietor could do.",
+      "custom_fields": [
+        "donor_pin",
+        "donee_registration_no",
+        "donee_postal_address",
+        "donee_address_for_service",
+        "donee_tel_no",
+        "donee_email_address"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_6",
+      "form_number": "LRA 6",
+      "doc_title": "SPECIFIC POWER OF ATTORNEY",
+      "regulation": "(r. 18)",
+      "party_roles": {
+        "transferor": "Donor",
+        "transferor_single": "Donor",
+        "transferee": "Donee",
+        "transferee_single": "Donee"
+      },
+      "category": "deed",
+      "party_mode": "two_party",
+      "when_used": "A registered proprietor appoints an attorney to do only the specific acts listed in the form in relation to the proprietor's interest in a title.",
+      "custom_fields": [
+        "donor_pin",
+        "donee_registration_no",
+        "donee_postal_address",
+        "donee_address_for_service",
+        "donee_tel_no",
+        "donee_email_address",
+        "specific_powers"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_7",
+      "form_number": "LRA-7",
+      "doc_title": "IRREVOCABLE POWER OF ATTORNEY",
+      "regulation": "(r. 19)",
+      "party_roles": {
+        "transferor": "Donor",
+        "transferor_single": "Donor",
+        "transferee": "Donee",
+        "transferee_single": "Donee"
+      },
+      "category": "deed",
+      "party_mode": "two_party",
+      "when_used": "A registered proprietor grants an attorney a power that cannot be revoked, for value received from the Donee.",
+      "custom_fields": [
+        "donor_pin",
+        "donee_registration_no",
+        "donee_postal_address",
+        "donee_address_for_service",
+        "donee_tel_no",
+        "donee_email_address",
+        "consideration"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_8",
+      "form_number": "LRA 8",
+      "doc_title": "NOTICE OF REVOCATION OF A POWER OF ATTORNEY",
+      "regulation": "(r. 20)",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant",
+        "transferee": "Donee",
+        "transferee_single": "Donee"
+      },
+      "category": "notice",
+      "party_mode": "two_party",
+      "when_used": "Tells the land registry that a power of attorney entered in the register of powers of attorney has been revoked.",
+      "custom_fields": [
+        "applicant_pin",
+        "donee_pin",
+        "registered_proprietor_donor",
+        "power_of_attorney_number",
+        "supporting_documents"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_9",
+      "form_number": "LRA 9",
+      "doc_title": "GENERAL APPLICATION FOR REGISTRATION",
+      "regulation": "(r. 21(2), 22(1)(d), 70(1) and 71(1))",
+      "party_roles": {
+        "transferor": "Presentor",
+        "transferor_single": "Presentor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "Accompanies every instrument presented for registration, listing the instruments lodged in their order of priority and the documents enclosed with them.",
+      "custom_fields": [
+        "instruments_presented",
+        "enclosed_documents",
+        "presentor_name",
+        "presentor_postal_address",
+        "presentor_tel_no",
+        "presentor_email",
+        "special_instructions"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_10",
+      "form_number": "LRA 10",
+      "doc_title": "APPLICATION TO BE NOTED IN THE REGISTER AS A SPOUSE",
+      "regulation": "(r. 23(2))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "A spouse of the registered proprietor applies to have the spousal interest noted in the register of the title.",
+      "custom_fields": [
+        "registered_proprietor",
+        "applicant_address_for_service",
+        "applicant_email",
+        "applicant_telephone",
+        "declarant_name",
+        "proprietor_spouse_of",
+        "marriage_certificate_date",
+        "marriage_law",
+        "further_supporting_document",
+        "declaration_text"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_12",
+      "form_number": "LRA-12",
+      "doc_title": "APPLICATION FOR REPLACEMENT CERTIFICATE OF TITLE/LEASE ON LOSS/DESTRUCTION OF A PREVIOUS TITLE",
+      "regulation": "(r. 27(1), 31(3))",
+      "party_roles": {
+        "transferor": "Proprietor",
+        "transferor_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The registered proprietor applies for a replacement certificate of title or lease after the original has been lost or destroyed.",
+      "custom_fields": [],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_14",
+      "form_number": "LRA 14",
+      "doc_title": "APPLICATION FOR RECONSTRUCTION OF A LAND REGISTER",
+      "regulation": "(r. 28(1), 29(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The registered proprietor, or a person entitled under the law, applies for the reconstruction of a land register that has been lost or destroyed.",
+      "custom_fields": [
+        "applicant_address",
+        "applicant_email",
+        "applicant_telephone",
+        "registered_proprietor_name",
+        "registered_proprietor_address",
+        "registered_proprietor_id",
+        "basis_of_entitlement",
+        "declarant_name"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_15",
+      "form_number": "LRA-15",
+      "doc_title": "STATUTORY DECLARATION BY A BODY CORPORATE",
+      "regulation": "(r. 28(2), 29(2))",
+      "party_roles": {
+        "transferor": "Declarant",
+        "transferor_single": "Declarant"
+      },
+      "category": "declaration",
+      "party_mode": "single_party",
+      "when_used": "A director swears for a company that its certificate of title or lease has been lost or destroyed, in support of an application for a replacement.",
+      "custom_fields": [
+        "declarant_name",
+        "declarant_id_number",
+        "declarant_postal_address",
+        "company_name",
+        "company_address",
+        "company_registration_no",
+        "exhibit_mark_search",
+        "land_registry",
+        "search_date",
+        "exhibit_mark_abstract",
+        "cause_of_destruction"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_16",
+      "form_number": "LRA-16",
+      "doc_title": "STATUTORY DECLARATION BY A NATURAL PERSON",
+      "regulation": "(r. 28(3), 29(3))",
+      "party_roles": {
+        "transferor": "Declarant",
+        "transferor_single": "Declarant"
+      },
+      "category": "declaration",
+      "party_mode": "single_party",
+      "when_used": "Supports an application for a replacement certificate of title or lease that has been lost or destroyed.",
+      "custom_fields": [
+        "declarant_name",
+        "declarant_po_box",
+        "sworn_at"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_17",
+      "form_number": "LRA 17",
+      "doc_title": "DEED OF INDEMNITY",
+      "regulation": "(r. 28(4), 29(4))",
+      "party_roles": {
+        "transferor": "Owner",
+        "transferor_single": "Owner"
+      },
+      "category": "deed",
+      "party_mode": "single_party",
+      "when_used": "A company that is the registered proprietor indemnifies the Government against loss arising from the reconstruction of a deed file the land registry cannot trace, and seals the deed under its common seal.",
+      "custom_fields": [
+        "owner_po_box"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_19",
+      "form_number": "LRA 19",
+      "doc_title": "APPLICATION FOR ISSUE OF A CERTIFICATE OF TITLE/LEASE*",
+      "regulation": "(r. 30(1))",
+      "party_roles": {
+        "transferor": "Proprietor",
+        "transferor_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The registered proprietor applies to the Land Registrar for the issue of a certificate of title or a certificate of lease.",
+      "custom_fields": [
+        "declarant_name"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_23",
+      "form_number": "LRA 23",
+      "doc_title": "APPLICATION BY AN INTERESTED PERSON TO ASCERTAIN AND FIX THE BOUNDARIES OF LAND",
+      "regulation": "(r. 40(1), 41(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The registered proprietor or an interested person asks the Land Registrar to ascertain and fix the boundaries of a parcel of land.",
+      "custom_fields": [
+        "adjoining_proprietors",
+        "applicant_address"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_26",
+      "form_number": "LRA 26",
+      "doc_title": "APPLICATION FOR COMBINATION",
+      "regulation": "(r. 43(1))",
+      "party_roles": {
+        "transferor": "Proprietor(s)",
+        "transferor_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The proprietor of two or more parcels registered in the same name applies for them to be combined into one title.",
+      "custom_fields": [
+        "combination_schedule"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_27",
+      "form_number": "LRA-27",
+      "doc_title": "MUTATION FORM",
+      "regulation": "(r. 43(2)(b), 44(2)(f), 45(2)(e))",
+      "party_roles": {
+        "transferor": "Proprietor(s)",
+        "transferor_single": "Proprietor"
+      },
+      "regulation_official": "(r. 43(2(b), 44(2)(f), 45(2)(e))",
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The registered proprietors instruct a surveyor to subdivide, re-parcel, combine, partition or change the boundaries of the parcels in a title, and sign Part A of the form while the surveyor completes Part B, the Government Surveyor Part C and the Land Registrar Part D.",
+      "custom_fields": [
+        "proprietors_address",
+        "parcel_schedule"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_28",
+      "form_number": "LRA 28",
+      "doc_title": "APPLICATION FOR REPARCELLATION",
+      "regulation": "(r. 44(1))",
+      "party_roles": {
+        "transferor": "Applicants",
+        "transferor_single": "Applicant",
+        "transferee": "Applicants",
+        "transferee_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "two_party",
+      "when_used": "Two or more proprietors apply for their parcels to be re-parcelled into new parcels on a fresh cadastral plan.",
+      "custom_fields": [
+        "reparcellation_schedule"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_29",
+      "form_number": "LRA-29",
+      "doc_title": "APPLICATION FOR PARTITION",
+      "regulation": "(r. 45(1))",
+      "party_roles": {
+        "transferor": "Proprietors",
+        "transferor_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "Proprietors holding land in common apply for the land to be partitioned between them into separate parcels.",
+      "custom_fields": [
+        "proprietors_details",
+        "partition_schedule"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_30",
+      "form_number": "LRA 30",
+      "doc_title": "APPLICATION FOR PARTITION PURSUANT TO AN ORDER OF THE REGISTRAR",
+      "regulation": "(r. 46(1))",
+      "party_roles": {
+        "transferor": "Proprietor (s)",
+        "transferor_single": "Proprietor (s)"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "Tenants in common apply for the land to be partitioned in the manner a court order or an order of the Registrar directs.",
+      "custom_fields": [
+        "tenants_details",
+        "applicant_names",
+        "partition_schedule"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_32",
+      "form_number": "LRA-32",
+      "doc_title": "FORM OF CONSENT OF A CHARGEE TO A PARTITION",
+      "regulation": "(r. 47)",
+      "party_roles": {
+        "transferor": "Chargee",
+        "transferor_single": "Chargee",
+        "transferee": "Proprietor(s)",
+        "transferee_single": "Proprietor"
+      },
+      "category": "consent",
+      "party_mode": "two_party",
+      "when_used": "A chargee consents to the partition of the charged land so that the partition can be registered on the title.",
+      "custom_fields": [
+        "charge_date",
+        "charge_entry_number",
+        "partition_schedule"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_33",
+      "form_number": "LRA 33",
+      "doc_title": "TRANSFER OF INTEREST IN LAND",
+      "regulation": "(r. 49(1))",
+      "category": "instrument",
+      "party_mode": "two_party",
+      "custom_fields": [],
+      "pairs_with_lra9": true,
+      "party_roles": {
+        "transferor": "Transferor(s)",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee(s)",
+        "transferee_single": "Transferee"
+      },
+      "when_used": "Transfers a registered interest in land from the transferor to the transferee for registration at the land registry.",
+      "builder": "custom"
+    },
+    {
+      "form_id": "lra_34",
+      "form_number": "LRA 34",
+      "doc_title": "CONSENT BY THE ENCUMBRANCER TO TRANSFER",
+      "regulation": "(r. 50)",
+      "party_roles": {
+        "transferor": "Encumbrancer",
+        "transferor_single": "Encumbrancer"
+      },
+      "category": "consent",
+      "party_mode": "single_party",
+      "when_used": "The holder of an encumbrance over a title consents to a transfer of that title so that the transfer can be registered.",
+      "custom_fields": [
+        "encumbrancer_po_box"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_35",
+      "form_number": "LRA-35",
+      "doc_title": "TRANSFER OF UNDIVIDED SHARE",
+      "regulation": "(r. 51(1))",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "One of several registered proprietors transfers an undivided share in the title, leaving the continuing proprietors on the register.",
+      "custom_fields": [
+        "registered_proprietors",
+        "undivided_share_transferred",
+        "continuing_proprietors",
+        "additional_provisions",
+        "tenancy_in_common_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_36",
+      "form_number": "LRA-36",
+      "doc_title": "TRANSFER OF JOINT INTEREST",
+      "regulation": "(r. 52(1))",
+      "party_roles": {
+        "transferor": "Transferors",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "Joint proprietors transfer the whole of their right title and interest in a title to a transferee, who takes it jointly or in common.",
+      "custom_fields": [
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_37",
+      "form_number": "LRA-37",
+      "doc_title": "APPLICATION FOR SEVERANCE OF JOINT OWNERSHIP",
+      "regulation": "(r. 53(1))",
+      "party_roles": {
+        "transferor": "Joint Proprietors",
+        "transferor_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "Joint proprietors apply to sever the joint proprietorship and to be registered instead as proprietors in common in stated undivided shares.",
+      "custom_fields": [
+        "joint_proprietors_addresses",
+        "share_proprietor_1",
+        "share_proprietor_2",
+        "share_proprietor_3",
+        "share_proprietor_4",
+        "additional_provisions"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_38",
+      "form_number": "LRA 38",
+      "doc_title": "APPLICATION FOR THE REMOVAL OF THE NAME OF A DECEASED JOINT PROPRIETOR FROM THE REGISTER",
+      "regulation": "(r. 54(1))",
+      "party_roles": {
+        "transferor": "Surviving Joint Proprietor(s)",
+        "transferor_single": "surviving Joint Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The surviving joint proprietors apply to have a deceased joint proprietor's name removed from the register so that they alone remain registered.",
+      "custom_fields": [
+        "joint_proprietors_on_register",
+        "applicant_addresses",
+        "deceased_joint_proprietor"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_39",
+      "form_number": "LRA-39",
+      "doc_title": "TRANSFER TO THE PERSONAL REPRESENTATIVE AS EXECUTOR/ADMINISTRATOR",
+      "regulation": "(r. 56(1))",
+      "party_roles": {
+        "transferor": "Transferor(s)",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee(s)",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "The interest of a deceased proprietor is transmitted to the personal representative who holds it as executor or administrator of the estate.",
+      "custom_fields": [
+        "deceased_name",
+        "date_of_grant",
+        "nature_of_interest",
+        "additional_provisions"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_40",
+      "form_number": "LRA 40",
+      "doc_title": "APPLICATION FOR REGISTRATION AS PROPRIETOR JOINTLY WITH OTHER PERSONAL REPRESENTATIVE(S)",
+      "regulation": "(r. 56(3))",
+      "party_roles": {
+        "transferor": "Applicant(s )",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "A personal representative applies to be registered as proprietor jointly with the other personal representatives of a deceased proprietor's estate.",
+      "custom_fields": [
+        "applicant_address",
+        "joint_proprietors_on_register"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_42",
+      "form_number": "LRA 42",
+      "doc_title": "TRANSFER BY PERSONAL REPRESENTATIVE TO PERSON ENTITLED UNDER A WILL OR ON AN INTESTACY",
+      "regulation": "(r. 57(1))",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A personal representative transfers the deceased proprietor's interest to the beneficiary entitled to it under the will or on an intestacy.",
+      "custom_fields": [
+        "deceased_name",
+        "date_of_grant",
+        "date_of_confirmation",
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_43",
+      "form_number": "LRA 43",
+      "doc_title": "TRANSFER BY PERSONAL REPRESENTATIVE TO PURCHASER",
+      "regulation": "(r. 58(1))",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A personal representative sells the deceased proprietor's interest and transfers it to the purchaser.",
+      "custom_fields": [
+        "deceased_name",
+        "date_of_grant",
+        "date_of_confirmation",
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_44",
+      "form_number": "LRA 44",
+      "doc_title": "TRANSFER BY TRUSTEE IN BANKRUPTCY",
+      "regulation": "(r. 59(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "A trustee in bankruptcy applies to be registered as trustee over the bankrupt proprietor's land, attaching the court order.",
+      "custom_fields": [
+        "bankrupt_name",
+        "date_of_court_order"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_45",
+      "form_number": "LRA 45",
+      "doc_title": "TRANSFER BY TRUSTEE ON BANKRUPTCY",
+      "regulation": "(r. 59(2)(b))",
+      "party_roles": {
+        "transferor": "Transferor(s)",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A trustee in bankruptcy who is registered over the bankrupt's land transfers that interest to a transferee.",
+      "custom_fields": [
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_46",
+      "form_number": "LRA-46",
+      "doc_title": "APPLICATION BY A LIQUIDATOR TO BE NOTED IN THE REGISTER",
+      "regulation": "(r. 60(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The liquidator of a proprietor company applies to be noted in the register as proprietor of the company's land.",
+      "custom_fields": [
+        "registered_proprietor"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_47",
+      "form_number": "LRA-47",
+      "doc_title": "GENERAL FORM OF STATUTORY DECLARATION",
+      "regulation": "(r. 60(2)(b)(ii), 63(2)(c))",
+      "party_roles": {
+        "transferor": "Declarant",
+        "transferor_single": "Declarant"
+      },
+      "category": "declaration",
+      "party_mode": "single_party",
+      "when_used": "A declarant sets out facts on oath in support of an application to the land registry, in the declarant's own words.",
+      "custom_fields": [
+        "declarant_name"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_48",
+      "form_number": "LRA-48",
+      "doc_title": "TRANSFER OF LAND BY A LIQUIDATOR",
+      "regulation": "(r. 59(3))",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "The liquidator of a company in liquidation transfers the company's right title and interest in a title to a transferee.",
+      "custom_fields": [
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_49",
+      "form_number": "LRA-49",
+      "doc_title": "TRANSFER by COMPANIES AND LIMITED LIABILITY PARTNERSHIPS",
+      "regulation": "(r. 60)",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A company or limited liability partnership that is the registered proprietor transfers its whole interest in a title.",
+      "custom_fields": [
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_50",
+      "form_number": "LRA 50",
+      "doc_title": "APPLICATION TO BE REGISTERED AS PROPRIETOR BY TRANSMISSION",
+      "regulation": "(r. 62(1))",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "application",
+      "party_mode": "two_party",
+      "when_used": "A personal representative transmits a deceased proprietor's interest in a title to the person entitled to it under the estate.",
+      "custom_fields": [
+        "deceased_proprietor",
+        "date_of_grant",
+        "date_of_confirmation",
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_51",
+      "form_number": "LRA 51",
+      "doc_title": "APPLICATION TO BE REGISTERED AS A TRUSTEE",
+      "regulation": "(r. 64(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "A trustee applies to be registered as trustee of land held for a beneficiary.",
+      "custom_fields": [
+        "trust_beneficiary"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_52",
+      "form_number": "LRA-52",
+      "doc_title": "TRANSFER OF LAND BY A TRUSTEE",
+      "regulation": "(r. 66)",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A trustee registered as proprietor transfers the right title and interest held on trust to a transferee.",
+      "custom_fields": [
+        "additional_provisions",
+        "undivided_shares"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_53",
+      "form_number": "LRA-53",
+      "doc_title": "CHARGE",
+      "regulation": "(r. 67(1))",
+      "party_roles": {
+        "transferor": "Chargor",
+        "transferor_single": "Chargor",
+        "transferee": "Chargee",
+        "transferee_single": "Chargee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargor charges its interest in a title to a chargee as security for the payment and discharge in full of all monies and liabilities covenanted to be paid under the charge. The chargor is passed as the transferor and the chargee as the transferee, both as company parties, with the chargee's attorneys in its attorneys list, so the chargor seals under its common seal and the chargee signs by its duly authorised attorneys as the official execution prints them.",
+      "custom_fields": [
+        "principal_amount",
+        "borrower_name",
+        "supplemental_collateral",
+        "additional_provisions"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_54",
+      "form_number": "LRA 54",
+      "doc_title": "INFORMAL CHARGE",
+      "regulation": "(r. 67(2))",
+      "party_roles": {
+        "transferor": "Chargee",
+        "transferor_single": "Chargee",
+        "transferee": "Chargor(s)",
+        "transferee_single": "Chargor"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargor charges its interest in a title to a chargee by way of informal charge, depositing the documents of title with the chargee as security for all monies covenanted to be paid. The chargee is passed as the transferor and the chargor as the transferee, because the official execution prints the chargee first: it is passed as a company party with its attorneys, seals under its common seal and then signs by those attorneys, while the chargor and the borrower sign as natural persons.",
+      "custom_fields": [
+        "principal_amount",
+        "borrower_name",
+        "supplemental_collateral",
+        "documents_deposited",
+        "additional_provisions"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_55",
+      "form_number": "LRA 55",
+      "doc_title": "CONSENT FOR SECOND OR SUBSEQUENT CHARGE",
+      "regulation": "(r. 69, 70(2)(c))",
+      "party_roles": {
+        "transferor": "Chargee",
+        "transferor_single": "Chargee",
+        "transferee": "Chargor(s)",
+        "transferee_single": "Chargor"
+      },
+      "category": "consent",
+      "party_mode": "two_party",
+      "when_used": "A first chargee consents to a second or subsequent charge over the charged land and states how the two charges rank. The chargee is passed as the transferor and the chargor as the transferee, because the official execution prints the chargee first: the chargee is passed as a company party so that it seals under its common seal, the chargor signs as a natural person, and the borrower signs a block of its own from the borrower name field.",
+      "custom_fields": [
+        "charge_date",
+        "charge_entry_numbers",
+        "second_or_subsequent_chargee",
+        "borrower_name"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_56",
+      "form_number": "LRA-56",
+      "doc_title": "MEMORANDUM OF VARIATION OF CHARGE",
+      "regulation": "(r. 72)",
+      "party_roles": {
+        "transferor": "Chargor",
+        "transferor_single": "Chargor",
+        "transferee": "Chargee",
+        "transferee_single": "Chargee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargor and a chargee vary a registered charge, setting out the variations, and lodge the memorandum for registration against the title. The chargor is passed as the transferor and the chargee as the transferee, both as company parties, with the chargee's attorneys in its attorneys list, so the chargor seals under its common seal and the chargee signs by its duly authorised attorneys.",
+      "custom_fields": [
+        "charge_date",
+        "charge_entry_numbers",
+        "borrower_name",
+        "variations"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_57",
+      "form_number": "LRA-57",
+      "doc_title": "TRANSFER OF CHARGE",
+      "regulation": "(r. 73)",
+      "party_roles": {
+        "transferor": "Transferor",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee",
+        "transferee_single": "Transferee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargee transfers a registered charge to a new chargee for a consideration, with the chargor confirming the outstanding amount where the chargor is made a party. The outgoing chargee is passed as the transferor and the incoming one as the transferee, each as a natural person signing by its own duly authorised attorneys, and the chargor signs personally.",
+      "custom_fields": [
+        "charge_date",
+        "charge_entry_numbers",
+        "chargor_name",
+        "principal_amount",
+        "outstanding_amount",
+        "additional_conditions",
+        "transferor_poa_lands_registry",
+        "transferor_poa_lands_no_1",
+        "transferor_poa_lands_no_2",
+        "transferor_poa_docs_no_1",
+        "transferor_poa_docs_no_2",
+        "transferee_poa_lands_registry",
+        "transferee_poa_lands_no_1",
+        "transferee_poa_lands_no_2",
+        "transferee_poa_docs_no_1",
+        "transferee_poa_docs_no_2"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_58",
+      "form_number": "LRA-58",
+      "doc_title": "DISCHARGE OF CHARGE",
+      "regulation": "(r. 74(1))",
+      "category": "instrument",
+      "party_mode": "two_party",
+      "custom_fields": [],
+      "pairs_with_lra9": true,
+      "party_roles": {
+        "transferor": "Chargee(s)",
+        "transferor_single": "Chargee",
+        "transferee": "Chargor(s)",
+        "transferee_single": "Chargor"
+      },
+      "when_used": "Releases a charge over a title once the secured debt has been repaid.",
+      "builder": "custom"
+    },
+    {
+      "form_id": "lra_59",
+      "form_number": "LRA-59",
+      "doc_title": "PARTIAL DISCHARGE OF CHARGE",
+      "regulation": "(r. 74(2))",
+      "party_roles": {
+        "transferor": "Chargee",
+        "transferor_single": "Chargee",
+        "transferee": "Chargor",
+        "transferee_single": "Chargor"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargee discharges a registered charge in relation to part of the charged property, releasing that part while the charge stands over the rest. The chargee is passed as the transferor, because it is the only party that signs, and the chargor as the transferee, and the chargee signs by its duly authorised attorneys.",
+      "custom_fields": [
+        "charge_registration",
+        "principal_amount",
+        "property_released",
+        "charge_entry_numbers",
+        "poa_lands_registry",
+        "poa_lands_no_1",
+        "poa_lands_no_2",
+        "poa_docs_registry",
+        "poa_docs_no_1",
+        "poa_docs_no_2"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_60",
+      "form_number": "LRA-60",
+      "doc_title": "TRANSFER PURSUANT TO PURCHASE BY CHARGEE WITH LEAVE OF COURT",
+      "regulation": "(r. 75(1))",
+      "party_roles": {
+        "transferor": "Chargee (as Transferor)",
+        "transferor_single": "Chargee (as Transferor)",
+        "transferee": "Transferee (being the Chargee)",
+        "transferee_single": "Transferee (being the Chargee)"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargee exercising its power of sale buys the charged land itself with the leave of the court, and transfers the title to itself.",
+      "custom_fields": [
+        "date_of_charge",
+        "charge_entry_numbers",
+        "chargor_name",
+        "court_case_no",
+        "court_case_parties",
+        "date_of_court_order",
+        "additional_provisions",
+        "undivided_shares",
+        "poa_lands_registry",
+        "poa_lands_no_1",
+        "poa_lands_no_2",
+        "poa_docs_no_1",
+        "poa_docs_no_2"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_61",
+      "form_number": "LRA 61",
+      "doc_title": "TRANSFER PURSUANT TO PURCHASE BY CHARGEE IN A PUBLIC AUCTION",
+      "regulation": "(r. 75(3))",
+      "party_roles": {
+        "transferor": "Chargee (as Transferor)",
+        "transferor_single": "Chargee (as Transferor)",
+        "transferee": "Transferee (being the Chargee)",
+        "transferee_single": "Transferee (being the Chargee)"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A chargee exercising its power of sale buys the charged land itself at a public auction, and transfers the title to itself.",
+      "custom_fields": [
+        "date_of_charge",
+        "charge_entry_numbers",
+        "date_of_auction",
+        "chargor_name",
+        "additional_provisions",
+        "undivided_shares",
+        "poa_lands_registry",
+        "poa_lands_no_1",
+        "poa_lands_no_2",
+        "poa_docs_no_1",
+        "poa_docs_no_2"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_62",
+      "form_number": "LRA 62",
+      "doc_title": "LEASE",
+      "regulation": "(r. 76(1))",
+      "party_roles": {
+        "transferor": "Lessor",
+        "transferor_single": "Lessor",
+        "transferee": "Lessee",
+        "transferee_single": "Lessee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A lessor leases demised premises to a lessee for a term at a rent, on the registry form lodged for registration against the title.",
+      "custom_fields": [
+        "demised_premises",
+        "term",
+        "rent_or_stand_premium",
+        "service_charge",
+        "cadastral_plan",
+        "sectional_plan",
+        "additional_provisions"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_63",
+      "form_number": "LRA 63",
+      "doc_title": "TRANSFER OF LEASE",
+      "regulation": "(r. 76(2)(g), 77(2)(g))",
+      "category": "instrument",
+      "party_mode": "two_party",
+      "custom_fields": [],
+      "pairs_with_lra9": true,
+      "party_roles": {
+        "transferor": "Transferor(s)",
+        "transferor_single": "Transferor",
+        "transferee": "Transferee(s)",
+        "transferee_single": "Transferee"
+      },
+      "when_used": "Transfers a registered lease from the transferor to the transferee for registration at the land registry.",
+      "builder": "custom"
+    },
+    {
+      "form_id": "lra_64",
+      "form_number": "LRA 64",
+      "doc_title": "LEASE (Long Term)",
+      "regulation": "(r. 77(1))",
+      "party_roles": {
+        "transferor": "Lessor",
+        "transferor_single": "Lessor",
+        "transferee": "Lessee",
+        "transferee_single": "Lessee"
+      },
+      "regulation_official": "(r. 77(1)",
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A lessor grants a long term lease of demised premises, on the registry form that carries the management company and the plans of the demised premises.",
+      "custom_fields": [
+        "demised_premises",
+        "term",
+        "rent_or_stand_premium",
+        "service_charge",
+        "management_company",
+        "cadastral_plan",
+        "sectional_plan",
+        "additional_provisions"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_65",
+      "form_number": "LRA 65",
+      "doc_title": "SURRENDER OF LEASE",
+      "regulation": "(r. 78)",
+      "party_roles": {
+        "transferor": "Lessor",
+        "transferor_single": "Lessor",
+        "transferee": "Lessee",
+        "transferee_single": "Lessee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A lessee surrenders a registered lease back to the lessor, who accepts the surrender, so that the lease can be closed on the register.",
+      "custom_fields": [
+        "consideration",
+        "entry_no_encumbrances",
+        "demised_premises",
+        "term",
+        "guarantor"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_66",
+      "form_number": "LRA 66",
+      "doc_title": "APPLICATION FOR REGISTRATION OF AN INHIBITION ORDER",
+      "regulation": "(r. 79(2))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "regulation_official": "(r. 79(2)",
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "A person in whose favour a court has made an inhibition order applies to have the order registered against the title, attaching a sealed copy of it.",
+      "custom_fields": [
+        "applicant_address",
+        "court_order_details",
+        "case_number",
+        "order_date"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_67",
+      "form_number": "LRA 67",
+      "doc_title": "CAUTION",
+      "regulation": "(r. 80(1))",
+      "party_roles": {
+        "transferor": "Cautioner",
+        "transferor_single": "Cautioner",
+        "transferee": "Proprietor",
+        "transferee_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "two_party",
+      "when_used": "A person claiming an interest in land lodges a caution so that no dealing is registered on the title without notice to them.",
+      "custom_fields": [
+        "cautioner_address",
+        "proprietor_pin",
+        "proprietor_citizenship",
+        "proprietor_address",
+        "interest_claimed",
+        "caution_scope",
+        "supporting_documents",
+        "declarant_name",
+        "declaration_text"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_69",
+      "form_number": "LRA 69",
+      "doc_title": "WITHDRAWAL OF CAUTION",
+      "regulation": "(r. 80(4))",
+      "party_roles": {
+        "transferor": "Cautioner",
+        "transferor_single": "Cautioner",
+        "transferee": "Proprietor",
+        "transferee_single": "Proprietor"
+      },
+      "category": "withdrawal",
+      "party_mode": "two_party",
+      "when_used": "A cautioner withdraws a caution registered against a title, so that the entry is removed from the Encumbrances Section of the register.",
+      "custom_fields": [
+        "caution_date",
+        "cautioner_pin",
+        "cautioner_address",
+        "proprietor_pin",
+        "proprietor_address",
+        "entry_numbers"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_70",
+      "form_number": "LRA 70",
+      "doc_title": "APPLICATION TO REMOVE CAUTION",
+      "regulation": "(r. 80(5))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant",
+        "transferee": "Proprietor",
+        "transferee_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "two_party",
+      "when_used": "A person aggrieved by a caution applies to the Land Registrar to remove it, setting out the grounds and attaching the documents that support them.",
+      "custom_fields": [
+        "caution_date",
+        "applicant_pin",
+        "applicant_address",
+        "proprietor_pin",
+        "proprietor_address",
+        "entry_numbers",
+        "grounds"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_72",
+      "form_number": "LRA 72",
+      "doc_title": "NOTICE OF OBJECTION TO REMOVAL OF A CAUTION",
+      "regulation": "(r. 80(7))",
+      "party_roles": {
+        "transferor": "Cautioner",
+        "transferor_single": "Cautioner",
+        "transferee": "Proprietor/Interested Party",
+        "transferee_single": "Proprietor/Interested Party"
+      },
+      "category": "notice",
+      "party_mode": "two_party",
+      "when_used": "A cautioner served with an application to remove a caution notifies the Land Registrar that the cautioner objects to its removal.",
+      "custom_fields": [
+        "caution_date",
+        "entry_numbers"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_75",
+      "form_number": "LRA 75",
+      "doc_title": "APPLICATION FOR A RESTRICTION",
+      "regulation": "(r. 81(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant",
+        "transferee": "Proprietor",
+        "transferee_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "two_party",
+      "when_used": "A person applies to the Land Registrar to register a restriction on the Proprietorship Section of the register, stating the grounds, the nature of the restriction and how long it is to run.",
+      "custom_fields": [
+        "grounds",
+        "restriction_nature",
+        "restriction_duration"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_78",
+      "form_number": "LRA 78",
+      "doc_title": "APPLICATION TO REMOVE OR VARY A RESTRICTION",
+      "regulation": "(r. 81(4))",
+      "party_roles": {
+        "transferor": "Applicant/Person Interested",
+        "transferor_single": "Applicant/Person Interested"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "An applicant or person interested applies to the Land Registrar to vary or remove a registered restriction, setting out the grounds.",
+      "custom_fields": [
+        "restriction_date",
+        "entry_numbers",
+        "grounds"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_80",
+      "form_number": "LRA 80",
+      "doc_title": "GRANT OF EASEMENT/ANALOGOUS RIGHT",
+      "regulation": "(r. 82)",
+      "party_roles": {
+        "transferor": "Grantor",
+        "transferor_single": "Grantor",
+        "transferee": "Grantee",
+        "transferee_single": "Grantee"
+      },
+      "category": "instrument",
+      "party_mode": "two_party",
+      "when_used": "A proprietor grants an easement or analogous right over the servient land in favour of the dominant land, for a period and on conditions.",
+      "custom_fields": [
+        "consideration",
+        "nature_of_easement",
+        "conditions",
+        "period_of_easement",
+        "servient_land",
+        "dominant_land"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_81",
+      "form_number": "LRA 81",
+      "doc_title": "CANCELLATION OF EASEMENT/ANALOGOUS RIGHTS BY PERSON OCCUPYING DOMINANT LAND",
+      "regulation": "(r. 83)",
+      "party_roles": {
+        "transferor": "person occupying the dominant land",
+        "transferor_single": "person occupying the dominant land"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The person occupying the dominant land cancels an easement or analogous right, lodging the LRA 82 consent of the lessee or lender with it.",
+      "custom_fields": [
+        "date_of_easement",
+        "dominant_land",
+        "proprietor_of_dominant_land",
+        "proprietors_grantors"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_82",
+      "form_number": "LRA82",
+      "doc_title": "CONSENT OF LESSEE OR LENDER ON CANCELLATION OF EASEMENT/ ANALOGOUS RIGHT BY THE PERSON OCCUPYING DOMINANT LAND",
+      "regulation": "(r. 84)",
+      "party_roles": {
+        "transferor": "lessee/lender",
+        "transferor_single": "lessee/lender"
+      },
+      "category": "consent",
+      "party_mode": "single_party",
+      "when_used": "A lessee or lender entitled to the benefit of an easement consents to its cancellation by the person occupying the dominant land, and the consent is lodged with the LRA 81 cancellation.",
+      "custom_fields": [
+        "date_of_easement",
+        "dominant_land",
+        "proprietor_of_dominant_land",
+        "proprietors_grantors"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_83",
+      "form_number": "LRA 83",
+      "doc_title": "APPLICATION FOR CANCELLATION OF EASEMENT/ANALOGOUS RIGHTS BY PERSON OCCUPYING SERVIENT LAND",
+      "regulation": "(r. 85)",
+      "party_roles": {
+        "transferor": "person occupying the servient land",
+        "transferor_single": "person occupying the servient land"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "The person occupying the servient land applies to cancel an easement or analogous right shown on the title.",
+      "custom_fields": [
+        "date_of_easement",
+        "dominant_land",
+        "proprietor_of_dominant_land",
+        "proprietors_grantors"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_84",
+      "form_number": "LRA 84",
+      "doc_title": "APPLICATION FOR OFFICIAL SEARCH",
+      "regulation": "(r. 86(1))",
+      "regulation_official": "(r. 86(1)",
+      "category": "application",
+      "party_mode": "single_party",
+      "custom_fields": [],
+      "pairs_with_lra9": false,
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "when_used": "Asks the land registry for an official search of the register of a title.",
+      "builder": "custom"
+    },
+    {
+      "form_id": "lra_86",
+      "form_number": "LRA 86",
+      "doc_title": "APPLICATION TO THE REGISTRAR FOR APPROVAL OF A DOCUMENT FOR USE WHERE NO FORM HAS BEEN PRESCRIBED",
+      "regulation": "(r. 87(4))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "An applicant asks the Land Registrar to approve a document for use in a transaction for which the Regulations prescribe no form, attaching the proposed form, a statutory declaration and the supporting documents.",
+      "custom_fields": [
+        "proposed_document"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_87",
+      "form_number": "LRA 87",
+      "doc_title": "APPLICATION TO RECTIFY THE REGISTER",
+      "regulation": "(r. 91(1))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "An applicant asks the Land Registrar to rectify the register of a title, setting out the rectifications sought and the grounds, with the supporting documents attached.",
+      "custom_fields": [
+        "rectifications",
+        "grounds"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_88",
+      "form_number": "LRA 88",
+      "doc_title": "CONSENT TO RECTIFY THE REGISTER BY A COMPANY",
+      "regulation": "(r. 91(2))",
+      "party_roles": {
+        "transferor": "Company",
+        "transferor_single": "Company",
+        "transferee": "Proprietor",
+        "transferee_single": "Proprietor"
+      },
+      "category": "consent",
+      "party_mode": "two_party",
+      "when_used": "A company affected by an intended rectification of the register consents to it under its common seal, so that the Registrar may rectify. The Ministry prints this form for a company only, so the party giving consent is always a body corporate and the form is drawn with its registration number and its common seal.",
+      "custom_fields": [
+        "nature_of_rectification"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_89",
+      "form_number": "LRA 89",
+      "doc_title": "CONSENT TO RECTIFY THE REGISTER BY INDIVIDUAL",
+      "regulation": "(r. 91(3))",
+      "party_roles": {
+        "transferor": "Party Giving Consent",
+        "transferor_single": "Party Giving Consent",
+        "transferee": "Proprietor",
+        "transferee_single": "Proprietor"
+      },
+      "category": "consent",
+      "party_mode": "two_party",
+      "when_used": "An individual affected by an intended rectification of the register consents to it, so that the Registrar may rectify.",
+      "custom_fields": [
+        "nature_of_rectification"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_94",
+      "form_number": "LRA 94",
+      "doc_title": "APPLICATION FOR RECTIFICATION OF REGISTER PURSUANT TO A COURT ORDER",
+      "regulation": "(r. 94(3))",
+      "party_roles": {
+        "transferor": "Applicant",
+        "transferor_single": "Applicant"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "An applicant lodges a court order for registration so that the register of a title is rectified in the manner the order sets out, attaching a certified true copy of the order.",
+      "custom_fields": [
+        "order_date"
+      ],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_96",
+      "form_number": "LRA 96",
+      "doc_title": "PRESENTATION ON OBJECTIONS TO THE CONVERSION LIST",
+      "regulation": "(p. 5(1)(a))",
+      "party_roles": {
+        "transferor": "Objector",
+        "transferor_single": "Objector"
+      },
+      "category": "notice",
+      "party_mode": "single_party",
+      "when_used": "A person aggrieved by the conversion list or the cadastral maps lodges the grounds of the objection with the land registry.",
+      "custom_fields": [
+        "nature_of_interest_in_land",
+        "grounds_of_objection"
+      ],
+      "pairs_with_lra9": false,
+      "builder": "schema"
+    },
+    {
+      "form_id": "lra_97",
+      "form_number": "LRA 97",
+      "doc_title": "APPLICATION FOR REPLACEMENT OF TITLE ISSUED FROM THE CLOSED REGISTER",
+      "regulation": "(p. 9(2))",
+      "party_roles": {
+        "transferor": "Proprietor(s)",
+        "transferor_single": "Proprietor"
+      },
+      "category": "application",
+      "party_mode": "single_party",
+      "when_used": "A registered proprietor applies for a certificate of title or lease in replacement of a title issued from the closed register, surrendering the title document to be replaced.",
+      "custom_fields": [],
+      "pairs_with_lra9": true,
+      "builder": "schema"
+    }
+  ],
+  "excluded": [
+    {
+      "form_number": "LRA 2",
+      "doc_title": "THE LAND REGISTER (ABSOLUTE TITLES)",
+      "reason": "The register itself, maintained by the registry."
+    },
+    {
+      "form_number": "LRA 3",
+      "doc_title": "THE LAND REGISTER (LEASEHOLD)",
+      "reason": "The register itself, maintained by the registry."
+    },
+    {
+      "form_number": "LRA 4",
+      "doc_title": "REGISTER OF POWERS OF ATTORNEY",
+      "reason": "A register maintained by the registry."
+    },
+    {
+      "form_number": "LRA 11",
+      "doc_title": "NOTICE OF INTENTION TO NOTE A SPOUSE IN THE REGISTER",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 13",
+      "doc_title": "NOTICE FOR ISSUE OF A REPLACEMENT TITLE",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 18",
+      "doc_title": "NOTICE FOR RECONSTRUCTION OF LOST OR DESTROYED LAND REGISTER",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 20",
+      "doc_title": "CERTIFICATE OF TITLE",
+      "reason": "Issued by the registry."
+    },
+    {
+      "form_number": "LRA 21",
+      "doc_title": "CERTIFICATE OF LEASE",
+      "reason": "Issued by the registry."
+    },
+    {
+      "form_number": "LRA 22",
+      "doc_title": "REFUSAL TO REGISTER AN APPLICATION FOR REGISTRATION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 24",
+      "doc_title": "NOTICE OF INTENTION TO ASCERTAIN AND FIX THE BOUNDARIES",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 25",
+      "doc_title": "ORDER FOR DEMARCATION MAINTENANCE",
+      "reason": "An order of the Registrar."
+    },
+    {
+      "form_number": "LRA 31",
+      "doc_title": "NOTICE FOR A HEARING ON APPLICATION FOR PARTITION OF LAND HELD IN COMMON",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 41",
+      "doc_title": "NOTIFICATION BY REGISTRAR TO PERSONAL REPRESENTATIVE",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 68",
+      "doc_title": "NOTICE OF CAUTION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 71",
+      "doc_title": "NOTICE OF INTENTION TO REMOVE A CAUTION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 73",
+      "doc_title": "NOTICE OF HEARING ON APPLICATION TO REMOVE CAUTION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 74",
+      "doc_title": "ORDER OF THE REGISTRAR ON AN APPLICATION TO REMOVE A CAUTION",
+      "reason": "An order of the Registrar."
+    },
+    {
+      "form_number": "LRA 76",
+      "doc_title": "NOTICE OF INTENTION TO REGISTER, REMOVE OR VARY A RESTRICTION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 77",
+      "doc_title": "NOTICE OF RESTRICTION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 79",
+      "doc_title": "NOTICE OF VARIATION OR REMOVAL OF RESTRICTION",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 85",
+      "doc_title": "CERTIFICATE OF OFFICIAL SEARCH",
+      "reason": "Issued by the registry in answer to an LRA 84."
+    },
+    {
+      "form_number": "LRA 90",
+      "doc_title": "NOTICE OF RECTIFICATION OF REGISTER BY REGISTRAR",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 91",
+      "doc_title": "NOTICE OF INTENTION TO RECTIFY REGISTER",
+      "reason": "Issued by the Registrar."
+    },
+    {
+      "form_number": "LRA 92",
+      "doc_title": "ORDER OF RECTIFICATION OF REGISTER",
+      "reason": "An order of the Registrar."
+    },
+    {
+      "form_number": "LRA 93",
+      "doc_title": "SUMMONS",
+      "reason": "Issued by the Registrar."
+    }
+  ]
+}

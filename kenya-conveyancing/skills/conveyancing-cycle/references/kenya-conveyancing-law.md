@@ -1,10 +1,10 @@
-# Kenya Conveyancing Law — Reference
+# Kenya Conveyancing Law: Reference
 
 Full statutory and procedural reference for the Kenya Conveyancing Manager.
 
-Primary authority: `/Users/astalavista/Desktop/Claude/Obsidian/Robin's Vault/references/Kenya Conveyancing Law.md`
+Primary authority: the Land Registration Act 2012, the Land Act 2012 (Cap 280), the Land Control Act (Cap 302), and the Stamp Duty Act (Cap 480), read together with the Registration of Titles practice. Verify current provisions against the Kenya Law MCP (kenya-law) before relying on any figure in a live matter.
 
-The file above contains 23 sections covering: governing framework, the land register, indefeasibility, overriding interests, priority rule, official search mechanics, execution requirements, stamp duty gateway, freehold vs leasehold, LCB consent, charges, restraints (cautions/restrictions/inhibitions), transmission on death, trusts, joint tenancy, subdivision rule, easements, rectification, registry procedure, processing times, fees, and common rejection grounds.
+This reference summarises the key statutory rules a Kenyan conveyancing matter turns on: priority, the stamp duty gateway, indefeasibility, freehold vs leasehold treatment, LCB consent, execution requirements, registry procedure, the subdivision rule, and processing times. It is a quick-reference summary, not exhaustive. Verify any figure or provision against the Kenya Law MCP before relying on it in a live matter.
 
 ---
 
@@ -15,7 +15,7 @@ The file above contains 23 sections covering: governing framework, the land regi
 - Lodging LRA 84 with proprietor's consent creates a 14-day protection window (ss.36(8)–(9) LRA).
 
 ### Stamp Duty Gateway
-- No instrument is accepted for registration unless stamped (s.46 LRA). Absolute — no exceptions.
+- No instrument is accepted for registration unless stamped (s.46 LRA). Absolute, no exceptions.
 - Urban: 4%. Rural: 2%. Base = higher of consideration or market value.
 
 ### Indefeasibility

@@ -1,0 +1,139 @@
+{
+  "form_id": "lra_56",
+  "form_number": "LRA-56",
+  "regulation": "(r. 72)",
+  "doc_title": "MEMORANDUM OF VARIATION OF CHARGE",
+  "doc_title_official": "MEMORANDUM OF VARIATION OF CHARGE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-56-MEMORANDUM-OF-VARIATION-OF-CHARGE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-56.txt"
+  },
+  "category": "instrument",
+  "when_used": "A chargor and a chargee vary a registered charge, setting out the variations, and lodge the memorandum for registration against the title. The chargor is passed as the transferor and the chargee as the transferee, both as company parties, with the chargee's attorneys in its attorneys list, so the chargor seals under its common seal and the chargee signs by its duly authorised attorneys.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Chargor",
+    "transferor_single": "Chargor",
+    "transferee": "Chargee",
+    "transferee_single": "Chargee"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Issue:",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Charge(s)",
+      "value_field": "charge_date"
+    },
+    {
+      "label": "Charge(s) Registered in the Register as Entry Number(s)",
+      "value_field": "charge_entry_numbers"
+    },
+    {
+      "label": "The Chargor: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "The Chargee: Give full name(s) and company’s registration number, if any",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Borrower Include where lending is to secure a third party. Give full name(s) and if corporate the registration number, if any",
+      "value_field": "borrower_name"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Charge(s) is HEREBY VARIED as follows:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{variations}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this Memorandum of Variation of Charge has been duly executed as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Chargor",
+    "verification": true,
+    "company_seal": false,
+    "verification_heading": {
+      "transferor": "Certificate of Verification under Section 45 of the Land Registration Act, 2012",
+      "transferee": "Verification of execution pursuant to Section 45 of the Land Registration Act, 2012"
+    },
+    "extra_blocks": [
+      {
+        "signed_label": "SIGNED as a deed by the",
+        "signer_label": "Borrower",
+        "verification": true,
+        "name_field": "borrower_name",
+        "frame": "deed",
+        "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act"
+      }
+    ]
+  },
+  "registry_block": [
+    "REGISTERED this ………………. day of ………………..20....................",
+    "ENTRY in Encumbrances Section Number:…………....................",
+    "Seal……………………………………………….",
+    "LAND REGISTRAR",
+    "Name:………………………………… Registrar’s Stamp / No…………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "All parties including the Borrower(s) must execute.",
+    "Notes:",
+    "* Provide full name(s) and registered number Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.",
+    "*** Attach a survey plan."
+  ],
+  "custom_fields": [
+    {
+      "name": "charge_date",
+      "label": "Date of the Charge",
+      "prompt": "The date of the charge or charges being varied",
+      "required": true
+    },
+    {
+      "name": "charge_entry_numbers",
+      "label": "Entry number of the Charge",
+      "prompt": "The entry number or numbers under which the charge is registered in the register",
+      "required": true
+    },
+    {
+      "name": "borrower_name",
+      "label": "The Borrower",
+      "prompt": "Full name of the borrower and, if corporate, the registration number, where the lending secures a third party. Where the chargor is the borrower, give the chargor's own name, because the form carries a signing block for the borrower",
+      "required": false
+    },
+    {
+      "name": "variations",
+      "label": "The variations",
+      "prompt": "The variations to the charge, one variation per line",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

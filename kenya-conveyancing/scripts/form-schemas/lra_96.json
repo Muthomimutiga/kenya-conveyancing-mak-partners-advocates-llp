@@ -1,0 +1,80 @@
+{
+  "form_id": "lra_96",
+  "form_number": "LRA 96",
+  "regulation": "(p. 5(1)(a))",
+  "doc_title": "PRESENTATION ON OBJECTIONS TO THE CONVERSION LIST",
+  "doc_title_official": "PRESENTATION ON OBJECTIONS TO THE CONVERSION LIST",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-96-PRESENTATION-ON-OBJECTIONS-TO-THE-CONVERSION-LIST.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-96.txt"
+  },
+  "category": "notice",
+  "when_used": "A person aggrieved by the conversion list or the cadastral maps lodges the grounds of the objection with the land registry.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Objector",
+    "transferor_single": "Objector"
+  },
+  "head_lines": [
+    "SECOND SCHEDULE"
+  ],
+  "filing_box": [
+    "Date Received\n………………",
+    "Presentation Book\nNo…………..",
+    "Registration Fees Paid\nKshs.",
+    "Receipt no. for registration\n…………."
+  ],
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Presentation",
+      "value_blank": true
+    },
+    {
+      "label": "The Objector: Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport/Company Registration No. of the Trustee(if any)",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Nature of Interest in Land",
+      "value_template": "{{nature_of_interest_in_land}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Objector is HEREBY aggrieved by the information in the conversion list /the cadastral maps on the following grounds:"
+    },
+    {
+      "type": "plain",
+      "text": "{{grounds_of_objection}}"
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Objector",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "nature_of_interest_in_land",
+      "label": "Nature of the interest in the land",
+      "prompt": "The interest the Objector holds in the land, for example registered proprietor or beneficiary under a trust",
+      "required": true
+    },
+    {
+      "name": "grounds_of_objection",
+      "label": "Grounds of the objection",
+      "prompt": "Why the Objector is aggrieved by the conversion list or the cadastral maps, set out in full",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": false
+}

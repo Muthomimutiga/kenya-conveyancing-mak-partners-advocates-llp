@@ -1,0 +1,218 @@
+{
+  "transaction_id": "charge_and_discharge",
+  "name": "Charge of a title, and its discharge",
+  "summary": "A proprietor charges land or a lease to secure a debt, and in due course the chargee discharges it. The two ends of the same relationship.",
+  "triggers": [
+    "A lender is taking security over registered land or a lease",
+    "Or an existing charge is being redeemed and released"
+  ],
+  "not_this_if": [
+    {
+      "fact": "The charge is being sold on to another lender",
+      "use": null,
+      "why": "That is a transfer of charge, LRA 57."
+    },
+    {
+      "fact": "Only part of the security is being released",
+      "use": null,
+      "why": "That is a partial discharge, LRA 59."
+    },
+    {
+      "fact": "The terms of an existing charge are changing",
+      "use": null,
+      "why": "That is a memorandum of variation, LRA 56."
+    }
+  ],
+  "statutory_basis": [
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.56(1)",
+      "quote": "A proprietor may by an instrument, in the prescribed form, charge any land or lease to secure the payment of an existing, future or a contingent debt",
+      "effect": "A charge is made on the prescribed form, which is LRA 53."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.56(3)",
+      "quote": "The charge shall be completed by its registration as an encumbrance",
+      "effect": "An unregistered charge is not a completed charge. Until it is registered as an encumbrance and the chargee registered as its proprietor, the lender does not have what it thinks it has."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.56(4)",
+      "quote": "The Registrar shall not register a charge, unless a land rent clearance",
+      "effect": "A charge over leasehold needs the rent clearance certificate and the consent to charge before it registers. Freehold is excepted, as are a condominium unit, an office in a building and certain subleases under subsection (5A)."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.56(5)",
+      "quote": "A charge shall have effect as a security only and shall not operate as a transfer",
+      "effect": "The chargee takes security, not ownership. This is worth saying to a client who thinks the bank now owns the land."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.57(2)",
+      "quote": "shall be obtained before the second or subsequent charge is created",
+      "effect": "The first chargee's consent must be obtained before the second charge is created, not after. Creating first and seeking consent afterwards is the wrong order and LRA 55 is the instrument."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.46",
+      "quote": "An instrument required by law to be stamped shall not be accepted for registration unless it is stamped",
+      "effect": "Stamping gates registration of a charge as of a transfer."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.6(1)",
+      "quote": "is void for all purposes unless the land control board for the land control area or division in which the land is situated has given its consent in respect of that transaction in accordance with this Act",
+      "effect": "Agricultural land within a land control area cannot be dealt with without the board's consent. Registration does not cure the want of it."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.8(1)",
+      "quote": "within six months of the making of the agreement for the controlled transaction",
+      "effect": "The clock runs from the agreement, not from completion. Six months, extendable only by the High Court for sufficient reason."
+    }
+  ],
+  "bundle": [
+    {
+      "form_id": "lcb_1",
+      "role": "Application for the consent of the land control board, in the prescribed form",
+      "order": -1,
+      "required": false,
+      "condition": "A charge is being created over agricultural land within a land control area. Not for a discharge alone.",
+      "why": "Section 6(1) catches a mortgage or charge of agricultural land expressly."
+    },
+    {
+      "form_id": "lra_9",
+      "role": "Cover application",
+      "order": 1,
+      "required": true,
+      "why": "Everything lodged goes under a general application."
+    },
+    {
+      "form_id": "lra_55",
+      "role": "Consent of the first chargee to a second or subsequent charge",
+      "order": 2,
+      "required": false,
+      "condition": "A charge already sits on the title and a further charge is being created",
+      "why": "Section 57(2) requires the first chargee's consent before the second charge is created."
+    },
+    {
+      "form_id": "lra_53",
+      "role": "Charge",
+      "order": 3,
+      "required": false,
+      "condition": "Security is being taken",
+      "why": "The prescribed form under section 56(1)."
+    },
+    {
+      "form_id": "lra_58",
+      "role": "Discharge of charge",
+      "order": 3,
+      "required": false,
+      "condition": "An existing charge is being redeemed in full",
+      "why": "The chargee releases the security. Note that a discharge is given by the chargee over the title, not to the purchaser."
+    }
+  ],
+  "drafted_together": [
+    {
+      "forms": [
+        "lra_9",
+        "lra_53"
+      ],
+      "why": "A charge lodges under a general application like any other instrument."
+    }
+  ],
+  "consents": [
+    {
+      "name": "Consent of the first chargee",
+      "when_required": "A second or subsequent charge is being created",
+      "authority": "The existing chargee",
+      "provision": "Land Registration Act s.57(2)",
+      "deadline": "Before the second charge is created",
+      "consequence_if_missed": "The consent is required before creation, so seeking it afterwards does not cure the sequence. LRA 55 is the form."
+    },
+    {
+      "name": "Consent to charge, with a land rent clearance certificate",
+      "when_required": "The title is leasehold",
+      "when_not_required": "The land is freehold, or the charge relates to a condominium unit, an office in a building, or certain subleases under s.56(5A)",
+      "authority": "The lessor, which for public land is the National Land Commission",
+      "provision": "Land Registration Act s.56(4)",
+      "deadline": null,
+      "consequence_if_missed": "The Registrar shall not register the charge."
+    },
+    {
+      "name": "Land Control Board consent",
+      "when_required": "A charge is being created over agricultural land within a land control area",
+      "authority": "The land control board for the area",
+      "provision": "Land Control Act s.6(1)",
+      "deadline": "Six months from the agreement",
+      "deadline_provision": "Land Control Act s.8(1)",
+      "consequence_if_missed": "The charge is void for all purposes. A lender holding a void charge holds nothing.",
+      "when_not_required": "The land is not agricultural or lies outside a land control area; or the transaction is a discharge alone. Releasing a charge is not a controlled transaction."
+    }
+  ],
+  "clearances": [
+    {
+      "name": "Land rent clearance certificate",
+      "authority": "the Ministry or the National Land Commission",
+      "when_required": "Leasehold, per section 56(4)"
+    },
+    {
+      "name": "Land rates clearance",
+      "authority": "the county government",
+      "when_required": "Where the parcel attracts rates"
+    }
+  ],
+  "sequence": [
+    "Official search, to see what is already on the register.",
+    "If a charge already exists, obtain the first chargee's consent before creating the second one.",
+    "If a charge is being created, establish whether the land is agricultural and within a land control area. A discharge alone needs no Board consent.",
+    "On leasehold, obtain the consent to charge and the land rent clearance certificate.",
+    "Assess and pay stamp duty.",
+    "Execute with verification, then lodge, and confirm the charge is registered as an encumbrance rather than assuming it."
+  ],
+  "traps": [
+    {
+      "trap": "Creating a second charge and then seeking the first chargee's consent",
+      "why_wrong": "Section 57(2) requires the consent before creation.",
+      "provision": "Land Registration Act s.57(2)"
+    },
+    {
+      "trap": "Treating an executed charge as security before it is registered",
+      "why_wrong": "Section 56(3) completes a charge by registration as an encumbrance. Until then the lender's position is not what it believes.",
+      "provision": "Land Registration Act s.56(3)"
+    },
+    {
+      "trap": "Describing a discharge as given in favour of the purchaser",
+      "why_wrong": "The chargee gives a discharge over the title. The purchaser is not the party discharging.",
+      "provision": null
+    },
+    {
+      "trap": "Forgetting that a charge of agricultural land is a controlled transaction",
+      "why_wrong": "Section 6(1) of the Land Control Act names mortgage and charge alongside sale. A void charge is worse for a lender than no charge.",
+      "provision": "Land Control Act s.6(1)"
+    }
+  ],
+  "practice_varies": [
+    {
+      "step": "Whether the charge and its stamping are presented together",
+      "note": "Registries differ. Record what yours accepts."
+    }
+  ],
+  "milestone": 7,
+  "verified_by": {
+    "status": "APPROVED",
+    "by": "Robin Muthomi Mutiga, Advocate",
+    "date": "2026-09-28",
+    "note": "Bundles, sequence, alternatives and traps approved. Every statutory quote is proved against cached primary law by scripts/procedures/lint.js on each build; the readings remain ED's, approved by the advocate above. 2026-09-28: Robin confirmed that a discharge alone needs no Land Control Board consent; consent is scoped to creating a charge."
+  }
+}

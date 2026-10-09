@@ -1,0 +1,88 @@
+{
+  "form_id": "lra_78",
+  "form_number": "LRA 78",
+  "regulation": "(r. 81(4))",
+  "doc_title": "APPLICATION TO REMOVE OR VARY A RESTRICTION",
+  "doc_title_official": "APPLICATION TO REMOVE OR VARY A RESTRICTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-78-APPLICATION-TO-REMOVE-OR-VARY-A-RESTRICTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-78.txt"
+  },
+  "category": "application",
+  "when_used": "An applicant or person interested applies to the Land Registrar to vary or remove a registered restriction, setting out the grounds.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant/Person Interested",
+    "transferor_single": "Applicant/Person Interested"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application to remove or vary a Restriction",
+      "value_blank": true
+    },
+    {
+      "label": "Date of the Restriction",
+      "value_field": "restriction_date"
+    },
+    {
+      "label": "Applicant/Person Interested: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport/Company Registration No. of Applicant/Person Interested(if any)",
+      "value_field": "transferorIDs"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant/Person Interested HEREBY APPLIES to the Land Registrar to vary/remove* the Restriction registered in Entry Number(s) {{entry_numbers}} on the Encumbrances Section of the Register on the grounds that:"
+    },
+    {
+      "type": "numbered",
+      "text": "{{grounds}}",
+      "number": 1
+    },
+    {
+      "type": "plain",
+      "text": "delete where not applicable"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application for removal/variation of Restriction has been duly executed this ................. day of……………. 20…."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant/Interested Party",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "restriction_date",
+      "label": "Date of the Restriction",
+      "prompt": "The date of the restriction to be removed or varied",
+      "required": true
+    },
+    {
+      "name": "entry_numbers",
+      "label": "Entry number of the Restriction",
+      "prompt": "The entry number or numbers of the restriction in the register",
+      "required": true
+    },
+    {
+      "name": "grounds",
+      "label": "Grounds for the application",
+      "prompt": "The grounds for removing or varying the restriction, one ground per line",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

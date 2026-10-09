@@ -14,7 +14,7 @@ let html = fs.readFileSync(builtPath, 'utf8');
 // Demo token values — field IDs use short readable keys so the mock router
 // can distinguish conveyances from milestones by tableId.
 const demo = {
-  '__FIRM_NAME__':           'MAK & Partners Advocates LLP',
+  '__FIRM_NAME__':           'Sample Advocates LLP',
   '__BRIEF_TZ__':            'Africa/Nairobi',
   '__AT_SERVER_UUID__':      'demoAT',
   '__GCAL_SERVER_UUID__':    '__GCAL_UUID_ABSENT__',
@@ -51,10 +51,10 @@ html = applyIds(html, demo);
 //   recC3: clean active file, nothing urgent
 //   recC4: Completed file (excluded from active view)
 const CONVEYANCES = [
-  { id:'recC1', cellValuesByFieldId:{ name:'Kasuku Road — Githurai 45', buyer:'Peter Njoroge Kamau', seller:'Lydia Wambui Njuguna', status:{name:'Active'}, tenure:{name:'Freehold'}, price:8500000, instrDate:'2026-03-10', targetComp:'2026-08-01', actualComp:null, titleNum:'LR No. 27948', assignee:{name:'Ken Ashimosi'} }},
-  { id:'recC2', cellValuesByFieldId:{ name:'Lavington Green — Apt 4B', buyer:'Amara Holdings Ltd', seller:'David Omondi Ochieng', status:{name:'Active'}, tenure:{name:'Leasehold'}, price:22000000, instrDate:'2026-02-14', targetComp:'2026-07-15', actualComp:null, titleNum:'LR No. 8831/4', assignee:{name:'Ann Wayodi'} }},
-  { id:'recC3', cellValuesByFieldId:{ name:'Ruiru — Plot 1156', buyer:'Faith Muthoni Kariuki', seller:'Kiambu County Government', status:{name:'Active'}, tenure:{name:'Freehold'}, price:3200000, instrDate:'2026-04-01', targetComp:'2026-09-01', actualComp:null, titleNum:'Ruiru/Block 4/1156', assignee:{name:'Ken Ashimosi'} }},
-  { id:'recC4', cellValuesByFieldId:{ name:'Kilimani — Plot 88', buyer:'Jane Wangari Kamau', seller:'Marcus Dev Ltd', status:{name:'Completed'}, tenure:{name:'Freehold'}, price:15000000, instrDate:'2025-10-01', targetComp:'2026-04-01', actualComp:'2026-03-28', titleNum:'LR No. 4401', assignee:{name:'Ann Wayodi'} }},
+  { id:'recC1', cellValuesByFieldId:{ name:'Kasuku Road — Githurai 45', buyer:'Peter Njoroge Kamau', seller:'Lydia Wambui Njuguna', status:{name:'Active'}, tenure:{name:'Freehold'}, price:8500000, instrDate:'2026-03-10', targetComp:'2026-08-01', actualComp:null, titleNum:'LR No. 27948', assignee:{name:'Amina Otieno'} }},
+  { id:'recC2', cellValuesByFieldId:{ name:'Lavington Green — Apt 4B', buyer:'Amara Holdings Ltd', seller:'David Omondi Ochieng', status:{name:'Active'}, tenure:{name:'Leasehold'}, price:22000000, instrDate:'2026-02-14', targetComp:'2026-07-15', actualComp:null, titleNum:'LR No. 8831/4', assignee:{name:'Brian Kariuki'} }},
+  { id:'recC3', cellValuesByFieldId:{ name:'Ruiru — Plot 1156', buyer:'Faith Muthoni Kariuki', seller:'Kiambu County Government', status:{name:'Active'}, tenure:{name:'Freehold'}, price:3200000, instrDate:'2026-04-01', targetComp:'2026-09-01', actualComp:null, titleNum:'Ruiru/Block 4/1156', assignee:{name:'Amina Otieno'} }},
+  { id:'recC4', cellValuesByFieldId:{ name:'Kilimani — Plot 88', buyer:'Jane Wangari Kamau', seller:'Marcus Dev Ltd', status:{name:'Completed'}, tenure:{name:'Freehold'}, price:15000000, instrDate:'2025-10-01', targetComp:'2026-04-01', actualComp:'2026-03-28', titleNum:'LR No. 4401', assignee:{name:'Brian Kariuki'} }},
 ];
 
 const MILESTONES = [

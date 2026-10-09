@@ -1,0 +1,157 @@
+{
+  "form_id": "lra_7",
+  "form_number": "LRA-7",
+  "regulation": "(r. 19)",
+  "doc_title": "IRREVOCABLE POWER OF ATTORNEY",
+  "doc_title_official": "IRREVOCABLE POWER OF ATTORNEY",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-7-IRREVOCABLE-POWER-OF-ATTORNEY.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-7.txt"
+  },
+  "category": "deed",
+  "when_used": "A registered proprietor grants an attorney a power that cannot be revoked, for value received from the Donee.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Donor",
+    "transferor_single": "Donor",
+    "transferee": "Donee",
+    "transferee_single": "Donee"
+  },
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument",
+      "value_blank": true
+    },
+    {
+      "label": "Registered *Proprietor/Donor",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN No.",
+      "value_field": "donor_pin"
+    },
+    {
+      "label": "The Donee: Name",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Registration No.( if applicable)",
+      "value_template": "{{donee_registration_no}}"
+    },
+    {
+      "label": "Postal Address:",
+      "value_template": "{{donee_postal_address}}"
+    },
+    {
+      "label": "Address for Service:",
+      "value_template": "{{donee_address_for_service}}"
+    },
+    {
+      "label": "Tel. No:",
+      "value_template": "{{donee_tel_no}}"
+    },
+    {
+      "label": "Email address:",
+      "value_template": "{{donee_email_address}}"
+    },
+    {
+      "label": "Consideration",
+      "value_template": "{{consideration}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "IN CONSIDERATION of {{consideration}}"
+    },
+    {
+      "type": "plain",
+      "text": "from the Donee to the Donor (receipt whereof is hereby acknowledged by the Donor) the Donor HEREBY APPOINT(S) the Donee to be the attorney of the Donor and generally in relation to the Donor’s interest in the above-mentioned Title to do anything and everything that the Donor could do, and for the Donor and in the name of the Donor to execute all such instruments and to do all such acts, matters and things as may be necessary or expedient for carrying out the powers hereby given."
+    },
+    {
+      "type": "plain",
+      "text": "The power granted herein is irrevocable."
+    },
+    {
+      "type": "plain",
+      "text": "SIGNED as a Deed by the Donor on …………………………20……"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this power of Attorney has been duly executed this........................…. day of……………………..20……………."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Donor",
+    "verification": true,
+    "signed_label": "SIGNED and SEALED by the"
+  },
+  "registry_block": [
+    "REGISTERED in the Register of Powers of Attorney as No......................... this ……………… day of ………………..........................……..…20………",
+    "SIGNED:",
+    "LAND REGISTRAR",
+    "Seal………………………………………………….",
+    "Name:…………………...………… Registrar’s Stamp / No………………..",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "Notes",
+    "indicate: Name; I.D/Passport No./PIN. If corporate body provide Registration details."
+  ],
+  "custom_fields": [
+    {
+      "name": "donor_pin",
+      "label": "PIN of the Donor",
+      "prompt": "Personal Identification Number of the registered proprietor giving the power",
+      "required": true
+    },
+    {
+      "name": "donee_registration_no",
+      "label": "Registration number of the Donee",
+      "prompt": "Company or other registration number of the Donee, where the Donee is a body corporate",
+      "required": false
+    },
+    {
+      "name": "donee_postal_address",
+      "label": "Postal address of the Donee",
+      "prompt": "Postal address of the Donee, for example 1-00100 Nairobi",
+      "required": true
+    },
+    {
+      "name": "donee_address_for_service",
+      "label": "Address for service of the Donee",
+      "prompt": "Address within Kenya at which documents may be served on the Donee",
+      "required": true
+    },
+    {
+      "name": "donee_tel_no",
+      "label": "Telephone number of the Donee",
+      "prompt": "Telephone number of the Donee",
+      "required": false
+    },
+    {
+      "name": "donee_email_address",
+      "label": "Email address of the Donee",
+      "prompt": "Email address of the Donee",
+      "required": false
+    },
+    {
+      "name": "consideration",
+      "label": "Consideration moving from the Donee",
+      "prompt": "What the Donee gave the Donor for the power, for example Kenya Shillings One Million (Kshs. 1,000,000/=)",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

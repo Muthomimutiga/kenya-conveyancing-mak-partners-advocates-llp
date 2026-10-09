@@ -1,11 +1,11 @@
-# Requisitions on Title — Template
+# Requisitions on Title: Template
 
 ## Output Category
 
-**Category B — Registry Document.** Begin output with:
-`[REGISTRY DOCUMENT — No letterhead. File at Land Registry. Check title details before filing.]`
+**Category B: Registry Document.** Begin output with:
+`[REGISTRY DOCUMENT: No letterhead. File at Land Registry. Check title details before filing.]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -23,12 +23,12 @@ Where the Vendor fails to answer requisitions or cannot satisfy them: LSK Condit
 
 ---
 
-## Requisitions on Title — Template
+## Requisitions on Title: Template
 
 ```
 IN THE MATTER OF:
 
-[FULL PROPERTY DESCRIPTION — e.g., "Land Reference Number 209/4491" or
+[FULL PROPERTY DESCRIPTION, e.g., "Land Reference Number 209/4491" or
 "Title Number Nairobi/Block 123/456"] situate at [PHYSICAL LOCATION]
 ("the Property")
 
@@ -187,8 +187,8 @@ Advocates for the Purchaser
 
 DRAWN BY:
 MAK & PARTNERS ADVOCATES LLP
-4TH FLOOR, VICTORIA AT TWO RIVERS, TWO RIVERS DEVELOPMENT, LIMURU ROAD
-P.O. BOX 10644-00100
+4TH FLOOR, VICTORIA AT TWO RIVERS, TWO RIVERS DEVELOPMENT, LIMURU ROAD, NAIROBI
+P.O. BOX 10644-00100, NAIROBI
 NAIROBI, KENYA
 TEL: +254 100 939 727
 EMAIL: mak@makadvocates.com
@@ -204,4 +204,4 @@ TO BE REPLIED TO BY:
 - Raise only the requisitions that are relevant to the specific matter. Remove inapplicable requisitions before sending (e.g., remove leasehold requisitions for freehold transactions; remove LCB consent requisitions for non-agricultural land).
 - The Vendor's Advocates must answer all requisitions in writing (LSK Condition 6.4). A blanket "no comment" or failure to answer within 14 days entitles the Purchaser to rescind (LSK Condition 6.4).
 - If the Official Search (LRA 85) reveals unexpected encumbrances not disclosed in the Agreement, those must be specifically flagged and resolved before the Purchaser proceeds.
-- After raising requisitions, update the Airtable Documents table — Document Type = "Requisitions on Title", Status = "Sent".
+- After raising requisitions, update the Airtable Documents table: Document Type = "Requisitions on Title", Status = "Sent".

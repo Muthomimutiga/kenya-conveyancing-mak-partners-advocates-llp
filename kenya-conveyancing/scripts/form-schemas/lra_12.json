@@ -1,0 +1,108 @@
+{
+  "form_id": "lra_12",
+  "form_number": "LRA-12",
+  "regulation": "(r. 27(1), 31(3))",
+  "doc_title": "APPLICATION FOR REPLACEMENT CERTIFICATE OF TITLE/LEASE ON LOSS/DESTRUCTION OF A PREVIOUS TITLE",
+  "doc_title_official": "APPLICATION FOR REPLACEMENT CERTIFICATE OF TITLE/LEASE ON LOSS/DESTRUCTION OF A PREVIOUS TITLE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-12-APPLICATION-FOR-REPLACEMENT-CERTIFICATE-OF-TITLELEASE-ON.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-12.txt"
+  },
+  "category": "application",
+  "when_used": "The registered proprietor applies for a replacement certificate of title or lease after the original has been lost or destroyed.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Proprietor",
+    "transferor_single": "Proprietor"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "none",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Applicant*",
+      "value_field": "transferorNames",
+      "bold": true
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Proprietor HEREBY APPLIES for the issue of the above new Certificate of Title /Lease on the following grounds:"
+    },
+    {
+      "type": "plain",
+      "text": "The Certificate of Title/Lease has been lost; or"
+    },
+    {
+      "type": "plain",
+      "text": "The Certificate of Title/Lease has been destroyed."
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application the Proprietor:"
+    },
+    {
+      "type": "plain",
+      "text": "Undertakes to deliver to the Registrar the old Certificate of Title/ Lease if found for cancellation."
+    },
+    {
+      "type": "plain",
+      "text": "Attaches a statutory declaration."
+    },
+    {
+      "type": "plain",
+      "text": "Attaches the following supporting documents:-"
+    },
+    {
+      "type": "plain",
+      "text": "Police Abstract"
+    },
+    {
+      "type": "plain",
+      "text": "Certified copies of National Identity Card/Passport of the registered Proprietor(s)."
+    },
+    {
+      "type": "plain",
+      "text": "Certified copies of certificate of registration/ incorporation as well as copies of National Identity Cards/Passport of the directors/partners/officials who have sworn the statutory declaration in the case of a registered entity."
+    },
+    {
+      "type": "plain",
+      "text": "Colour passport sized photos of the individual registered Proprietors or person(s) making the statutory declaration."
+    },
+    {
+      "type": "plain",
+      "text": "In the case of a registered entity, certified extract of the resolution of the entity seeking an application for a replacement title."
+    },
+    {
+      "type": "plain",
+      "text": "An official search from the registration office where the entity is registered."
+    },
+    {
+      "type": "plain",
+      "text": "An official search in respect of the Property and/or any other document evidencing ownership of the Property."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application of a loss or destroyed certificate of Title / lease has been duly executed by the Proprietor."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true
+  },
+  "registry_block": [
+    "LAND REGISTRAR",
+    "Name:………………………… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "custom_fields": [],
+  "pairs_with_lra9": true
+}

@@ -1,0 +1,129 @@
+{
+  "form_id": "lra_55",
+  "form_number": "LRA 55",
+  "regulation": "(r. 69, 70(2)(c))",
+  "doc_title": "CONSENT FOR SECOND OR SUBSEQUENT CHARGE",
+  "doc_title_official": "CONSENT FOR SECOND OR SUBSEQUENT CHARGE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-55-CONSENT-FOR-SECOND-OR-SUBSEQUENT-CHARGE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-55.txt"
+  },
+  "category": "consent",
+  "when_used": "A first chargee consents to a second or subsequent charge over the charged land and states how the two charges rank. The chargee is passed as the transferor and the chargor as the transferee, because the official execution prints the chargee first: the chargee is passed as a company party so that it seals under its common seal, the chargor signs as a natural person, and the borrower signs a block of its own from the borrower name field.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Chargee",
+    "transferor_single": "Chargee",
+    "transferee": "Chargor(s)",
+    "transferee_single": "Chargor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date",
+      "value_blank": true
+    },
+    {
+      "label": "The Chargor(s) Give full name(s)",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "and if corporate the registered number, if any",
+      "value_field": "transfereeIDs"
+    },
+    {
+      "label": "The Chargee",
+      "value_field": "transferorNames",
+      "bold": true
+    }
+  ],
+  "body_text": [
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "The above named Chargee in respect of the Charge dated {{charge_date}} and registered as Entry Number {{charge_entry_numbers}} of the property comprised in the above noted Title HEREBY CONSENT to a Second or Subsequent Charge* over the Charged land to {{second_or_subsequent_chargee}};**"
+    },
+    {
+      "type": "plain",
+      "text": "The Second or Subsequent Charge shall in point of security nand in relation to the Charge rank as follows (delete as applicable):-"
+    },
+    {
+      "type": "plain",
+      "text": "in parri passu;"
+    },
+    {
+      "type": "plain",
+      "text": "subsequent;"
+    },
+    {
+      "type": "plain",
+      "text": "in priority."
+    },
+    {
+      "type": "plain",
+      "text": "Delete whatever not applicable"
+    },
+    {
+      "type": "plain",
+      "text": "*Give the full name and address of the second or subsequent charge(s)"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEROF the Chargee has signed this Consent as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Chargee",
+    "verification": true,
+    "extra_blocks": [
+      {
+        "signed_label": "SIGNED as a deed by the",
+        "signer_label": "Borrower(s)",
+        "verification": true,
+        "name_field": "borrower_name",
+        "frame": "deed"
+      }
+    ]
+  },
+  "registry_block": [
+    "REGISTERED this ………………. day of ………………….……..20…",
+    "ENTRY in Encumbrances Section Number:…………..",
+    "Seal……………………………………………….",
+    "LAND REGISTRAR",
+    "Name:……………………… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "custom_fields": [
+    {
+      "name": "charge_date",
+      "label": "Date of the first Charge",
+      "prompt": "The date the charge the consenting chargee holds was made, for example 1st March 2020",
+      "required": true
+    },
+    {
+      "name": "charge_entry_numbers",
+      "label": "Entry number of the Charge",
+      "prompt": "The entry number or numbers under which the consenting chargee’s charge is registered in the encumbrances section",
+      "required": true
+    },
+    {
+      "name": "second_or_subsequent_chargee",
+      "label": "The second or subsequent chargee",
+      "prompt": "Full name and address of the second or subsequent chargee, as the form’s own note asks",
+      "required": true
+    },
+    {
+      "name": "borrower_name",
+      "label": "Name of the Borrower(s)",
+      "prompt": "Full name(s) of the borrower under the charge, where the borrower is not the chargor and signs the consent separately",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

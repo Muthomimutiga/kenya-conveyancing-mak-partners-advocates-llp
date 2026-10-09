@@ -1,11 +1,11 @@
-# Completion Notice — Template
+# Completion Notice: Template
 
 ## Output Category
 
-**Category A — Letterhead Document.** Begin output with:
-`[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Category A: Letterhead Document.** Begin output with:
+`[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -19,11 +19,11 @@ Send this notice at least 5 business days before the Completion Date (or earlier
 
 ---
 
-## Completion Notice — Template
+## Completion Notice: Template
 
 ```
 ══════════════════════════════════════════════════════════
-[PRINT ON FIRM LETTERHEAD — MAK & PARTNERS ADVOCATES LLP]
+[PRINT ON FIRM LETTERHEAD: MAK & PARTNERS ADVOCATES LLP]
 ══════════════════════════════════════════════════════════
 
 [DATE]
@@ -34,7 +34,7 @@ Send this notice at least 5 business days before the Completion Date (or earlier
 
 Dear [VENDOR'S ADVOCATE NAME / "Sirs"],
 
-RE: [PROPERTY DESCRIPTION — e.g., "LAND REFERENCE NUMBER 209/4491 —
+RE: [PROPERTY DESCRIPTION, e.g., "LAND REFERENCE NUMBER 209/4491:
     PROPOSED TRANSFER FROM [VENDOR NAME] TO [PURCHASER NAME]"]
 
 We act for [PURCHASER FULL NAME(S)] and refer to the above matter.
@@ -47,7 +47,7 @@ COMPLETION ARRANGEMENTS
 
 We propose the following arrangements for Completion:
 
-Date:    [COMPLETION DATE — DAY, DATE MONTH YEAR]
+Date:    [COMPLETION DATE: DAY, DATE MONTH YEAR]
 Time:    [TIME, e.g., "10:00 a.m."]
 Venue:   Your offices at [VENDOR'S ADVOCATE ADDRESS]
 
@@ -68,7 +68,7 @@ you provide, in cleared funds not later than three (3) Business Days before
 the Completion Date, in accordance with Condition 8.3 of the Law Society
 of Kenya Conditions of Sale (2015 Edition).
 
-[OR — where undertaking is given:]
+[OR, where undertaking is given:]
 
 Our firm undertakes, as advocates for the Purchaser, that we hold Kenya
 Shillings [BALANCE IN WORDS] (Kshs. [BALANCE IN FIGURES]) in our client
@@ -116,5 +116,5 @@ ADVOCATES FOR THE PURCHASER
 
 - Send via email and confirmed by post/courier.
 - Remove numbered items in "Completion Documents Required" that are not applicable to the specific matter (e.g., remove NLC consent for freehold transactions).
-- Confirm with the client that funds are available before sending this notice — the Purchaser is committing to Completion by this notice.
+- Confirm with the client that funds are available before sending this notice. The Purchaser is committing to Completion by this notice.
 - After sending, create a record in Airtable Documents table: Document Type = "Completion Notice", Status = "Sent".

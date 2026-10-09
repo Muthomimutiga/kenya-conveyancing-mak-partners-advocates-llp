@@ -1,0 +1,68 @@
+{
+  "form_id": "lra_86",
+  "form_number": "LRA 86",
+  "regulation": "(r. 87(4))",
+  "doc_title": "APPLICATION TO THE REGISTRAR FOR APPROVAL OF A DOCUMENT FOR USE WHERE NO FORM HAS BEEN PRESCRIBED",
+  "doc_title_official": "APPLICATION TO THE REGISTRAR FOR APPROVAL OF A DOCUMENT FOR USE WHERE NO FORM HAS BEEN PRESCRIBED",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-86-APPLICATION-TO-THE-REGISTRAR-FOR-APPROVAL-OF-A-DOCUMENT-FOR-USE-WHERE-NO-FORM-HAS-BEEN-PRESCRIBED.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-86.txt"
+  },
+  "category": "application",
+  "when_used": "An applicant asks the Land Registrar to approve a document for use in a transaction for which the Regulations prescribe no form, attaching the proposed form, a statutory declaration and the supporting documents.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "The Applicant: Give full name(s) and if corporate the registered number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Proposed document Proposed Form to be Approved is herewith attached*",
+      "value_field": "proposed_document"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES to the Land Registrar for approval of the above named form for use the following grounds that no form of the above nature and purpose has been prescribed:"
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application, the Applicant attaches a statutory declaration and supporting documents."
+    }
+  ],
+  "execution": {
+    "mode": "signature",
+    "signer": "transferor",
+    "signer_label": "applicant",
+    "verification": false
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "proposed_document",
+      "label": "The proposed document",
+      "prompt": "What the proposed form is and what it is for, for example a deed of variation of a sale agreement",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

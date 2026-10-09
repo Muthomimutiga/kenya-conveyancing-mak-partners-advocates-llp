@@ -1,0 +1,168 @@
+{
+  "form_id": "lra_59",
+  "form_number": "LRA-59",
+  "regulation": "(r. 74(2))",
+  "doc_title": "PARTIAL DISCHARGE OF CHARGE",
+  "doc_title_official": "PARTIAL DISCHARGE OF CHARGE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-59-PARTIAL-DISCHARGE-OF-CHARGE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-59.txt"
+  },
+  "category": "instrument",
+  "when_used": "A chargee discharges a registered charge in relation to part of the charged property, releasing that part while the charge stands over the rest. The chargee is passed as the transferor, because it is the only party that signs, and the chargor as the transferee, and the chargee signs by its duly authorised attorneys.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Chargee",
+    "transferor_single": "Chargee",
+    "transferee": "Chargor",
+    "transferee_single": "Chargor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Discharge:",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Registration of Charge(s) and entry Number",
+      "value_field": "charge_registration"
+    },
+    {
+      "label": "The Chargor: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "The Chargee: Give full name(s) and company’s registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "The Principal Amount Secured Under the Charge",
+      "value_field": "principal_amount"
+    },
+    {
+      "label": "Property Released from Charge",
+      "value_field": "property_released"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "numbered",
+      "text": "The amounts secured under the Charge(s) being otherwise secured the Chargee HEREBY DISCHARGES the Charge(s) shown as entry number(s) {{charge_entry_numbers}} in the Encumbrances Section of the register of the above-mentioned Title wholly.",
+      "number": 1
+    },
+    {
+      "type": "plain",
+      "text": "OR"
+    },
+    {
+      "type": "plain",
+      "text": "The Chargee HEREBY DISCHARGES the Charge(s) shown as entry number(s) {{charge_entry_numbers}} in the Encumbrances Section of the register in the above-mentioned Title in relation to {{property_released}}."
+    },
+    {
+      "type": "numbered",
+      "text": "This is a Partial Discharge.",
+      "number": 2
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this partial discharge has been duly executed as a deed the day and year mentioned above."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "transferor",
+    "signer_label": "Chargee",
+    "verification": true,
+    "signed_label": "SIGNED AND SEALED by the duly authorised attorney(ies) of the",
+    "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act",
+    "signatory_cell": "attorney",
+    "verification_variant": "attorney",
+    "signing_recital": "under and by virtue of Powers of Attorney registered at the {{poa_lands_registry}} Lands registry as number {{poa_lands_no_1}} and {{poa_lands_no_2}} and at the registry of Documents at {{poa_docs_registry}} as Number {{poa_docs_no_1}} and {{poa_docs_no_2}} respectively"
+  },
+  "registry_block": [
+    "REGISTERED this ………………. day of ………………..………..20…..",
+    "ENTRY in Encumbrances Section Number:…………..",
+    "Seal……………………………………………….",
+    "LAND REGISTRAR",
+    "Name: …………………………… Registrar’s Stamp / No………………",
+    "Signature: ………………………………………….."
+  ],
+  "custom_fields": [
+    {
+      "name": "charge_registration",
+      "label": "Date of registration of the Charge and entry number",
+      "prompt": "The date the charge was registered and the entry number it carries in the register, which repeats the entry number the body of the form asks for",
+      "required": true
+    },
+    {
+      "name": "principal_amount",
+      "label": "Principal amount secured under the Charge",
+      "prompt": "The principal amount secured under the charge",
+      "required": true
+    },
+    {
+      "name": "property_released",
+      "label": "Property released from the Charge",
+      "prompt": "The part of the charged property released by this partial discharge, described as the title describes it",
+      "required": true
+    },
+    {
+      "name": "charge_entry_numbers",
+      "label": "Entry number of the Charge",
+      "prompt": "The entry number or numbers of the charge in the Encumbrances Section of the register",
+      "required": true
+    },
+    {
+      "name": "poa_lands_registry",
+      "label": "Lands registry the powers of attorney are registered at",
+      "prompt": "Which lands registry are the powers of attorney registered at, for example Nairobi",
+      "required": true
+    },
+    {
+      "name": "poa_lands_no_1",
+      "label": "First power of attorney number at the lands registry",
+      "prompt": "What number is the first power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "poa_lands_no_2",
+      "label": "Second power of attorney number at the lands registry",
+      "prompt": "What number is the second power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "poa_docs_registry",
+      "label": "Place of the registry of Documents",
+      "prompt": "Where is the registry of Documents the powers of attorney are registered at, for example Nairobi",
+      "required": true
+    },
+    {
+      "name": "poa_docs_no_1",
+      "label": "First power of attorney number at the registry of Documents",
+      "prompt": "What Number is the first power of attorney registered under at that registry of Documents",
+      "required": true
+    },
+    {
+      "name": "poa_docs_no_2",
+      "label": "Second power of attorney number at the registry of Documents",
+      "prompt": "What Number is the second power of attorney registered under at that registry of Documents",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

@@ -1,11 +1,11 @@
-# LRA 33 — Transfer of Interest in Land (Freehold)
+# LRA 33: Transfer of Interest in Land (Freehold)
 
 ## Output Category
 
-**Category B — Registry Document.** Begin output with:
-`[REGISTRY DOCUMENT — No letterhead. File at Land Registry. Check title details before filing.]`
+**Category B: Registry Document.** Begin output with:
+`[REGISTRY DOCUMENT: No letterhead. File at Land Registry. Check title details before filing.]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -17,22 +17,22 @@ LRA 33 is the prescribed form for transferring a freehold interest in registered
 - Transmission by way of inheritance (see also LRA 39 and LRA 42)
 - Transfer by a personal representative to a beneficiary
 
-Do NOT use LRA 33 for leasehold interests — use LRA 63 (Transfer of Lease).
+Do NOT use LRA 33 for leasehold interests. Use LRA 63 (Transfer of Lease).
 
 **Statutory basis:** s.37 LRA 2012; Land Registration (General) Regulations, 2017
 
 ---
 
-## LRA 33 — Transfer of Interest in Land
+## LRA 33: Transfer of Interest in Land
 
 ```
 REPUBLIC OF KENYA
 
 LAND REGISTRATION ACT, 2012
 
-LRA 33 — TRANSFER OF INTEREST IN LAND
+LRA 33: TRANSFER OF INTEREST IN LAND
 
-[Registry Stamp — for official use]
+[Registry Stamp: for official use]
 
 TITLE NO.: _________________________________________________
 
@@ -63,7 +63,7 @@ P.O. Box: [ADDRESS]
 
 PROPERTY:
 
-The property known as [FULL TITLE DESCRIPTION — e.g., "Land Reference
+The property known as [FULL TITLE DESCRIPTION, e.g., "Land Reference
 Number 209/4491" or "Title Number Nairobi/Block 123/456"] situate at
 [PHYSICAL LOCATION, COUNTY].
 
@@ -114,7 +114,7 @@ EXECUTION BY TRANSFEROR(S):
 
 SIGNED by the Transferor:                  )
 [TRANSFEROR FULL NAME]                     )
-in the presence of:—                       )
+in the presence of:                        )
                                            )
 Name of Attesting Advocate:                )
 .................................................  )
@@ -138,7 +138,7 @@ Enrolment No.: ................
 
 SEALED with the Common Seal of             )
 [COMPANY NAME]                             )
-in the presence of:—                       )
+in the presence of:                        )
                                            )
 DIRECTOR:                                  )
 .................................................  )
@@ -159,7 +159,7 @@ ADVOCATE
 
 EXECUTION BY TRANSFEREE(S):
 
-[Same format as Transferor execution block — individual or company as applicable]
+[Same format as Transferor execution block: individual or company as applicable]
 
 ---
 
@@ -172,12 +172,12 @@ Sale reference file for the full text.]
 
 ---
 
-LODGEMENT CHECKLIST (remove before filing — for office use):
+LODGEMENT CHECKLIST (remove before filing, for office use):
 
-[ ] LRA 9 (General Application) — quadruplicate
-[ ] LRA 33 — two counterparts (Reg. 22)
+[ ] LRA 9 (General Application): quadruplicate
+[ ] LRA 33: two counterparts (Reg. 22)
 [ ] Original Certificate of Title
-[ ] Stamped instrument (stamp duty paid — KRA iTax)
+[ ] Stamped instrument (stamp duty paid: KRA iTax)
 [ ] Rates Clearance Certificate (valid 21+ days)
 [ ] Rent Clearance Certificate (leasehold only)
 [ ] LCB or NLC Consent (if applicable)
@@ -186,19 +186,19 @@ LODGEMENT CHECKLIST (remove before filing — for office use):
 [ ] Transferee: 2 passport photographs
 [ ] Transferee: Marriage certificate (if applicable)
 [ ] Transferee: Certificate of Incorporation + CR12 (if company)
-[ ] Power of Attorney — LRA 5 or LRA 6 (if signing through attorney)
+[ ] Power of Attorney: LRA 5 or LRA 6 (if signing through attorney)
 [ ] LRA 58 Discharge of Charge (if property was charged)
-[ ] Registration fee — KES 1,000 (electronic payment / banker's cheque)
-[ ] Spousal Consent (whenever the Transferor is or may be married — s.93 LRA + Matrimonial Property Act s.12)
+[ ] Registration fee: KES 1,000 (electronic payment / banker's cheque)
+[ ] Spousal Consent (whenever the Transferor is or may be married, s.93 LRA + Matrimonial Property Act s.12)
 ```
 
 ---
 
 ## Drafting Notes
 
-- Print in two counterparts (Reg. 22) — one for the registry, one returned to parties.
-- LRA 9 (quadruplicate) must accompany every lodgement — it is not optional.
-- Stamp duty must be paid before lodgement — the Registrar will not accept an unstamped instrument (s.46 LRA).
+- Print in two counterparts (Reg. 22): one for the registry, one returned to parties.
+- LRA 9 (quadruplicate) must accompany every lodgement. It is not optional.
+- Stamp duty must be paid before lodgement. The Registrar will not accept an unstamped instrument (s.46 LRA).
 - Execution: both Transferor AND Transferee must sign. Each signature verified by a qualified advocate.
 - Attesting advocate's signature must appear on the same page as the executing party's name (Reg. 87).
 - If a Discharge of Charge (LRA 58) is required, prepare and lodge it simultaneously with the Transfer.

@@ -1,11 +1,11 @@
-# Rates Clearance Application — Template
+# Rates Clearance Application: Template
 
 ## Output Category
 
-**Category A — Letterhead Document.** Begin output with:
-`[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Category A: Letterhead Document.** Begin output with:
+`[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Lexend 12pt, single spaced, justified.
+**Typography:** the firm's correspondence font (`font_correspondence` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -21,23 +21,23 @@ The certificate must be valid for at least 21 days from the Completion Date and 
 
 ---
 
-## Template — Physical Application (Non-Nairobi Counties)
+## Template: Physical Application (Non-Nairobi Counties)
 
 ```
 ══════════════════════════════════════════════════════════
-[PRINT ON FIRM LETTERHEAD — MAK & PARTNERS ADVOCATES LLP]
+[PRINT ON FIRM LETTERHEAD: MAK & PARTNERS ADVOCATES LLP]
 ══════════════════════════════════════════════════════════
 
 [DATE]
 
-The County Director of Revenue / Chief Officer — Finance,
+The County Director of Revenue / Chief Officer, Finance,
 [COUNTY GOVERNMENT NAME]
 [COUNTY HEADQUARTERS ADDRESS]
 
 Dear Sir/Madam,
 
 RE: APPLICATION FOR LAND RATES CLEARANCE CERTIFICATE
-    [FULL PROPERTY DESCRIPTION — LR No. / Title No. / Plot No.]
+    [FULL PROPERTY DESCRIPTION: LR No. / Title No. / Plot No.]
     REGISTERED PROPRIETOR: [VENDOR FULL NAME(S)]
 
 We act for [VENDOR FULL NAME(S)] ("the Registered Proprietor") in
@@ -79,7 +79,7 @@ ADVOCATES FOR THE VENDOR
 
 ---
 
-## Nairobi City County — Online Portal Note
+## Nairobi City County: Online Portal Note
 
 For Nairobi properties, advise the Vendor (in a separate client note or via the client update letter) as follows:
 
@@ -97,5 +97,5 @@ We recommend applying at least 3–5 business days before the Completion Date to
 ## Drafting Notes
 
 - After rates clearance is received, verify: (a) property description matches the title; (b) validity period covers Completion Date + at least 21 days.
-- Attach 3 years of rates receipts at Completion — the Vendor should hold these. If receipts are lost, a statement of account from the County is an acceptable alternative.
+- Attach 3 years of rates receipts at Completion. The Vendor should hold these. If receipts are lost, a statement of account from the County is an acceptable alternative.
 - Record in Airtable: Document Type = "Rates Clearance Application", Status = "Sent" once sent; update to Status = "Ready" when certificate received.

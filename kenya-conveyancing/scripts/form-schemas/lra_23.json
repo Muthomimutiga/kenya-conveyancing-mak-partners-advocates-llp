@@ -1,0 +1,78 @@
+{
+  "form_id": "lra_23",
+  "form_number": "LRA 23",
+  "regulation": "(r. 40(1), 41(1))",
+  "doc_title": "APPLICATION BY AN INTERESTED PERSON TO ASCERTAIN AND FIX THE BOUNDARIES OF LAND",
+  "doc_title_official": "APPLICATION BY AN INTERESTED PERSON TO ASCERTAIN AND FIX THE BOUNDARIES OF LAND",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-23-APPLICATION-BY-AN-INTERESTED-PERSON-TO-ASCERTAIN-AND-FIX-LAND-BOUNDARIES.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-23.txt"
+  },
+  "category": "application",
+  "when_used": "The registered proprietor or an interested person asks the Land Registrar to ascertain and fix the boundaries of a parcel of land.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": [
+    "Date Received\n…………………",
+    "Presentation Book\nNo………………….",
+    "Official Fees Paid\nKshs.",
+    "Receipt No.\n……………"
+  ],
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Name of Applicant / Interested Party: Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Registered Proprietors of land adjoining Give full name(s)",
+      "value_template": "{{adjoining_proprietors}}"
+    },
+    {
+      "label": "Address (within Kenya for service of notice)",
+      "value_template": "{{applicant_address}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The registered Proprietor/Interested Party HEREBY APPLIES to the Land Registrar to ascertain and fix the boundaries of the above land."
+    },
+    {
+      "type": "plain",
+      "text": "Dated this ……………………………day of ………………………….20……."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "adjoining_proprietors",
+      "label": "Registered proprietors of the adjoining land",
+      "prompt": "Full name of the registered proprietor of every parcel adjoining the land, numbered 1, 2 and 3 as the form prints them",
+      "required": true
+    },
+    {
+      "name": "applicant_address",
+      "label": "Address of the Applicant",
+      "prompt": "Address within Kenya at which notice of the boundary hearing may be served on the applicant",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

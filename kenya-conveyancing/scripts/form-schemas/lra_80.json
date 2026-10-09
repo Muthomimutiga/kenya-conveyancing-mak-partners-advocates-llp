@@ -1,0 +1,136 @@
+{
+  "form_id": "lra_80",
+  "form_number": "LRA 80",
+  "regulation": "(r. 82)",
+  "doc_title": "GRANT OF EASEMENT/ANALOGOUS RIGHT",
+  "doc_title_official": "GRANT OF EASEMENT/ANALOGOUS RIGHT",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-80-GRANT-OF-EASEMENT-ANALOGOUS-RIGHT.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-80.txt"
+  },
+  "category": "instrument",
+  "when_used": "A proprietor grants an easement or analogous right over the servient land in favour of the dominant land, for a period and on conditions.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Grantor",
+    "transferor_single": "Grantor",
+    "transferee": "Grantee",
+    "transferee_single": "Grantee"
+  },
+  "filing_box": [
+    "Date Received\n…………………",
+    "Presentation Book\nNo………………",
+    "Official Fees Paid\nKshs.",
+    "Receipt No."
+  ],
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument",
+      "value_blank": true
+    },
+    {
+      "label": "Proprietor/Grantor",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Grantee",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Nature of Easement/analogous right Granted",
+      "value_field": "nature_of_easement"
+    },
+    {
+      "label": "Conditions",
+      "value_field": "conditions"
+    },
+    {
+      "label": "Period of Easement",
+      "value_field": "period_of_easement"
+    },
+    {
+      "label": "land or specific part burdened by the easem",
+      "value_field": "servient_land"
+    },
+    {
+      "label": "Dominant Land",
+      "value_field": "dominant_land"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "In consideration of {{consideration}}"
+    },
+    {
+      "type": "plain",
+      "text": "(receipt whereof is hereby acknowledged by the Grantor) the Grantor HEREBY GRANTS to the Grantee an Easement/analogous right over the above Title in the nature for the period and subject to the conditions stated above."
+    },
+    {
+      "type": "witness",
+      "text": "IN"
+    },
+    {
+      "type": "witness",
+      "text": "WITNESS WHEREOF this grant of easement has been duly executed by the parties herein."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Grantor",
+    "verification": true,
+    "signed_label": "SIGNED by the"
+  },
+  "registry_block": [
+    "REGISTERED this ……………….day of ………………………. 20……",
+    "LAND REGISTRAR",
+    "Seal …………..",
+    "Name:………………………………Registrar’s  Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "custom_fields": [
+    {
+      "name": "consideration",
+      "label": "Consideration for the grant",
+      "prompt": "What the grantee gives for the easement, in words and figures",
+      "required": true
+    },
+    {
+      "name": "nature_of_easement",
+      "label": "Nature of the easement or analogous right granted",
+      "prompt": "What the easement allows, for example a right of way on foot and with vehicles over the access road",
+      "required": true
+    },
+    {
+      "name": "conditions",
+      "label": "Conditions",
+      "prompt": "The conditions the easement is granted subject to",
+      "required": false
+    },
+    {
+      "name": "period_of_easement",
+      "label": "Period of the easement",
+      "prompt": "How long the easement runs for, for example in perpetuity or for twenty years from 1st October 2026",
+      "required": true
+    },
+    {
+      "name": "servient_land",
+      "label": "Land or specific part burdened by the easement",
+      "prompt": "The servient land, or the specific part of it, that the easement burdens",
+      "required": true
+    },
+    {
+      "name": "dominant_land",
+      "label": "Dominant land",
+      "prompt": "The land that takes the benefit of the easement, by title number and location",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

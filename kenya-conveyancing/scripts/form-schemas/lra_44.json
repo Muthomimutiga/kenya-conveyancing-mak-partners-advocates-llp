@@ -1,0 +1,45 @@
+{
+  "form_id": "lra_44",
+  "form_number": "LRA 44",
+  "regulation": "(r. 59(1))",
+  "doc_title": "TRANSFER BY TRUSTEE IN BANKRUPTCY",
+  "doc_title_official": "TRANSFER BY TRUSTEE IN BANKRUPTCY",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-44-TRANSFER-BY-TRUSTEE-IN-BANKRUPTCY.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-44.txt"
+  },
+  "category": "application",
+  "when_used": "A trustee in bankruptcy applies to be registered as trustee over the bankrupt proprietor's land, attaching the court order.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    { "label": "Date of Application", "value_blank": true },
+    { "label": "The Applicant: Give full name(s)", "value_field": "transferorNames", "bold": true },
+    { "label": "ID/Passport/Company Registration No. of the Trustee(if any)", "value_field": "transferorIDs" },
+    { "label": "Name of Proprietor/Bankrupt", "value_template": "{{bankrupt_name}}" },
+    { "label": "Date of Court Order", "value_template": "{{date_of_court_order}}" }
+  ],
+  "body_text": [
+    { "type": "intro", "text": "The Applicant HEREBY APPLIES to be registered as Trustee in Bankruptcy in respect of the above noted land." },
+    { "type": "plain", "text": "In support of this Application, the Applicant attaches a Certified True copy of the Court Order and supporting documents." }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    { "name": "bankrupt_name", "label": "Name of the proprietor or bankrupt", "prompt": "Full name of the registered proprietor who has been adjudged bankrupt", "required": true },
+    { "name": "date_of_court_order", "label": "Date of the court order", "prompt": "The date of the court order appointing the trustee in bankruptcy", "required": true }
+  ],
+  "pairs_with_lra9": true
+}

@@ -1,0 +1,30 @@
+{
+  "_about": "Forms the plugin will not draft. Each is issued, sealed or signed by the Land Registrar or is a register or certificate maintained by the registry. Generating one would be producing a registrar's document.",
+  "excluded": [
+    {"form_number": "LRA 2", "doc_title": "THE LAND REGISTER (ABSOLUTE TITLES)", "reason": "The register itself, maintained by the registry."},
+    {"form_number": "LRA 3", "doc_title": "THE LAND REGISTER (LEASEHOLD)", "reason": "The register itself, maintained by the registry."},
+    {"form_number": "LRA 4", "doc_title": "REGISTER OF POWERS OF ATTORNEY", "reason": "A register maintained by the registry."},
+    {"form_number": "LRA 11", "doc_title": "NOTICE OF INTENTION TO NOTE A SPOUSE IN THE REGISTER", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 13", "doc_title": "NOTICE FOR ISSUE OF A REPLACEMENT TITLE", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 18", "doc_title": "NOTICE FOR RECONSTRUCTION OF LOST OR DESTROYED LAND REGISTER", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 20", "doc_title": "CERTIFICATE OF TITLE", "reason": "Issued by the registry."},
+    {"form_number": "LRA 21", "doc_title": "CERTIFICATE OF LEASE", "reason": "Issued by the registry."},
+    {"form_number": "LRA 22", "doc_title": "REFUSAL TO REGISTER AN APPLICATION FOR REGISTRATION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 24", "doc_title": "NOTICE OF INTENTION TO ASCERTAIN AND FIX THE BOUNDARIES", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 25", "doc_title": "ORDER FOR DEMARCATION MAINTENANCE", "reason": "An order of the Registrar."},
+    {"form_number": "LRA 31", "doc_title": "NOTICE FOR A HEARING ON APPLICATION FOR PARTITION OF LAND HELD IN COMMON", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 41", "doc_title": "NOTIFICATION BY REGISTRAR TO PERSONAL REPRESENTATIVE", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 68", "doc_title": "NOTICE OF CAUTION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 71", "doc_title": "NOTICE OF INTENTION TO REMOVE A CAUTION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 73", "doc_title": "NOTICE OF HEARING ON APPLICATION TO REMOVE CAUTION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 74", "doc_title": "ORDER OF THE REGISTRAR ON AN APPLICATION TO REMOVE A CAUTION", "reason": "An order of the Registrar."},
+    {"form_number": "LRA 76", "doc_title": "NOTICE OF INTENTION TO REGISTER, REMOVE OR VARY A RESTRICTION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 77", "doc_title": "NOTICE OF RESTRICTION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 79", "doc_title": "NOTICE OF VARIATION OR REMOVAL OF RESTRICTION", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 85", "doc_title": "CERTIFICATE OF OFFICIAL SEARCH", "reason": "Issued by the registry in answer to an LRA 84."},
+    {"form_number": "LRA 90", "doc_title": "NOTICE OF RECTIFICATION OF REGISTER BY REGISTRAR", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 91", "doc_title": "NOTICE OF INTENTION TO RECTIFY REGISTER", "reason": "Issued by the Registrar."},
+    {"form_number": "LRA 92", "doc_title": "ORDER OF RECTIFICATION OF REGISTER", "reason": "An order of the Registrar."},
+    {"form_number": "LRA 93", "doc_title": "SUMMONS", "reason": "Issued by the Registrar."}
+  ]
+}

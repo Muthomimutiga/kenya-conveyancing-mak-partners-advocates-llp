@@ -1,0 +1,86 @@
+{
+  "form_id": "lra_72",
+  "form_number": "LRA 72",
+  "regulation": "(r. 80(7))",
+  "doc_title": "NOTICE OF OBJECTION TO REMOVAL OF A CAUTION",
+  "doc_title_official": "NOTICE OF OBJECTION TO REMOVAL OF A CAUTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-72-NOTICE-OF-OBJECTION-TO-REMOVAL-OF-A-CAUTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-72.txt"
+  },
+  "category": "notice",
+  "when_used": "A cautioner served with an application to remove a caution notifies the Land Registrar that the cautioner objects to its removal.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Cautioner",
+    "transferor_single": "Cautioner",
+    "transferee": "Proprietor/Interested Party",
+    "transferee_single": "Proprietor/Interested Party"
+  },
+  "filing_box": "none",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application to remove Caution",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Caution:",
+      "value_field": "caution_date"
+    },
+    {
+      "label": "The Cautioner: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "The Proprietor/Interested Party: Give full name(s) and company’s registration number, if any",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Cautioner HEREBY NOTIFIES the Land Registrar of his/her/its objection to the removal of the Caution registered in Entry Number(s) {{entry_numbers}} on the Encumbrances Section of the Register."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this notice of objection has been duly executed this........................…. day of…………..………….. 20………."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Cautioner",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "caution_date",
+      "label": "Date of the Caution",
+      "prompt": "The date of the caution objected to being removed",
+      "required": true
+    },
+    {
+      "name": "entry_numbers",
+      "label": "Entry number of the Caution",
+      "prompt": "The entry number or numbers of the caution in the Encumbrances Section of the register",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

@@ -1,11 +1,11 @@
-# LRA 58 — Discharge of Charge
+# LRA 58: Discharge of Charge
 
 ## Output Category
 
-**Category B — Registry Document.** Begin output with:
-`[REGISTRY DOCUMENT — No letterhead. File at Land Registry. Check title details before filing.]`
+**Category B: Registry Document.** Begin output with:
+`[REGISTRY DOCUMENT: No letterhead. File at Land Registry. Check title details before filing.]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -21,16 +21,16 @@ LRA 58 is used when a charge (mortgage) over a property is fully repaid and the 
 
 ---
 
-## LRA 58 — Discharge of Charge
+## LRA 58: Discharge of Charge
 
 ```
 REPUBLIC OF KENYA
 
 LAND REGISTRATION ACT, 2012
 
-LRA 58 — DISCHARGE OF CHARGE
+LRA 58: DISCHARGE OF CHARGE
 
-[Registry Stamp — for official use]
+[Registry Stamp: for official use]
 
 TITLE NO.: _________________________________________________
 
@@ -48,7 +48,7 @@ DEALING NO.: __________________ DATE: __________________
 
 CHARGEE (the lender discharging):
 
-Full Name: [CHARGEE FULL NAME — e.g., "EQUITY BANK (KENYA) LIMITED"]
+Full Name: [CHARGEE FULL NAME, e.g., "EQUITY BANK (KENYA) LIMITED"]
 [If company: Certificate of Registration No.: ____________]
 P.O. Box: [ADDRESS]
 
@@ -84,7 +84,7 @@ EXECUTION BY CHARGEE:
 
 SEALED with the Common Seal of             )
 [CHARGEE COMPANY NAME]                     )
-in the presence of:—                       )
+in the presence of:                        )
                                            )
 DIRECTOR:                                  )
 .................................................  )
@@ -109,7 +109,7 @@ Enrolment No.: ................
 
 SIGNED by the Chargee:                     )
 [CHARGEE FULL NAME]                        )
-in the presence of:—                       )
+in the presence of:                        )
                                            )
 Name of Attesting Advocate:                )
 .................................................  )
@@ -125,11 +125,11 @@ ADVOCATE
 
 ---
 
-LODGEMENT CHECKLIST (remove before filing — for office use):
+LODGEMENT CHECKLIST (remove before filing, for office use):
 
-[ ] LRA 9 (General Application) — quadruplicate
-[ ] LRA 58 — two counterparts (Reg. 22)
-[ ] Registration fee — KES 1,000 (or applicable discharge fee)
+[ ] LRA 9 (General Application): quadruplicate
+[ ] LRA 58: two counterparts (Reg. 22)
+[ ] Registration fee: KES 1,000 (or applicable discharge fee)
 [ ] Bank / lender consent letter (if not already in the registry file)
 [ ] Lodge simultaneously with Transfer (LRA 33 or LRA 63)
 ```
@@ -140,6 +140,6 @@ LODGEMENT CHECKLIST (remove before filing — for office use):
 
 - The Discharge is signed by the CHARGEE (the bank / lender), NOT the Chargor (borrower). The Vendor's advocate must liaise with the lender to obtain a signed LRA 58 before Completion.
 - Simultaneously lodge: where a Discharge is being lodged with a Transfer, present both at the same time. The Registrar processes the Discharge first.
-- The lender's written consent to the transfer (s.59 LRA) is satisfied by the Discharge — you do not need a separate consent letter if the full Discharge is being given.
+- The lender's written consent to the transfer (s.59 LRA) is satisfied by the Discharge. You do not need a separate consent letter if the full Discharge is being given.
 - Processing time: 7 business days (Reg. 32).
 - The Discharge extinguishes the charge from the Encumbrances Section of the register (s.82 LRA).

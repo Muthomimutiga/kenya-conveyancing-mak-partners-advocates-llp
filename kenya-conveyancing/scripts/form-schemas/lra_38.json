@@ -1,0 +1,98 @@
+{
+  "form_id": "lra_38",
+  "form_number": "LRA 38",
+  "regulation": "(r. 54(1))",
+  "doc_title": "APPLICATION FOR THE REMOVAL OF THE NAME OF A DECEASED JOINT PROPRIETOR FROM THE REGISTER",
+  "doc_title_official": "APPLICATION FOR THE REMOVAL OF THE NAME OF A DECEASED JOINT PROPRIETOR FROM THE REGISTER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-38-APPLICATION-FOR-THE-REMOVAL-OF-THE-NAME-OF-A-DECEASED-JOINT-PROPRIETOR-FROM-THE-REGISTER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-38.txt"
+  },
+  "category": "application",
+  "when_used": "The surviving joint proprietors apply to have a deceased joint proprietor's name removed from the register so that they alone remain registered.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Surviving Joint Proprietor(s)",
+    "transferor_single": "surviving Joint Proprietor"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application:",
+      "value_blank": true
+    },
+    {
+      "label": "Joint Proprietors on Register:",
+      "value_template": "{{joint_proprietors_on_register}}"
+    },
+    {
+      "label": "Applicant(s)/Surviving Joint Proprietor(s):",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Address:",
+      "value_template": "{{applicant_addresses}}"
+    },
+    {
+      "label": "Deceased Joint Proprietor:",
+      "value_template": "{{deceased_joint_proprietor}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant (s) being the Surviving Joint Proprietor(s) HEREBY APPLIES to the Land Registrar to remove the name of the above Deceased Joint Proprietor from the Register of the above-mentioned Title to the intent that the Surviving Joint Proprietor(s) shall be registered as the sole proprietor(s) of the above-noted property."
+    },
+    {
+      "type": "plain",
+      "text": "The Proprietor(s) HEREBY PRODUCES for registration by the Land Registrar a certified copy of the Death Certificate of the Deceased Joint Proprietor."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application is duly signed by the Applicant surviving Joint Proprietor(s)."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "surviving Joint Proprietor",
+    "verification": true
+  },
+  "registry_block": [
+    "REGISTERED and SEALED this …………… day of …….……. 20……..",
+    "LAND REGISTRAR",
+    "Seal…………………………………………………..",
+    "Name:…………………………… Registrar’s Stamp / No………………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "Notes:",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "joint_proprietors_on_register",
+      "label": "Joint proprietors on the register",
+      "prompt": "Full name and address of every joint proprietor as the register shows them, numbered 1 and 2 as the form prints them",
+      "required": true
+    },
+    {
+      "name": "applicant_addresses",
+      "label": "Addresses of the surviving joint proprietors",
+      "prompt": "Address of each surviving joint proprietor making this application, in the same order as their names",
+      "required": true
+    },
+    {
+      "name": "deceased_joint_proprietor",
+      "label": "Deceased joint proprietor",
+      "prompt": "Full name and last address of the joint proprietor who has died",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

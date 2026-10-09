@@ -1,0 +1,87 @@
+{
+  "form_id": "lra_87",
+  "form_number": "LRA 87",
+  "regulation": "(r. 91(1))",
+  "doc_title": "APPLICATION TO RECTIFY THE REGISTER",
+  "doc_title_official": "APPLICATION TO RECTIFY THE REGISTER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-87-APPLICATION-TO-RECTIFY-THE-REGISTER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-87.txt"
+  },
+  "category": "application",
+  "when_used": "An applicant asks the Land Registrar to rectify the register of a title, setting out the rectifications sought and the grounds, with the supporting documents attached.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Applicant Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport/Registration No. of Applicant (if any)",
+      "value_field": "transferorIDs"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES to the Land Registrar to rectify the register of the above named land as follows:"
+    },
+    {
+      "type": "numbered",
+      "text": "{{rectifications}}",
+      "number": 1
+    },
+    {
+      "type": "plain",
+      "text": "The application is made on the grounds that*:"
+    },
+    {
+      "type": "numbered",
+      "text": "{{grounds}}",
+      "number": 1
+    },
+    {
+      "type": "plain",
+      "text": "*Provide supporting documents"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application for rectification of the register has been duly executed this..............…. day of …………………….. 20……"
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "rectifications",
+      "label": "Rectifications applied for",
+      "prompt": "What the register should be rectified to say, one rectification per line",
+      "required": true
+    },
+    {
+      "name": "grounds",
+      "label": "Grounds for the application",
+      "prompt": "The grounds the application is made on, one ground per line",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

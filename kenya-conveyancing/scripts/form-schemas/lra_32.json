@@ -1,0 +1,92 @@
+{
+  "form_id": "lra_32",
+  "form_number": "LRA-32",
+  "regulation": "(r. 47)",
+  "doc_title": "FORM OF CONSENT OF A CHARGEE TO A PARTITION",
+  "doc_title_official": "FORM OF CONSENT OF A CHARGEE TO A PARTITION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-32-FORM-OF-CONSENT-OF-A-CHARGEE-TO-A-PARTITION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-32.txt"
+  },
+  "category": "consent",
+  "when_used": "A chargee consents to the partition of the charged land so that the partition can be registered on the title.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Chargee",
+    "transferor_single": "Chargee",
+    "transferee": "Proprietor(s)",
+    "transferee_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date",
+      "value_blank": true
+    },
+    {
+      "label": "The Proprietor(s): Give full name(s)",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "and if corporate the registered number, if any",
+      "value_field": "transfereeIDs"
+    },
+    {
+      "label": "The Chargee",
+      "value_field": "transferorNames",
+      "bold": true
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The above named Chargee in respect of the Charge dated {{charge_date}} and registered as Entry Number {{charge_entry_number}} of the property comprised in the above noted Title HEREBY CONSENT for the land to be partitioned in the following manner;*"
+    },
+    {
+      "type": "table",
+      "columns": [
+        "Cadastral\nPlan",
+        "Title\nNumber",
+        "Area\n(approximately)",
+        "Proprietor\nNumber"
+      ],
+      "rows_field": "partition_schedule"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEROF the Chargee has signed this Consent as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "transferor",
+    "signer_label": "Chargee",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "charge_date",
+      "label": "Date of the Charge",
+      "prompt": "The date the charge the chargee holds was made, for example 1st March 2020",
+      "required": true
+    },
+    {
+      "name": "charge_entry_number",
+      "label": "Entry number of the Charge",
+      "prompt": "The entry number under which the charge is registered in the encumbrances section of the register",
+      "required": true
+    },
+    {
+      "name": "partition_schedule",
+      "label": "Manner of the partition",
+      "prompt": "How the land is to be partitioned. One row per line, cells separated by a pipe: cadastral plan | title number | area (approximately) | proprietor number",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

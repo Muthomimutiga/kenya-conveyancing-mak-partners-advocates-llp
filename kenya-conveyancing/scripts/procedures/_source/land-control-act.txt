@@ -1,0 +1,198 @@
+# Cached primary law. Do not edit by hand.
+# slug:     land-control-act
+# title:    Land Control Act
+# source:   https://new.kenyalaw.org/akn/ke/act/1967/34/eng@2022-12-31
+# as at:    2022-12-31
+# fetched:  2026-09-23
+# Every proposition in a procedure schema must quote text that appears below.
+
+LAWS OF KENYA
+
+LAND CONTROL ACT
+
+CAP. 302
+
+Assented to on 11 December 1967
+
+Commenced on 12 December 1967
+
+[Amended by Land (Group Representatives) Act, 1968 (Act No. 36 of 1968) on 28 June 1968]
+
+[Amended by Statute Law (Repeal and Miscellaneous Amendments) Act, 1980 (Act No. 13 of 1980) on 24 December 1980]
+
+[Amended by Land Control (Amendment) Act,1987 (Act No. 5 of 1987) on 8 May 1987]
+
+[Amended by Statute Law (Miscellaneous Amendments) Act, 1987 (Act No. 22 of 1987) on 31 December 1987]
+
+[Amended by Statute Law (Miscellaneous Amendments) Act, 1988 (Act No. 13 of 1988) on 16 December 1988]
+
+[Amended by Companies and Insolvency Legislation (Consequential Amendments) Act, 2015 (Act No. 19 of 2015) on 3 July 2017]
+
+[Revised by 24th Annual Supplement (Legal Notice 221 of 2023) on 31 December 2022]
+
+An Act of Parliament to provide for controlling transactions in agricultural land
+Part I – PRELIMINARY
+1. Short title
+This Act may be cited as the Land Control Act.
+2. Interpretation
+In this Act, unless the context otherwise requires—"agricultural land" means—(a)land that is not within—(i)a municipality or a township; or
+(ii)an area which was, on or at any time after the 1st July 1952, a township under the Townships Act (Cap. 133), 1948 (repealed); or
+(iii)an area which was, on or at any time after the 1st July 1952, a trading centre under the Trading Centres Act (Cap. 278, 1948 repealed); or
+(iv)a market;
+
+(b)land in the Nairobi Area or in any municipality, township or urban centre that is declared by the Cabinet Secretary, by notice in the Gazette, to be agricultural land for the purposes of this Act,
+other than land which, by reason of any condition or covenant in the title thereto or any limitation imposed by law, is subject to the restriction that it may not be used for agriculture or to the requirement that it shall be used for a non- agricultural purpose;"a board" means a land control board, a provincial land control appeals board or the central land control appeals board;"the central land control appeals board" means the central land control appeals board established by section 12;"controlled transaction" means one of the transactions specified in section 6(1) of this Act, other than those specified in section 6(3);"co-operative society" means a society registered as a co-operative society under the Co-operative Societies Act (Cap. 490);"county council" means a county council established under the Local Government Act (Cap. 265);"land" includes an estate, interest or right in land;"land control area" means an area to which the Cabinet Secretary has applied this Act under section 3;"land control board" means a land control board established under section 5;"mortgage" includes charge;"private company" means a private company within the meaning of section 9 of the Companies Act (Cap. 486);"province" includes the Nairobi Area;"provincial land control appeals board" means a provincial land control appeals board established under section 10;"the registrar" means any person charged with the registration of dealings in land under a written law or, in relation to shares, the person keeping the register of the shares;"share" means a share within the meaning of the Companies Act (Cap. 486).[Act No. 5 of 1987, s. 2, Act No. 13 of 1988, Sch., Act No. 19 of 2015, s. 27.]
+
+Part II – ESTABLISHMENT OF LAND CONTROL AREAS AND DIVISIONS
+3. Application of control
+The Cabinet Secretary may, by notice in the Gazette, apply this Act to any area, if he considers it expedient to do so.
+4. Establishment of divisions
+The Cabinet Secretary may, by notice in the Gazette, divide a land control area into two or more divisions, if he considers it expedient to do so.
+
+Part III – LAND CONTROL BOARDS
+5. Establishment of land control boards
+(1)The Cabinet Secretary shall, by notice in the Gazette, establish a land control board for every land control area or, where it is divided into divisions, for each division.
+(2)The membership of a land control board shall be as provided in in the First Schedule of this Act.
+
+Part IV – CONTROL OF DEALINGS IN AGRICULTURAL LAND
+6. Transactions affecting agricultural land
+(1)Each of the following transactions, that is to say—(a)the sale, transfer, lease, mortgage, exchange, partition or other disposal of or dealing with any agricultural land which is situated within a land control area;
+(b)the division of any such agricultural land into two or more parcels to be held under separate titles, other than the division of an area of less than twenty acres into plots in an area to which the Development and Use of Land (Planning) Regulations, 1961 (L.N. 516/1961) for the time being apply;
+(c)the issue, sale, transfer, mortgage or any other disposal of or dealing with any share in a private company or co-operative society which for the time being owns agricultural land situated within a land control area,
+is void for all purposes unless the land control board for the land control area or division in which the land is situated has given its consent in respect of that transaction in accordance with this Act.
+(2)For the avoidance of doubt it is declared that the declaration of a trust of agricultural land situated within a land control area is a dealing in that land for the purposes of subsection (1).
+(3)This section does not apply to—(a)the transmission of land by virtue of the will or intestacy of a deceased person, unless that transmission would result in the division of the land into two or more parcels to be held under separate titles; or
+(b)a transaction to which the Government or the Settlement Fund Trustees or (in respect of Trust land) a county council is a party.
+[Act No. 13 of 1980, Sch., Act No. 22 of 1987, Sch., Act No. 13 of 1988, Sch.]
+
+7. Recovery of consideration
+If any money or other valuable consideration has been paid in the course of a controlled transaction that becomes void under this Act, that money or consideration shall be recoverable as a debt by the person who paid it from the person to whom it was paid, but without prejudice to section 22.[Act No. 13 of 1980, Sch.]
+
+Part V – GRANTING OF CONSENT
+8. Application for consent
+(1)An application for consent in respect of a controlled transaction shall be made in the prescribed form to the appropriate land control board within six months of the making of the agreement for the controlled transaction by any party thereto:Provided that the High Court may, notwithstanding that the period of six months may have expired, extend that period where it considers that there is sufficient reason so to do, upon such conditions, if any, as it may think fit.
+(2)The land control board shall either give or refuse its consent to the controlled transaction and, subject to any right of appeal conferred by this Act, its decision shall be final and conclusive and shall not be questioned in any court.
+(3)For the purposes of subsection (1), an application shall be deemed to be made when it is delivered to the authority prescribed in the manner prescribed.
+(4)An application under subsection (1) shall be valid notwithstanding that the agreement for the controlled transaction is reduced to writing, or drawn up in the form of a legal document, only after the application has been made.[Act No. 13 of 1980, Sch.]
+
+9. Granting or refusal of consent
+(1)In deciding whether to grant or refuse consent in respect of a controlled transaction, a land control board shall—(a)have regard to the effect which the grant or refusal of consent is likely to have on the economic development of the land concerned or on the maintenance or improvement of standards of good husbandry within the land control area;
+(b)act on the principle that consent ought generally to be refused where—(i)the person to whom the land is to be disposed of—(A)is unlikely to farm the land well or to develop it adequately; or
+(B)is unlikely to be able to use the land profitably for the intended purpose owing to its nature; or
+(C)already has sufficient agricultural land; or
+
+(ii)the person to whom the share is to be disposed of—(A)already has sufficient shares in a private company or co- operative society owning agricultural land; or
+(B)would, by acquiring the share, be likely to bring about the transfer of the control of the company or society from one person to another and the transfer would be likely to lower the standards of good husbandry on the land; or
+
+(iii)the terms and conditions of the transaction (including the price to be paid) are markedly unfair or disadvantageous to one of the parties to the transaction; or
+(iv)in the case of the division of land into two or more parcels, the division would be likely to reduce the productivity of the land;
+
+(c)refuse consent in any case in which the land or share is to be disposed of by way of sale, transfer, lease, exchange or partition to a person who is not—(i)a citizen of Kenya; or
+(ii)a private company or co-operative society all of whose members are citizens of Kenya; or
+(iii)group representatives incorporated under the Land (Group Representatives) Act (Cap. 287); or
+(iv)a state corporation within the meaning of the State Corporations Act (Cap. 446).
+
+(2)Where an application for the consent of a land control board has been refused, then the agreement for a controlled transaction shall become void—(a)on the expiry of the time limited for appeal under section 11; or
+(b)where an appeal is entered under section 11 and dismissed, on the expiry of the time limited for appeal under section 13; or
+(c)where a further appeal is entered under section 13 and dismissed, on that dismissal.
+[Act No. 36 of 1968. s. 32, Act No. 13 of 1980, Sch., Act No. 22 of 1987, Sch.]
+
+Part VI – PROVINCIAL LAND CONTROL APPEALS BOARD
+10. Establishment of provincial land control appeals boards
+(1)The Cabinet Secretary shall establish for each province which contains a land control area, in consultation with the Provincial Commissioner of that province, a provincial land control appeals board.
+(2)The membership of a provincial land control appeals board shall be as provided in paragraph 2 of the First Schedule.
+
+11. Appeal to provincial land control appeals board
+(1)Where a land control board refuses to grant consent in respect of a controlled transaction, the applicant may, within thirty days of the copy of the board’s decision being delivered or posted under section 16(2) of this Act, appeal to the provincial land control appeals board for the province in which the land in question is situated.
+(2)A provincial land control appeals board shall, in its absolute discretion, hear and determine all appeals made to it under subsection (1), and, subject to the right of appeal conferred by section 13, the decision of a provincial land control appeals board shall be final and conclusive and shall not be questioned in any court.
+
+Part VII – CENTRAL LAND CONTROL APPEALS BOARD
+12. Establishment of central land control appeals board
+(1)There is hereby established a central land control appeals board.
+(2)The membership of the central land control appeals board shall be as provided in the First Schedule.
+(3)The Commissioner of Lands shall be the secretary of the Central land control appeals board, and shall attend and may speak at meetings, but may not vote.
+
+13. Appeal to central land control appeals board
+(1)Any person whose appeal has been dismissed by a provincial land control appeals board may, within thirty days of the copy of the board’s decision being delivered or posted under section 16(2) of this Act, appeal to the central land control appeals board.
+(2)The central land control appeals board shall, in its absolute discretion, hear and determine all appeals made to it under subsection (1) of this section, and its decision of the central land control appeals board shall be final and conclusive and shall not be questioned in any court.
+
+Part VIII – PROVISIONS AS TO BOARDS
+14. Tenure of office of members of boards
+An appointed member of a board shall hold office for such period as may be prescribed or, where no period is prescribed, for such period as may be specified in his appointment:Provided that a member’s appointment may be terminated at any time by the Cabinet Secretary, and a member may resign at any time by notice in writing to the Cabinet Secretary.
+15. Procedure of boards
+(1)If the Chairperson of a board is absent from a meeting of the board, the members present at the meeting shall elect one of their number to preside at that meeting.
+(2)The quorum of a meeting of a land control board or a provincial land control appeals board, where the total number of members of the board is an even number, shall be one-half of that number, and where the total number is an uneven number it shall be one-half of the even number which is greater than the uneven number by one.
+(3)The quorum of a meeting of the central land control appeals board shall be three.
+(4)If there is an equality of votes on any matter before a board, the Chairperson of the board or other member presiding shall have a casting vote as well as an original vote.
+
+16. Decisions of boards
+(1)Every decision of a board shall be given in writing in the prescribed manner and shall be signed by or on behalf of the Chairperson or other person presiding, and where consent is refused or an appeal is dismissed the reasons for the refusal or dismissal shall be stated in the decision.
+(2)A copy of the decision shall in every case be delivered or sent by post to the applicant and, in the case of an appeal, to the board whose decision is appealed against.
+
+17. Power to order attendance
+(1)Where an application for consent or an appeal is before a board, the board may—(a)require the applicant or appellant or any person interested in or affected by the application to attend before it;
+(b)require the applicant or appellant to adduce evidence to its satisfaction as to the applicant’s identity and as to the ownership of the land to which the application relates;
+(c)require any person to produce any document or other evidence relating to the land,
+and shall allow such reasonable time as it may think fit for a person to appear before it or produce a document or other evidence.
+(2)A board may depute one or more of its members or appoint a representative to visit and report on any land to which the application or appeal relates.
+(3)Any person who, without reasonable excuse, refuses or neglects to attend before a board or to produce, within the time allowed, any document or evidence, having been required to do so under subsection (1) of this section, shall be guilty of an offence and liable to a fine not exceeding five hundred shillings.
+
+18. Power to inspect land
+Any member of a board and any person authorized in writing by a board may, at any reasonable time after giving at least forty-eight hours’ notice, and on production of his authority to any person reasonably requiring it, enter upon and inspect any land for the purpose of carrying out the functions of the board under this Act.
+
+Part IX – MISCELLANEOUS
+19. Form of appeal
+An appeal under this Act shall be in writing and shall state separately each of the grounds of the appeal.
+20. Registration of documents
+(1)The registrar shall refuse to register an instrument effecting a controlled transaction unless he is satisfied that any consent required by this Act to be obtained in respect of the transaction has been given, or that no consent is required.
+(2)If the registrar contravenes subsection (1) of this section in relation to a share, he shall be guilty of an offence and liable to a fine not exceeding two thousand shillings or to imprisonment for a term not exceeding two months, or to both such fine and such imprisonment.
+
+21. False statements
+Any person who knowingly makes any false statement in an application or appeal under this Act, or who knowingly gives any false information to any person in connexion with the determination of an application or appeal under this Act, shall be guilty of an offence and liable to a fine not exceeding five thousand shillings or to imprisonment for a term not exceeding six months, or to both such fine and such imprisonment.
+22. Acts in furtherance of void transaction
+Where a controlled transaction, or an agreement to be a party to a controlled transaction, is avoided by section 6 of this Act, and any person—(a)pays or receives any money; or
+(b)enters into or remains in possession of any land,
+in such circumstances as to give rise to a reasonable presumption that the person pays or receives the money or enters into or remains in possession in furtherance of the avoided transaction or agreement or of the intentions of the parties to the avoided transaction or agreement, that person shall be guilty of an offence and liable to a fine not exceeding three thousand shillings or to imprisonment for a term not exceeding three months, or to both such fine and imprisonment.
+23. Prohibition of land transactions
+The President may, by notice in the Gazette, prohibit any controlled transaction or any class of controlled transaction.
+24. Exemptions
+The President may, by notice in the Gazette, exempt—(a)any land or share, or any class of land or share; or
+(b)any controlled transaction, or any class of controlled transaction; or
+(c)any person in respect of controlled transactions or some class of controlled transaction,
+from all or any of the provisions of this Act, or from any prohibition made under section 23 of this Act, on such conditions (if any) as he may think fit to impose.
+25. Regulations
+(1)The Cabinet Secretary may make regulations for prescribing anything which may be prescribed under this Act, and generally for carrying into effect the purposes and provisions of this Act.
+(2)Without prejudice to the generality of subsection (1) of this section, regulations may prescribe—(a)the forms to be used and the fees to be paid for things to be done under this Act;
+(b)the procedure for the making of applications and appeals under this Act, and the particulars and material to be furnished;
+(c)the convening of and procedure at meetings of boards;
+(d)the allowances to be paid to members or representatives of boards (other than public officers).
+
+Part X – SUPPLEMENTAL
+26. Saving of Applications under LN 457 of 1963
+Any application for consent duly made under regulation 10 or regulation 11 of the Kenya (Land Control) (Transitional Provisions) Regulations 1963 which immediately before the commencement of this Act has not been finally determined under those Regulations shall be deemed to be an application duly made under this Act, and it shall be forwarded by the person in whose possession it is to the land control board who would be responsible for determining a corresponding application under this Act, and thereafter it shall be determined in accordance with this Act.
+27. [Spent]
+
+FIRST SCHEDULE [ss. 5, 10, 12]
+MEMBERSHIP OF LAND CONTROL BOARD
+1.A land control board shall consist of—(a)the District Commissioner of the district in which the land control area or division is situated, or a District Officer deputed by him in writing, who shall be Chairperson;
+(b)not more than two other public officers;
+(c)two persons nominated by the county council having jurisdiction within the area of jurisdiction of the board; and
+(d)not less than three and not more than seven persons resident within the area of jurisdiction of the board,
+all appointed by the Cabinet Secretary:Provided that—(i)not less than eight and not more than twelve persons shall be appointed as members of the board; and
+(ii)more than one-half of the members of the board shall be owners or occupiers of agricultural land within the area of jurisdiction of the board.
+
+2.A provincial land control appeals board shall consist of—(a)the Provincial Commissioner, who shall be Chairperson;
+(b)not more than two other public officers appointed by the Cabinet Secretary; and
+(c)not less than two and not more than five persons appointed by the Cabinet Secretary:
+Provided that more than one-half of the members of the board shall be owners or occupiers of agricultural land within the province.
+3.The central land control appeals board shall consist of—(a)the Cabinet Secretary, who shall be Chairperson;
+(b)the Cabinet Secretary for the time being responsible for economic planning;
+(c)the Cabinet Secretary for the time being responsible for agriculture;
+(d)the Cabinet Secretary for the time being responsible for home affairs;
+(e)the Cabinet Secretary for the time being responsible for co-operatives and social services; and
+(f)the Attorney-General.
+
+4.Notwithstanding the foregoing provisions of this Schedule, no person shall be appointed a member of more than one board.
+
+SECOND SCHEDULE [s. 27]
+Spent

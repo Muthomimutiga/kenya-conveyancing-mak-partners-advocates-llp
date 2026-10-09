@@ -1,0 +1,289 @@
+{
+  "form_id": "lcb_1",
+  "form_number": "1",
+  "regulation": "(r. 2)",
+  "doc_title": "APPLICATION FOR CONSENT OF LAND CONTROL BOARD",
+  "doc_title_official": "APPLICATION FOR CONSENT OF LAND CONTROL BOARD",
+  "made_under": "The Land Control Regulations (L.N. 23 of 1968), Schedule, Form 1, prescribed by regulation 2 and required by section 8(1) of the Land Control Act (Cap. 302)",
+  "category": "application",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Present registered holders of interest",
+    "transferor_single": "Present registered holder of interest",
+    "transferee": "Proposed purchasers or transferees",
+    "transferee_single": "Proposed purchaser or transferee"
+  },
+  "when_used": "Applies to the land control board for consent to a controlled transaction in agricultural land within a land control area. Section 6(1) of the Land Control Act makes the transaction void for all purposes without that consent, and section 8(1) requires the application within six months of the agreement, in this prescribed form.",
+  "pairs_with_lra9": false,
+  "filing_box": "none",
+  "registry_block": [
+    "Signature of purchaser, lessee, mortgagee, chargee or authorized agent or agents, etc.: …………………………………………………………………",
+    "Name: …………………………………………………………………",
+    "Date: …………………………………………………………………"
+  ],
+  "title_line": "none",
+  "body_text": [
+    {
+      "type": "plain",
+      "text": "To be submitted in TRIPLICATE in respect of each transaction and sent to or left at the appropriate office of the Commissioner of Lands."
+    },
+    {
+      "type": "plain",
+      "text": "To: The {{land_control_board}} Land Control Board.  Official reference: {{official_reference}}",
+      "text_official": "To: The .................................Land Control Board.Official reference:"
+    },
+    {
+      "type": "plain",
+      "text": "I Hereby apply to the {{land_control_board}} Land Control Board for its consent to the transaction described below, and give the following information—",
+      "text_official": "I Hereby apply to the ................................ Land Control Board for its consent to the transaction described below, and give the following information—"
+    },
+    {
+      "type": "plain",
+      "text": "1.(a)Present registered holder of interest (full name in BLOCK LETTERS) {{vendor_name}}\n(b)Nationality {{vendor_nationality}}\n(c)Address {{vendor_address}}"
+    },
+    {
+      "type": "plain",
+      "text": "2.(a)Proposed purchaser, transferee, mortgagee, chargee, allottee, etc. (full name in BLOCK LETTERS) {{purchaser_name}}\n(b)If a limited liability company, names of directors, authorized and issued share capital and principal shareholders: if a co-operative society, names of chairman, secretary and treasurer and total number of members {{purchaser_company_particulars}}\n(c)Nationality {{purchaser_nationality}} Certificate No. {{purchaser_certificate_no}}\n(d)Address {{purchaser_address}}"
+    },
+    {
+      "type": "plain",
+      "text": "3.Nature of transaction (e.g. sale, gift, lease, mortgage, charge, etc.; if sale or allotment of shares, name of company, number and particulars of shares to be transferred) {{transaction_nature}}"
+    },
+    {
+      "type": "plain",
+      "text": "4.Term (i.e. the length of time for which the land affected is to be transferred or leased: if sale or allotment of shares, authorized share capital of the company and numbers of shares issued at date of application) {{transaction_term}}"
+    },
+    {
+      "type": "plain",
+      "text": "5.Description of land—L.R. or Parcel No. {{property_lr_no}}\nAcreage {{acreage}}\nLocality {{property_location}}\nCounty Council {{county}}"
+    },
+    {
+      "type": "plain",
+      "text": "6.(a)Purchase price, if a sale or option ............ Sh. {{purchase_price_figures}}\nRent ..................... Sh. {{rent}}\nEstimated value of the land (if a gift) .................. Sh. {{gift_value}}\nAmount of loan (if a mortgage or charge) .............. Sh. {{loan_amount}}\nRate of interest (if a mortgage or charge) ......... {{interest_rate}} %\nAny other information affecting the amount of the consideration, particularly regarding the description and area of crops with estimated yields and value thereof included in the purchase price {{crops_information}}\n(b)Full description and approximate value of improvements on land included in the consideration {{improvements}}\n(c)Any other consideration passing between the parties {{other_consideration}}"
+    },
+    {
+      "type": "plain",
+      "text": "7.If a transfer or lease of the land—Proposed development programme of purchaser, including funds available therefor with approximate dates {{development_programme}}\nDoes the purchaser/lessee intend to reside on the land? {{intends_to_reside}}"
+    },
+    {
+      "type": "plain",
+      "text": "8.(a)Other agricultural land registered in the name of or held under contract for sale by the proposed purchaser, transferee, lessee or allottee, or any members of his immediate family, or any company in which he has an interest (state the nature of any interest in such company)—L.R. or Parcel Nos. {{other_land_parcels}}\nAcreage {{other_land_acreage}} Owner {{other_land_owner}}\nNature of interest {{other_land_interest}} Whether contiguous to land being purchased {{other_land_contiguous}}\n(b)Particulars of agricultural land held and disposed of by purchaser or lessee in the last three years—L.R. or Parcel Nos. {{disposed_land_parcels}} District {{disposed_land_district}} Acres {{disposed_land_acres}}\nL.R. or Parcel Nos. .......... District .......... Acres ........."
+    },
+    {
+      "type": "plain",
+      "text": "9.Farming experience of transferee {{farming_experience}}"
+    },
+    {
+      "type": "plain",
+      "text": "We hereby declare that the above information is true to the best of our knowledge and belief."
+    }
+  ],
+  "foot_notes": [
+    "If spaces allowed under any particular item are insufficient for the information, a separate sheet with item numbers and duly signed by all parties or their authorized agent or agents should be attached."
+  ],
+  "custom_fields": [
+    {
+      "name": "land_control_board",
+      "label": "Land control board",
+      "prompt": "Item heading: the board's place name only, e.g. Kikuyu. The form already prints the words Land Control Board after it, so write Kikuyu, not Kikuyu Land Control Board.",
+      "required": true
+    },
+    {
+      "name": "vendor_nationality",
+      "label": "Nationality of the present registered holder",
+      "prompt": "Item 1(b): the nationality of the present registered holder (the seller, donor, lessor or chargor), e.g. Kenyan.",
+      "required": true
+    },
+    {
+      "name": "vendor_address",
+      "label": "Address of the present registered holder",
+      "prompt": "Item 1(c): the holder's postal address, e.g. P.O. Box 10-00902 Kikuyu.",
+      "required": true
+    },
+    {
+      "name": "purchaser_nationality",
+      "label": "Nationality of the proposed purchaser or transferee",
+      "prompt": "Item 2(c): the nationality of the purchaser, transferee, lessee, chargee or allottee, e.g. Kenyan.",
+      "required": true
+    },
+    {
+      "name": "purchaser_address",
+      "label": "Address of the proposed purchaser or transferee",
+      "prompt": "Item 2(d): the purchaser's postal address, e.g. P.O. Box 20-00902 Kikuyu.",
+      "required": true
+    },
+    {
+      "name": "transaction_nature",
+      "label": "Nature of transaction",
+      "prompt": "Item 3: what the transaction is, e.g. Sale, Gift, Lease or Charge. For a sale or allotment of shares, add the company's name and the number and particulars of the shares.",
+      "required": true
+    },
+    {
+      "name": "acreage",
+      "label": "Acreage",
+      "prompt": "Item 5: the area of the land as the title gives it, with its unit, e.g. 0.8094 Ha (two acres).",
+      "required": true
+    },
+    {
+      "name": "county",
+      "label": "County (the form's County Council)",
+      "prompt": "Item 5, the County Council line: the county in which the land lies, e.g. Kiambu.",
+      "required": true
+    },
+    {
+      "name": "purchase_price_figures",
+      "label": "Purchase price in figures",
+      "prompt": "Item 6(a), for a sale or option: the purchase price in figures without the currency, e.g. 6,500,000 (the form prints Sh. before it). Leave out only for a gift, lease, mortgage or charge.",
+      "required": false
+    },
+    {
+      "name": "official_reference",
+      "label": "Official reference",
+      "prompt": "The board's own reference, where one has been given. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "purchaser_company_particulars",
+      "label": "Company or society particulars",
+      "prompt": "Item 2(b), only where the purchaser is a limited company or a co-operative society: for a company, its directors, authorised and issued share capital and principal shareholders; for a society, its chairman, secretary, treasurer and total number of members. Leave out for an individual.",
+      "required": false
+    },
+    {
+      "name": "purchaser_certificate_no",
+      "label": "Certificate No.",
+      "prompt": "Item 2(c), the Certificate No. printed beside the purchaser's nationality, where the purchaser holds one (for example a company's certificate of incorporation or a society's certificate of registration). Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "transaction_term",
+      "label": "Term",
+      "prompt": "Item 4: for a lease, the length of the term; for a sale or allotment of shares, the company's authorised share capital and the number of shares issued at the date of application. Leave out to leave the item blank for completion by hand.",
+      "required": false
+    },
+    {
+      "name": "rent",
+      "label": "Rent",
+      "prompt": "Item 6(a), for a lease: the rent in figures, e.g. 120,000 a year. Leave out otherwise.",
+      "required": false
+    },
+    {
+      "name": "gift_value",
+      "label": "Estimated value of the land (gift)",
+      "prompt": "Item 6(a), for a gift: the estimated value of the land in figures. Leave out otherwise.",
+      "required": false
+    },
+    {
+      "name": "loan_amount",
+      "label": "Amount of loan",
+      "prompt": "Item 6(a), for a mortgage or charge: the amount of the loan in figures. Leave out otherwise.",
+      "required": false
+    },
+    {
+      "name": "interest_rate",
+      "label": "Rate of interest",
+      "prompt": "Item 6(a), for a mortgage or charge: the rate of interest as a number, e.g. 13 (the form prints % after it). Leave out otherwise.",
+      "required": false
+    },
+    {
+      "name": "crops_information",
+      "label": "Crops and other information affecting the consideration",
+      "prompt": "Item 6(a): any other information affecting the amount of the consideration, particularly the description and area of crops, with their estimated yields and value, included in the purchase price. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "improvements",
+      "label": "Improvements included in the consideration",
+      "prompt": "Item 6(b): a full description and the approximate value of improvements on the land included in the consideration. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "other_consideration",
+      "label": "Other consideration",
+      "prompt": "Item 6(c): any other consideration passing between the parties. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "development_programme",
+      "label": "Development programme",
+      "prompt": "Item 7, on a transfer or lease: the purchaser's proposed development programme for the land, including the funds available for it and approximate dates. Leave out if none is proposed.",
+      "required": false
+    },
+    {
+      "name": "intends_to_reside",
+      "label": "Will the purchaser reside on the land?",
+      "prompt": "Item 7, on a transfer or lease: does the purchaser or lessee intend to reside on the land? Answer Yes or No. Leave out to leave it for completion by hand.",
+      "required": false
+    },
+    {
+      "name": "other_land_parcels",
+      "label": "Other agricultural land: L.R. or parcel numbers",
+      "prompt": "Item 8(a): other agricultural land registered in the name of, or held under contract for sale by, the purchaser, the purchaser's immediate family or a company the purchaser has an interest in. Give the L.R. or parcel numbers, or write Nil if there is none. Leave out to complete by hand.",
+      "required": false
+    },
+    {
+      "name": "other_land_acreage",
+      "label": "Other agricultural land: acreage",
+      "prompt": "Item 8(a): the acreage of that other land. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "other_land_owner",
+      "label": "Other agricultural land: owner",
+      "prompt": "Item 8(a): the owner of that other land. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "other_land_interest",
+      "label": "Other agricultural land: nature of interest",
+      "prompt": "Item 8(a): the nature of the interest in that land and, where it is held through a company, the nature of the purchaser's interest in the company. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "other_land_contiguous",
+      "label": "Other agricultural land: contiguous?",
+      "prompt": "Item 8(a): whether that land is contiguous to the land being purchased, Yes or No. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "disposed_land_parcels",
+      "label": "Land held and disposed of in the last three years: L.R. or parcel numbers",
+      "prompt": "Item 8(b): agricultural land the purchaser or lessee has held and disposed of in the last three years. Give the L.R. or parcel numbers, or write Nil if there is none. Leave out to complete by hand.",
+      "required": false
+    },
+    {
+      "name": "disposed_land_district",
+      "label": "Land disposed of: district",
+      "prompt": "Item 8(b): the district in which that land lies. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "disposed_land_acres",
+      "label": "Land disposed of: acres",
+      "prompt": "Item 8(b): the area of that land in acres. Leave out if none.",
+      "required": false
+    },
+    {
+      "name": "farming_experience",
+      "label": "Farming experience of the transferee",
+      "prompt": "Item 9: the transferee's farming experience, in the transferee's own words. Leave out to complete by hand.",
+      "required": false
+    }
+  ],
+  "execution": {
+    "mode": "signature",
+    "signer": "both",
+    "verification": false,
+    "signer_label": "owner, lessor, mortgagor, charger or authorized agent or agents, etc."
+  },
+  "source": {
+    "url": "https://new.kenyalaw.org/akn/ke/act/ln/1968/23/eng@2022-12-31",
+    "fetched": "2026-09-23",
+    "text": "_source/lcb-1.txt",
+    "note": "Form 1 in the Schedule to the Land Control Regulations (L.N. 23 of 1968), as at 2022-12-31. Extracted from the Regulations cached at procedures/_source/land-control-regulations.txt."
+  },
+  "detail_rows": [],
+  "act_lines": [
+    "LAND CONTROL ACT",
+    "THE LAND CONTROL REGULATIONS"
+  ]
+}

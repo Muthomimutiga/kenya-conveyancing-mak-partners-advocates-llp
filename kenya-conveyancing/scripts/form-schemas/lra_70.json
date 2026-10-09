@@ -1,0 +1,148 @@
+{
+  "form_id": "lra_70",
+  "form_number": "LRA 70",
+  "regulation": "(r. 80(5))",
+  "doc_title": "APPLICATION TO REMOVE CAUTION",
+  "doc_title_official": "APPLICATION TO REMOVE CAUTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-70-APPLICATION-TO-REMOVE-CAUTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-70.txt"
+  },
+  "category": "application",
+  "when_used": "A person aggrieved by a caution applies to the Land Registrar to remove it, setting out the grounds and attaching the documents that support them.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant",
+    "transferee": "Proprietor",
+    "transferee_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Caution",
+      "value_field": "caution_date"
+    },
+    {
+      "label": "The Applicant:",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN",
+      "value_field": "applicant_pin"
+    },
+    {
+      "label": "Address",
+      "value_field": "applicant_address"
+    },
+    {
+      "label": "The Proprietor:",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN",
+      "value_field": "proprietor_pin"
+    },
+    {
+      "label": "Address",
+      "value_field": "proprietor_address"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES to remove the Caution registered in Entry Number(s) {{entry_numbers}} on the Encumbrances Section of the Register."
+    },
+    {
+      "type": "plain",
+      "text": "The grounds for the application are as follows:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{grounds}}"
+    },
+    {
+      "type": "plain",
+      "text": "(Attach supporting documents as necessary)"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application for removal of caution has been duly executed this......................…. day of……………………….. 20………"
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": "none",
+  "foot_notes": [
+    "Notes:",
+    "Give full names ID/Passport No.; PIN and Address"
+  ],
+  "custom_fields": [
+    {
+      "name": "caution_date",
+      "label": "Date of the Caution",
+      "prompt": "The date of the caution the application seeks to remove",
+      "required": true
+    },
+    {
+      "name": "applicant_pin",
+      "label": "PIN of the Applicant",
+      "prompt": "Personal Identification Number of the applicant",
+      "required": true
+    },
+    {
+      "name": "applicant_address",
+      "label": "Address of the Applicant",
+      "prompt": "Postal address of the applicant",
+      "required": true
+    },
+    {
+      "name": "proprietor_pin",
+      "label": "PIN of the Proprietor",
+      "prompt": "Personal Identification Number of the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "proprietor_address",
+      "label": "Address of the Proprietor",
+      "prompt": "Postal address of the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "entry_numbers",
+      "label": "Entry number of the Caution",
+      "prompt": "The entry number or numbers of the caution in the Encumbrances Section of the register",
+      "required": true
+    },
+    {
+      "name": "grounds",
+      "label": "Grounds for the application",
+      "prompt": "The grounds for removing the caution, one ground per line",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

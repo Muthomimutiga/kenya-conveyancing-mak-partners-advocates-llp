@@ -1,0 +1,65 @@
+{
+  "form_id": "lra_51",
+  "form_number": "LRA 51",
+  "regulation": "(r. 64(1))",
+  "doc_title": "APPLICATION TO BE REGISTERED AS A TRUSTEE",
+  "doc_title_official": "APPLICATION TO BE REGISTERED AS A TRUSTEE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-51-APPLICATION-TO-BE-REGISTERED-AS-A-TRUSTEE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-51.txt"
+  },
+  "category": "application",
+  "when_used": "A trustee applies to be registered as trustee of land held for a beneficiary.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "The Applicant: Give full name(s) and if corporate the registration number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES to be registered as Trustee for {{trust_beneficiary}}"
+    },
+    {
+      "type": "plain",
+      "text": "in respect of the above noted land."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": [
+    "REGISTERED and SEALED this ………. day of …………………. 20….",
+    "LAND REGISTRAR",
+    "Seal………………………………………………",
+    "Name:…………………………… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "custom_fields": [
+    {
+      "name": "trust_beneficiary",
+      "label": "Who the Applicant is to be registered as trustee for",
+      "prompt": "Full name of the person or body the applicant holds the land in trust for",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

@@ -1,19 +1,22 @@
 #!/usr/bin/env node
-// Conveyancing Document Generator — MAK & Partners Advocates LLP
+// Conveyancing Document Generator. Firm identity, artwork and bank details come from firm-config.json.
 // Usage: node generate-conveyancing-document.js <data.json> <output.docx>
+// data.json carries an "advocate" block from the firm directory for any document that names the advocate (see commands/setup-conveyancing.md).
 //
 // Handles:
 //   sale_agreement — Agreement for Sale
 
 const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-  Footer, Header, AlignmentType, BorderStyle, WidthType, VerticalAlign,
+  Footer, AlignmentType, BorderStyle, WidthType, VerticalAlign,
   UnderlineType, LineRuleType, ShadingType, PageNumber, TabStopType, PageBreak,
   ImageRun, LevelFormat,
 } = require('docx');
+const DOCX = require('docx'); // the whole library, handed to firm extensions (see "Firm extensions" below)
 const fs   = require('fs');
 const path = require('path');
 
+const FirmLetter = require('./firm-letter.js'); // the one firm letter page (header, footer, sign-off, engagement letter)
 const dataPath = process.argv[2];
 const outputPath = process.argv[3];
 
@@ -91,32 +94,215 @@ function requireTransferParties(label) {
 }
 
 // ─── Firm details (loaded from firm-config.json) ─────────────────────────────
-const firmConfig   = JSON.parse(fs.readFileSync(path.join(__dirname, 'firm-config.json'), 'utf8'));
+// config.js is the single place that knows where the firm's config and artwork live, so the
+// generator, firm-letter.js and the tests all read one installation.
+const { loadFirmConfig, loadImage, assetsDir } = require('./config');
+const firmConfig   = loadFirmConfig();
 
-// ─── Developer projects registry (per-project sale agreement variants) ───────
-// See scripts/developer-projects.json — lookup by d.project_slug.
-// See scripts/drafting-rules/developer_sale_agreement*.md — drafting rules.
-const developerProjectsPath = path.join(__dirname, 'developer-projects.json');
-const developerProjects = fs.existsSync(developerProjectsPath)
-  ? JSON.parse(fs.readFileSync(developerProjectsPath, 'utf8'))
-  : null;
-
-function loadDeveloperProject(slug) {
-  if (!developerProjects || !slug) return null;
-  return developerProjects.projects?.[slug] || null;
+// ─── Per-user advocate identity (from the firm directory, and nowhere else) ──
+// The firm has several conveyancing fee earners. Anything that names or numbers
+// an INDIVIDUAL advocate (who signs a letter, whose P.105 sits under a signature,
+// who has conduct of the matter) must be the person running the plugin, not one
+// firm-level partner. Anything that names the FIRM (the letterhead, the DRAWN BY
+// block, the applicant on an LRA 84, the Commissioner for Oaths) stays firm-level
+// in firm-config.json and is shared by everyone.
+//
+// ─── Advocate identity: who signs this document ──────────────────────────────
+// One source, and only one: d.advocate, written by the drafting command from the
+// firm's Team Members directory in Airtable after the sign-in step, carrying the
+// Team Members record id it was read from.
+//
+// There is NO fallback: not to the firm partner's details, and not to any file on
+// the machine. A document that names or signs for an individual advocate carries
+// that advocate's own name and P.105 number, read from the directory, or it is not
+// produced. Two fallbacks have been removed for the same reason, that a fee earner
+// ends up signing in someone else's name: the 1.1.x firm-partner fallback signed
+// every letter with the Managing Partner's P.105, and the user-config.json
+// fallback ($KENYA_CONVEYANCING_USER_CONFIG, ~/.config/kenya-conveyancing/,
+// ~/.kenya-conveyancing/) let a stale file on one machine sign a client's letter in
+// an advocate who never saw it, and skipped the record-id check on the way past.
+//
+// Resolution is lazy: many conveyancing documents carry no individual-advocate
+// reference and must not be refused for want of one.
+function titleCaseName(s) {
+  return String(s || '').toLowerCase().replace(/(^|[\s'\-.])([a-z])/g, (m, sep, ch) => sep + ch.toUpperCase());
 }
+function normaliseAdvocate(src, origin) {
+  if (!src || typeof src !== 'object') return null;
+  const s = (k) => String(src[k] == null ? '' : src[k]).replace(/\s+/g, ' ').trim();
+  const name = s('name') || s('advocate_name');
+  if (!name && !(s('p105_no') || s('advocate_p105_no'))) return null;
+  return {
+    origin,
+    source:       src._source || '',
+    recordId:     s('record_id'),
+    signinId:     s('signin_id'),
+    name,
+    nameCaps:     (s('name_caps') || s('advocate_name_caps') || name).toUpperCase(),
+    p105:         (s('p105_no') || s('advocate_p105_no')).toUpperCase(),
+    practiceNo:   (s('practice_no') || s('advocate_practice_no')).toUpperCase(),
+    practiceYear: s('practice_year') || s('advocate_practice_no_year'),
+    email:        (s('email') || s('advocate_email')).toLowerCase(),
+  };
+}
+function refuse(reason) {
+  console.error(`\nREFUSED: ${reason}\nNo document was written.\n`);
+  process.exit(1);
+}
+
+// ─── Firm extensions (scripts/firm-extensions/) ──────────────────────────────
+// A firm's own precedents, a document type no other firm has, belong in that firm's build and
+// never in this template: the template is shared, and one firm's text in it is a leak. A build
+// carries them in scripts/firm-extensions/, which the client generator lays over the template from
+// the firm's own inputs, so a regenerated build keeps them. Two kinds of file are recognised:
+//
+//   <doc_type>.js      serves a doc_type that no built-in builder and no library form claims.
+//                      module.exports = (ctx) => ({ children: [...], numbering: [...]?, pageBorders: {...}? })
+//   registry-cover.js  returns a cover sheet placed before a registry instrument (the generator
+//                      adds the page break and keeps the page number off the cover), or null for none.
+//                      module.exports = (ctx) => [...] | null
+//
+// ctx = { d, docType, firmConfig, docx, scriptsDir, extensionsDir, assetsDir, refuse }. An extension
+// gets the docx library through ctx and must not require() anything itself: the plugin directory
+// has no node_modules at a client. With no firm-extensions directory nothing here does anything.
+const EXTENSIONS_DIR = process.env.KENYA_CONVEYANCING_EXTENSIONS_DIR || path.join(__dirname, 'firm-extensions');
+function loadFirmExtension(name) {
+  if (!/^[a-z][a-z0-9_-]*$/.test(String(name || ''))) return null;
+  const p = path.join(EXTENSIONS_DIR, name + '.js');
+  if (!fs.existsSync(p)) return null;
+  const mod = require(p);
+  if (typeof mod !== 'function') refuse(`firm extension ${name}.js does not export a function. No document was built from it.`);
+  return mod;
+}
+function extensionContext() {
+  return { d, docType: d.doc_type, firmConfig, docx: DOCX, scriptsDir: __dirname, extensionsDir: EXTENSIONS_DIR, assetsDir: assetsDir(), refuse };
+}
+let EXT_RESULT = null; // what a firm-extension builder returned, read again when the document is assembled
+let REGISTRY_COVER = false;
+
+// ─── Form library (scripts/form-schemas) ──────────────────────────────────────
+// Resolve {{field}} placeholders in schema text against the data file. A field the
+// data does not carry resolves to an empty string; required fields are checked
+// separately in buildGenericLRAForm and refused by name before anything is written.
+// The four party placeholders also read the arrays. A company is passed as
+// transferors: [{ company_name, is_company, reg_no }] with no vendor_name, which is
+// what the Party Type Rule directs, and {{vendor_name}} used to resolve to nothing and
+// print a form with no party on it.
+function partyJoin(list, kind) {
+  if (!Array.isArray(list)) return '';
+  return list.map(p => kind === 'id' ? (p.id_no || p.reg_no || '') : (p.company_name || p.name || ''))
+    .filter(x => String(x).trim() !== '').join(', ');
+}
+const PARTY_FALLBACK = {
+  vendor_name:    () => partyJoin(d.transferors, 'name'),
+  vendor_id:      () => partyJoin(d.transferors, 'id'),
+  purchaser_name: () => partyJoin(d.transferees, 'name'),
+  purchaser_id:   () => partyJoin(d.transferees, 'id'),
+};
+// Fields the schema's own author declared optional. The Ministry prints plenty of rows that
+// only apply sometimes: LRA 5's registration row is labelled "Registration No.( if applicable)"
+// and its field carries the prompt "where the Donee is a body corporate". An absent optional
+// value is a blank the form is meant to carry, not a hole, and refusing it made a power of
+// attorney to an individual donee impossible to draft. Populated when a schema loads.
+const DOT_RULE = '\u2026'.repeat(10);
+let optionalFields = new Set();
+function fill(text, where) {
+  return String(text === undefined || text === null ? '' : text)
+    .replace(/\{\{(\w+)\}\}/g, (_, k) => {
+      let v = d[k];
+      if ((v === undefined || v === null || String(v).trim() === '') && PARTY_FALLBACK[k]) {
+        const fromParty = PARTY_FALLBACK[k]();
+        if (fromParty) v = fromParty;
+      }
+      if (v === undefined || v === null || String(v).trim() === '') {
+        if (optionalFields.has(k)) {
+          // A blank in a table cell is the empty box the Ministry prints and you write in.
+          // A blank in running text is a dotted rule: LRA 37 prints "in favour of" followed
+          // by a dot leader on each of its four share lines, and dropping the rule left the
+          // unused lines reading "in favour of" and then nothing, which is a broken sentence
+          // rather than a blank to complete.
+          const inACell = /^detail_rows|table block|filing_box/.test(String(where || ''));
+          return inACell ? '' : DOT_RULE;
+        }
+        refuse(`[${d.doc_type}] ${where || 'the schema'} needs the field "${k}", and the data file has no value for it. ` +
+          'A {{field}} in a registry form marks a fact, not a blank the Ministry prints: the form would go out with a hole in it. ' +
+          'Supply it in the data file, or take the placeholder out of the schema.');
+      }
+      return String(v);
+    });
+}
+
+// Load a library form schema by doc_type. Returns null for a doc_type that is not
+// an LRA form id at all (the caller then reports an unknown doc_type); refuses for
+// an lra_NN with no schema file, and for a schema missing any field the form needs
+// to be labelled correctly.
+function loadFormSchema(docType) {
+  // The library began as LRA forms only. The Land Control Board's consent application is
+  // prescribed by the Land Control Regulations, not the land registration ones, and a
+  // transaction can be void for want of it, so the family had to widen.
+  if (!/^(lra|lcb)_\d+$/.test(String(docType))) return null;
+  const p = path.join(__dirname, 'form-schemas', docType + '.json');
+  if (!fs.existsSync(p)) refuse(`unknown doc_type "${docType}". Run node scripts/form-schemas/build-index.js and check _index.json for the forms this plugin drafts.`);
+  const s = JSON.parse(fs.readFileSync(p, 'utf8'));
+  optionalFields = new Set((s.custom_fields || []).filter(c => c.required === false).map(c => c.name));
+  for (const k of ['form_id', 'form_number', 'regulation', 'doc_title', 'party_mode', 'body_text', 'execution']) {
+    if (s[k] === undefined || s[k] === '') refuse(`[${docType}] schema is missing "${k}". A registry instrument must not be generated mislabelled.`);
+  }
+  return s;
+}
+function tryAdvocate() {
+  return normaliseAdvocate(d.advocate, 'directory');
+}
+let advocateResolved = null;
+function resolveAdvocate(label) {
+  if (advocateResolved) return advocateResolved;
+  const a = tryAdvocate();
+  const where = label ? `[${label}] ` : '';
+  if (!a) refuse(where +
+    'no advocate identity was supplied. This document names or signs for an individual advocate, and the ' +
+    'generator will not sign it with anyone else\'s details. The drafting command must sign in first (one ' +
+    'record in the Sign-ins table of the conveyancing base), look the person up in Team Members, and pass the ' +
+    '"advocate" block in the data file. A fee earner who is not in Team Members yet runs /setup-conveyancing once.');
+  if (!/^rec[A-Za-z0-9]{14}$/.test(a.recordId)) refuse(where +
+    'the "advocate" block carries no Team Members record_id. Identity must be read from the firm directory ' +
+    'after signing in, not typed from memory. Sign in, look the person up, and pass their record id.');
+  if (!a.name) refuse(where + 'the advocate block has no name.');
+  if (!/^P\.105\/\d{2,6}\/\d{2,4}$/.test(a.p105)) refuse(where +
+    `the P.105 number "${a.p105 || '(blank)'}" is missing or not in the form P.105/NNNN/YY. Correct it in Team Members with /setup-conveyancing.`);
+  console.error(`Signing as ${a.name}, ${a.p105} [Team Members ${a.recordId}]`);
+  advocateResolved = a;
+  return a;
+}
+
+// True when an individual advocate (other than the firm partner) is signing.
+// Used to keep engagement-letter prose sensible rather than naming the same
+// person twice when the partner drafts for himself.
+function hasUserAdvocate() {
+  const a = tryAdvocate();
+  return !!(a && a.name) && a.nameCaps !== String(firmConfig.firm_partner || '').toUpperCase();
+}
+
+function advocateName()     { return titleCaseName(resolveAdvocate().name); }
+function advocateEmail()    { return resolveAdvocate().email || firmConfig.firm_email; }
+function advocateNameCaps() { return resolveAdvocate().nameCaps; }
+
+// A P.105 number identifies the advocate personally. A blank one under a
+// signature is worse than no document at all, so refuse rather than emit it.
+function advocateP105(label) { return resolveAdvocate(label).p105; }
 
 // ─── Page geometry (A4) ───────────────────────────────────────────────────────
 const A4_W = 11906;
 const A4_H = 16838;
 const LRA_TYPES     = ['lra_33', 'lra_63', 'lra_58', 'lra_84'];
-// Keep a restrained top margin so the letterhead and every page's body text
-// have a small amount of breathing room from the physical page edge.
 const MARGIN_TOP    = 1440;
 const MARGIN_BOTTOM = 1440;
 const MARGIN_SIDE   = 1440;
 const FIRM_NAME    = firmConfig.firm_name;
 const FIRM_NAME_TC = firmConfig.firm_name_tc;
+// FIRM-level: the principal / managing partner of the firm. This is NOT the
+// advocate having conduct of a matter. For that, use advocateName() /
+// advocateNameCaps() / advocateP105(), which read the advocate block the
+// drafting command passes after signing in to the firm directory.
 const FIRM_PARTNER = firmConfig.firm_partner;
 const FIRM_LINE2   = firmConfig.firm_line2;
 const FIRM_PO      = firmConfig.firm_po;
@@ -127,7 +313,6 @@ const FIRM_CITY    = (firmConfig.firm_city || 'NAIROBI').toUpperCase();
 // ─── Font config (from firm) ─────────────────────────────────────────────────
 const FONT_BODY         = firmConfig.font_correspondence || 'Garamond';
 const FONT_PLEADINGS    = firmConfig.font_court          || 'Book Antiqua';
-const FONT_LRA_COVER    = 'Maiandra GD';
 
 // ─── Letterhead config ────────────────────────────────────────────────────────
 const LH_MODE           = firmConfig.letterhead_mode || 'generated';
@@ -142,41 +327,48 @@ const FIRM_HEADER_LINE2 = firmConfig.firm_name_header_line2
 const FIRM_MONOGRAM     = firmConfig.firm_monogram
   || FIRM_NAME_TC.split(' ').filter(w => w.length > 2).map(w => w[0]).join('').slice(0, 3).toUpperCase();
 
-const LH_HEADER_IMG = (() => {
-  if (LH_MODE === 'image') {
-    const cropped = path.join(__dirname, 'assets', 'letterhead-header-cropped.png');
-    if (fs.existsSync(cropped)) return { data: fs.readFileSync(cropped), type: 'png' };
-    for (const [ext, type] of [['png','png'],['jpeg','jpg'],['jpg','jpg']]) {
-      const p = path.join(__dirname, 'assets', `letterhead-header.${ext}`);
-      if (fs.existsSync(p)) return { data: fs.readFileSync(p), type };
-    }
-    return null;
-  }
-  if (LH_MODE === 'logo') { const p = path.join(__dirname, 'assets', 'firm-logo.png'); return fs.existsSync(p) ? { data: fs.readFileSync(p), type: 'png' } : null; }
-  return null;
-})();
-const LH_FOOTER_IMG = (() => {
-  if (LH_MODE === 'image') {
-    for (const [ext, type] of [['png','png'],['jpeg','jpg'],['jpg','jpg']]) {
-      const p = path.join(__dirname, 'assets', `letterhead-footer.${ext}`);
-      if (fs.existsSync(p)) return { data: fs.readFileSync(p), type };
-    }
-    return null;
-  }
-  return null;
-})();
+// The letterhead artwork. firm-letter.js already loaded it through config.js, so the two modules
+// can never disagree about which files a firm installed. "logo" mode takes the firm's own logo.
+const LH_HEADER_IMG = LH_MODE === 'image' ? FirmLetter.HEADER_IMG
+  : LH_MODE === 'logo' ? loadImage('firm-logo')
+  : null;
+const LH_FOOTER_IMG = LH_MODE === 'image' ? FirmLetter.FOOTER_IMG : null;
+
+// ─── Letterhead sizing ─────────────────────────────────────────────────────────
+// The render height MUST be derived from the image, never hardcoded. A fixed height silently
+// distorts any letterhead whose aspect ratio differs from the one it was tuned to, and a firm's
+// letterhead is its identity on the page, so it is never stretched. config.loadImage carries the
+// pixel width and height of the PNG or JPEG it read.
+const LH_IMG_W = 624;
+function lhFitHeight(img, fallback) {
+  return (img && img.width) ? Math.round(LH_IMG_W * img.height / img.width) : fallback;
+}
+const LH_HEADER_FIT_H = lhFitHeight(LH_HEADER_IMG, 123);
+const LH_FOOTER_FIT_H = lhFitHeight(LH_FOOTER_IMG, 134);
 
 // ─── Colours ─────────────────────────────────────────────────────────────────
+// The firm's two brand colours come from firm-config.json; the literals are only the fallback for
+// a config that does not carry them.
 const BLACK  = '1A1A1A';
-const NAVY   = '0D2458';
+const NAVY   = firmConfig.brand_navy || '0D2458';
 const NAVY_T = '1B3A7A';
-const GOLD   = 'C9A12C';
-const GOLD2  = 'C9A12C';
+const GOLD   = firmConfig.brand_gold || 'C9A12C';
+const GOLD2  = firmConfig.brand_gold || 'C9A12C';
 const IVORY  = 'FFFFFF';
 
 // ─── Font helpers ─────────────────────────────────────────────────────────────
+// A children array must hold runs. A bare string in one serialises into <w:p> with no
+// <w:r><w:t> wrapper, and both Word and LibreOffice drop it silently: that is how every
+// sale agreement's spousal consent came to declare nothing. Every helper that takes
+// "children" passes them through here, so a string is wrapped instead of lost.
+function asRuns(children, wrap) {
+  const one = wrap || ((t) => antiqua(t));
+  if (children === undefined || children === null) return [];
+  if (!Array.isArray(children)) return [one(children)];
+  return children.map(c => (typeof c === 'string' || typeof c === 'number') ? one(String(c)) : c);
+}
 function antiqua(text, opts = {}) {
-  return new TextRun({ text: String(text || ''), font: 'Tw Cen MT', size: 24, color: BLACK, ...opts });
+  return new TextRun({ text: String(text || ''), font: FONT_PLEADINGS, size: 24, color: BLACK, ...opts });
 }
 
 // ─── Cover page paragraph helpers ────────────────────────────────────────────
@@ -200,7 +392,7 @@ function spacingB(after = 80) {
 
 // Standard body paragraph — Book Antiqua 12pt, justified, spacing after 160
 function paraB(children, opts = {}) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({ children: c, spacing: spacingB(80), alignment: AlignmentType.JUSTIFIED, ...opts });
 }
 
@@ -214,7 +406,6 @@ function spacerSm() {
 
 // ─── Letterhead ───────────────────────────────────────────────────────────────
 function buildLetterhead() {
-  if (['conveyance_letter', 'engagement_letter'].includes(d.doc_type)) return [];
   const noBorder  = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
   const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
 
@@ -229,13 +420,7 @@ function buildLetterhead() {
     spacing: { before: 120, after: 0 }
   });
 
-  if (LH_MODE === 'image' && LH_HEADER_IMG) {
-    return [new Paragraph({
-      children: [new ImageRun({ data: LH_HEADER_IMG.data, transformation: { width: 740, height: 105 }, type: LH_HEADER_IMG.type })],
-      indent: { left: -MARGIN_SIDE },
-      spacing: { before: 100, after: 80 }
-    })];
-  }
+  if (LH_MODE === 'image' && LH_HEADER_IMG) return [FirmLetter.firstPageSpacer()]; // the header itself is anchored in the page header (firm-letter.js)
 
   const headerTable = new Table({
     width: { size: 9026, type: WidthType.DXA },
@@ -266,17 +451,6 @@ function buildLetterhead() {
   return [headerTable, goldLine, addressLine];
 }
 
-function buildFirstPageLetterhead() {
-  if (!LH_HEADER_IMG) return null;
-  return new Header({
-    children: [new Paragraph({
-      children: [new ImageRun({ data: LH_HEADER_IMG.data, transformation: { width: 740, height: 105 }, type: LH_HEADER_IMG.type })],
-      indent: { left: -MARGIN_SIDE },
-      spacing: { before: 0, after: 0 }
-    })]
-  });
-}
-
 // ─── Plain page-number footer (for registry documents) ───────────────────────
 function buildPageNumberFooter() {
   return new Footer({
@@ -297,11 +471,7 @@ function buildLetterheadFooter() {
   if (LH_FOOTER_IMG) {
     return new Footer({
       children: [
-        new Paragraph({
-          children: [new ImageRun({ data: LH_FOOTER_IMG.data, transformation: { width: 800, height: 254 }, type: LH_FOOTER_IMG.type })],
-          indent: { left: -MARGIN_SIDE },
-          spacing: { before: 0, after: 0 }
-        })
+        new Paragraph({ children: [new ImageRun({ data: LH_FOOTER_IMG.data, transformation: { width: LH_IMG_W, height: LH_FOOTER_FIT_H }, type: LH_FOOTER_IMG.type })], spacing: { before: 0, after: 0 } })
       ]
     });
   }
@@ -310,7 +480,7 @@ function buildLetterheadFooter() {
       new Paragraph({
         border: { top: { style: BorderStyle.SINGLE, size: 8, space: 0, color: '000000' } },
         spacing: { before: 100 },
-        children: [new TextRun({ text: FIRM_NAME_TC, font: 'Tw Cen MT', bold: true, size: 15, color: '000000' })]
+        children: [new TextRun({ text: FIRM_NAME_TC, font: FONT_BODY, bold: true, size: 15, color: '000000' })]
       })
     ]
   });
@@ -331,7 +501,7 @@ function clauseHeading(number, title) {
 
 // Sub-clause paragraph (1.1, 1.2 etc.) — hanging indent 720
 function subClause(number, children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({
     children: [antiqua(`${number}\u00a0\u00a0 `), ...c],
     spacing: spacingB(80),
@@ -340,19 +510,9 @@ function subClause(number, children) {
   });
 }
 
-// Sub-clause paragraph with number and text as separate runs, hanging indent 720
-function subClauseRuns(number, runs) {
-  return new Paragraph({
-    children: [antiqua(`${number}\u00a0\u00a0 `), ...runs],
-    spacing: spacingB(80),
-    alignment: AlignmentType.JUSTIFIED,
-    indent: { left: 720, hanging: 720 },
-  });
-}
-
 // (a)(b)(c) sub-sub-clause — indent 1440
 function subSubClause(label, children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({
     children: [antiqua(`${label}\u00a0\u00a0 `), ...c],
     spacing: spacingB(80),
@@ -363,7 +523,7 @@ function subSubClause(label, children) {
 
 // (i)(ii)(iii) list — indent 2160
 function romanItem(label, children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({
     children: [antiqua(`${label}\u00a0\u00a0\u00a0\u00a0 `), ...c],
     spacing: spacingB(80),
@@ -374,7 +534,7 @@ function romanItem(label, children) {
 
 // Definition paragraph inside 1.1 block — indent 1440
 function definitionPara(children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({
     children: c,
     spacing: spacingB(80),
@@ -388,7 +548,7 @@ function definitionPara(children) {
 // Sale Completion Date conditions) and the Force Majeure list. Replaces the
 // old literal "• " character convention which produced ugly flat-text bullets.
 function bulletPara(children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({
     children: c,
     bullet: { level: 0 },
@@ -398,58 +558,9 @@ function bulletPara(children) {
   });
 }
 
-// ─── MAK developer-sale-agreement numbering helpers ──────────────────────────
-// Use these in buildProjectAwareDeveloperSaleAgreement so Word generates the
-// numbers (1, 1.1, 1.1.1, (A), (1)) automatically and restart logic works.
-// Never use them in other doc-types (numbering definitions are only relevant
-// when the developer_sale_agreement path is active).
-
-// Top-level clause heading: renders "1." + title, bold + underlined
-function makClauseH(title) {
-  return new Paragraph({
-    numbering: { reference: 'mak-main-clauses', level: 0 },
-    children: [antiqua(title, { bold: true, underline: { type: UnderlineType.SINGLE } })],
-    spacing: spacingB(80),
-    alignment: AlignmentType.LEFT,
-  });
-}
-
-// Sub-clause at level 1 (renders "1.1") or level 2 (renders "1.1.1")
-function makSubC(children, level = 1) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
-  return new Paragraph({
-    numbering: { reference: 'mak-main-clauses', level },
-    children: c,
-    spacing: spacingB(80),
-    alignment: AlignmentType.JUSTIFIED,
-  });
-}
-
-// Recital with uppercase letter in parens: (A) (B) (C) ...
-function makRecital(children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
-  return new Paragraph({
-    numbering: { reference: 'mak-recitals', level: 0 },
-    children: c,
-    spacing: spacingB(80),
-    alignment: AlignmentType.JUSTIFIED,
-  });
-}
-
-// Party in BETWEEN block: (1) (2) ...
-function makParty(children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
-  return new Paragraph({
-    numbering: { reference: 'mak-parties', level: 0 },
-    children: c,
-    spacing: spacingB(80),
-    alignment: AlignmentType.JUSTIFIED,
-  });
-}
-
 // Plain body paragraph (no indent, justified)
 function bodyPara(children) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({
     children: c,
     spacing: spacingB(80),
@@ -459,7 +570,7 @@ function bodyPara(children) {
 
 // Centered paragraph
 function centeredPara(children, extraOpts = {}) {
-  const c = Array.isArray(children) ? children : [antiqua(children)];
+  const c = asRuns(children);
   return new Paragraph({ children: c, spacing: spacingB(80), alignment: AlignmentType.CENTER, ...extraOpts });
 }
 
@@ -483,10 +594,172 @@ function dottedLine(text) {
   });
 }
 
+// ─── Sale agreement facts: blanks, sides, parties, area, tenure, money ───────
+// A fact the drafter did not have prints as a dotted rule for completion by hand. It never
+// prints as the word "Unknown", and never as empty punctuation: "Messrs. Unknown of ." and
+// "measuring approximately  () hectares" both reached a client draft before this.
+const UNKNOWN_WORDS = /^(unknown|not known|tba|tbc|to be advised|to be confirmed|n\/?a|none|nil|-+|\?+)$/i;
+function known(v) {
+  const s = String(v == null ? '' : v).replace(/\s+/g, ' ').trim();
+  return s && !UNKNOWN_WORDS.test(s) ? s : '';
+}
+function orDots(v) { return known(v) || DOT_RULE; }
+function numOf(v) {
+  if (v == null) return null;
+  const s = String(v).replace(/[, ]/g, '').replace(/\/-?=?$/, '').replace(/^kshs?\.?/i, '');
+  if (s === '') return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+function numberWords(n) {
+  const ones = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
+    'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  if (n < 20) return ones[n];
+  return tens[Math.floor(n / 10)] + (n % 10 ? '-' + ones[n % 10] : '');
+}
+function roman(n) {
+  const map = [[10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i']];
+  let out = '';
+  for (const [v, s] of map) while (n >= v) { out += s; n -= v; }
+  return out;
+}
+
+// Which side the firm acts for. "acting_for" is the fact; "signing_for" (the "Advocates for the
+// ..." line under a letter) is accepted as evidence of it, and the two may not disagree. An
+// undertaking that recites "we act for the Purchaser" over a signature "Advocates for the Vendor"
+// is a professional undertaking that misstates whom the firm acts for.
+function sideOf(v) {
+  const s = String(v == null ? '' : v).trim().toLowerCase();
+  if (!s) return '';
+  if (/^(the )?(purchaser|buyer)s?$/.test(s)) return 'purchaser';
+  if (/^(the )?(vendor|seller)s?$/.test(s)) return 'vendor';
+  return '?';
+}
+function actingFor(label) {
+  const a = sideOf(d.acting_for), s = sideOf(d.signing_for);
+  if (a === '?') refuse(`[${label}] acting_for is "${d.acting_for}". It must be "purchaser" or "vendor", the side the firm acts for in this matter.`);
+  if (a && s && s !== '?' && a !== s) refuse(`[${label}] acting_for says the firm acts for the ${a}, but signing_for signs the letter as ` +
+    `"Advocates for the ${d.signing_for}". One of them is wrong; correct it before anything goes to the other side.`);
+  return a || (s === '?' ? '' : s);
+}
+
+// The firm's own name and address go only on the side it acts for. The other side's advocates come
+// from the intake, and where nobody knows them yet they print as a dotted rule.
+function saleAdvocates() {
+  const side = actingFor('sale_agreement');
+  const squash = (x) => String(x || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const isFirm = (x) => !!known(x) && squash(x) === squash(FIRM_NAME);
+  const v = { firm: known(d.vendor_advocate_firm), addr: known(d.vendor_advocate_address) };
+  const p = { firm: known(d.purchaser_advocate_firm), addr: known(d.purchaser_advocate_address) };
+  if (side) {
+    const ours = side === 'purchaser' ? p : v, theirs = side === 'purchaser' ? v : p;
+    const ourRole = side === 'purchaser' ? 'Purchaser' : 'Vendor', theirRole = side === 'purchaser' ? 'Vendor' : 'Purchaser';
+    const theirKey = side === 'purchaser' ? 'vendor_advocate_firm' : 'purchaser_advocate_firm';
+    if (ours.firm && !isFirm(ours.firm)) refuse(`[sale_agreement] acting_for says the firm acts for the ${side}, but the data file names ` +
+      `${ours.firm} as the ${ourRole}'s advocates. The firm's own details are printed on its own side from the firm configuration.`);
+    if (isFirm(theirs.firm)) refuse(`[sale_agreement] acting_for says the firm acts for the ${side}, but the data file also names ` +
+      `${FIRM_NAME} as the ${theirRole}'s advocates. Put the other side's advocates in ${theirKey}, or leave it blank for completion by hand.`);
+    ours.firm = FIRM_NAME;
+    ours.addr = [FIRM_LINE2, FIRM_PO].map(known).filter(Boolean).join(', ');
+  }
+  return { vendor: v, purchaser: p, side };
+}
+function advocatesDefinition(a) {
+  if (!a.firm) return ` means Messrs. ${DOT_RULE} of ${DOT_RULE}`;
+  return ` means Messrs. ${a.firm} of ${a.addr || DOT_RULE}`;
+}
+
+// A party is an individual (name, P.O. Box, I.D. No.) or a company (name, registration number,
+// P.O. Box). A company registration number is never labelled "I.D. No.", and a company has
+// successors, not heirs or personal representatives.
+function isCompanyParty(pre) { return d[`${pre}_is_company`] === true; }
+function partyDescription(pre) {
+  const box = `Post Office Box Number ${orDots(d[`${pre}_po_box`])}, ${orDots(d[`${pre}_town`])}`;
+  if (isCompanyParty(pre)) {
+    const reg = known(d[`${pre}_reg_no`]) || known(d[`${pre}_id`]);
+    return `${d[`${pre}_name`] || ''}, a limited liability company incorporated in the Republic of Kenya (Registration No. ${reg || DOT_RULE}) of ${box}`;
+  }
+  return `${d[`${pre}_name`] || ''} of ${box} and I.D. No. ${orDots(d[`${pre}_id`])}`;
+}
+
+// The officers who execute for a company party: "vendor_directors" / "purchaser_directors", an
+// array of names or of { name, title }. Named officers print under their titles; with none named
+// the block prints the two titled signature lines for completion by hand, as the reference does.
+function companyOfficers(pre) {
+  const raw = Array.isArray(d[`${pre}_directors`]) ? d[`${pre}_directors`] : [];
+  const defaults = ['DIRECTOR', 'DIRECTOR/SECRETARY'];
+  const list = raw.map((o, i) => {
+    const name = known(typeof o === 'object' && o ? o.name : o).toUpperCase();
+    const title = known(typeof o === 'object' && o ? o.title : '').toUpperCase() || defaults[Math.min(i, 1)];
+    return { name, title };
+  }).filter(o => o.name || o.title);
+  while (list.length < 2) list.push({ name: '', title: defaults[list.length] });
+  return list;
+}
+
+// Land area, as given, with its unit. Acres are stated as given and converted to hectares
+// exactly (1 acre = 0.404686 ha, four decimal places) because the recital is written in hectares.
+function areaText() {
+  const fig = known(d.property_area_figures), words = known(d.property_area_words);
+  if (!fig && !words) return DOT_RULE;
+  const u = known(d.property_area_unit).toLowerCase();
+  const unit = !u || /^(ha|hectares?)$/.test(u) ? 'hectares' : /^(ac|acres?)$/.test(u) ? 'acres' : u;
+  const n = numOf(fig);
+  const unitWord = n === 1 ? unit.replace(/s$/, '') : unit;
+  let s = words && fig ? `${words} (${fig}) ${unitWord}` : `${words || fig} ${unitWord}`;
+  if (unit === 'acres' && n != null) s += ` (${(Math.round(n * 0.404686 * 10000) / 10000).toFixed(4)} hectares)`;
+  return s;
+}
+
+// Tenure is read from "tenure", and the old "is_leasehold" flag may not contradict it: a template
+// that hard-coded is_leasehold false turned a leasehold title into a freehold agreement, exit 0.
+function saleTenure() {
+  const t = known(d.tenure).toLowerCase();
+  if (t && t !== 'freehold' && t !== 'leasehold') refuse(`[sale_agreement] tenure is "${d.tenure}". It must be "freehold" or "leasehold".`);
+  if (t && typeof d.is_leasehold === 'boolean' && d.is_leasehold !== (t === 'leasehold')) refuse(`[sale_agreement] tenure is "${t}" but ` +
+    `is_leasehold is ${d.is_leasehold}. The two contradict each other, so the agreement would state the wrong interest. Set is_leasehold from the tenure.`);
+  const lease = t ? t === 'leasehold' : d.is_leasehold === true;
+  if (lease) {
+    const missing = [];
+    if (!known(d.lease_term_years)) missing.push('lease_term_years (the term the lease was granted for, in years, e.g. 99; not the years remaining)');
+    if (!known(d.lessor)) missing.push('lessor (who granted the lease, e.g. the Government of Kenya, a County Government or the developer)');
+    if (missing.length) refuse(`[sale_agreement] the title is leasehold, so the agreement must state the lease. Pass "lease_term_years" ` +
+      `and "lessor" in the data file. Missing: ${missing.join('; ')}.`);
+  }
+  return lease;
+}
+
 // ─── Build Agreement for Sale ──────────────────────────────────────────────────
 function buildSaleAgreement() {
   requireFields(['vendor_name', 'purchaser_name', 'property_lr_no', 'purchase_price_words', 'purchase_price_figures', 'completion_date'], 'sale_agreement');
   assertMoneyConsistent();
+  const isLease = saleTenure();
+  const advs = saleAdvocates();
+  const vendorCo = isCompanyParty('vendor'), purchaserCo = isCompanyParty('purchaser');
+
+  // Money. A sale with no deposit says so; a deposit prints its percentage only when it is a whole
+  // percentage of the price, and never a hard-coded "ten percentum" that may be false.
+  const price = numOf(d.purchase_price_figures), dep = numOf(d.deposit_figures), bal = numOf(d.balance_figures);
+  const noDeposit = (dep == null || dep === 0) && !known(d.deposit_words);
+  if (!noDeposit) {
+    const miss = ['deposit_words', 'deposit_figures', 'balance_words', 'balance_figures'].filter(k => !known(d[k]));
+    if (miss.length) refuse(`[sale_agreement] a deposit is stated, so the agreement needs the deposit and the balance in words and ` +
+      `figures. Missing: ${miss.join(', ')}. For a sale with no deposit, set deposit_words and deposit_figures to null.`);
+  } else if (price != null && bal != null && Math.abs(bal - price) > 1) {
+    refuse(`[sale_agreement] no deposit is stated, so the balance (${d.balance_figures}) must equal the purchase price ` +
+      `(${d.purchase_price_figures}). Fix the figures before generating.`);
+  }
+  let depositPct = '';
+  if (!noDeposit && price && dep) {
+    const pct = Math.round((dep / price) * 100 * 1e6) / 1e6;
+    if (Number.isInteger(pct) && pct > 0 && pct < 100) depositPct = ` being ${numberWords(pct)} percentum (${pct}%) of the Purchase Price`;
+  }
+
+  // Charge. A charged title names its chargee in the completion documents.
+  const chargee = known(d.chargee_name);
+  if (chargee && d.is_charged !== true) refuse(`[sale_agreement] chargee_name is "${chargee}" but is_charged is not true. ` +
+    'A title with a chargee is charged: set is_charged to true so the Discharge of Charge is a completion document.');
   const children = [];
 
   // ── COVER PAGE ─────────────────────────────────────────────────────────────
@@ -576,20 +849,20 @@ function buildSaleAgreement() {
   children.push(spacer());
 
   // Vendor party block
-  const vendorGender = d.vendor_is_company ? 'its' : 'his/her';
   let vendorCapacityText = '';
   if (d.vendor_capacity) {
     vendorCapacityText = ` (acting in his/her capacity as ${d.vendor_capacity})`;
   }
+  const vendorSuccessors = vendorCo ? 'its successors and assigns' : 'his/her personal representatives and assigns';
   children.push(bodyPara([
-    antiqua(`${d.vendor_name || ''} of Post Office Box Number ${d.vendor_po_box || ''}, ${d.vendor_town || ''} and I.D. No. ${d.vendor_id || ''}${vendorCapacityText} (hereinafter called \u201cthe Vendor\u201d which expression shall where the context so admits include ${vendorGender} personal representatives and assigns) of the one part; and`)
+    antiqua(`${partyDescription('vendor')}${vendorCapacityText} (hereinafter called \u201cthe Vendor\u201d which expression shall where the context so admits include ${vendorSuccessors}) of the one part; and`)
   ]));
   children.push(spacer());
 
   // Purchaser party block
-  const purchaserGender = d.purchaser_is_company ? 'its' : 'his/her';
+  const purchaserSuccessors = purchaserCo ? 'its successors and assigns' : 'his/her heirs, personal representatives and assigns';
   children.push(bodyPara([
-    antiqua(`${d.purchaser_name || ''} of Post Office Box Number ${d.purchaser_po_box || ''}, ${d.purchaser_town || ''} and I.D. No. ${d.purchaser_id || ''} (hereinafter called \u201cthe Purchaser\u201d which expression shall where the context so admits include ${purchaserGender} heirs, personal representatives and assigns) of the other part.`)
+    antiqua(`${partyDescription('purchaser')} (hereinafter called \u201cthe Purchaser\u201d which expression shall where the context so admits include ${purchaserSuccessors}) of the other part.`)
   ]));
   children.push(spacer());
 
@@ -598,11 +871,12 @@ function buildSaleAgreement() {
   children.push(spacer());
 
   // Recital 1
-  const tenurePhrase = d.is_leasehold
-    ? `the leasehold interest for a term of ${d.lease_term_years || '___'} years from ${d.lease_start_date || '___'} in`
+  const leaseTerm = `${known(d.lease_term_years)} years from ${orDots(d.lease_start_date)}`;
+  const tenurePhrase = isLease
+    ? `the leasehold interest for a term of ${leaseTerm} granted by ${known(d.lessor)} in`
     : 'the freehold interest in';
   children.push(bodyPara([
-    antiqua(`${d.vendor_name || ''} is registered as the proprietor of ${tenurePhrase} all that parcel of land known as ${d.property_lr_no || ''} situate at ${d.property_location || ''} and measuring approximately ${d.property_area_words || ''} (${d.property_area_figures || ''}) hectares or thereabouts (hereinafter referred to as \u201cthe Property\u201d).`)
+    antiqua(`${d.vendor_name || ''} is registered as the proprietor of ${tenurePhrase} all that parcel of land known as ${d.property_lr_no || ''} situate at ${d.property_location || ''} and measuring approximately ${areaText()} or thereabouts (hereinafter referred to as \u201cthe Property\u201d).`)
   ]));
   children.push(spacer());
 
@@ -629,9 +903,9 @@ function buildSaleAgreement() {
     antiqua('\u201cCompletion Date\u201d', { bold: true }),
     antiqua(' means the date stipulated in or ascertained in accordance with the provisions of Clause 5 of this Agreement;')
   ]));
-  children.push(definitionPara([
+  if (!noDeposit) children.push(definitionPara([
     antiqua('\u201cDeposit\u201d', { bold: true }),
-    antiqua(` means the sum of Kenya Shillings ${d.deposit_words || ''} (Kshs. ${d.deposit_figures || ''}/-);`)
+    antiqua(` means the sum of Kenya Shillings ${known(d.deposit_words)} (Kshs. ${known(d.deposit_figures)}/-);`)
   ]));
   children.push(definitionPara([
     antiqua('\u201cLSK Conditions\u201d', { bold: true }),
@@ -647,11 +921,11 @@ function buildSaleAgreement() {
   ]));
   children.push(definitionPara([
     antiqua('\u201cThe Vendor\u2019s Advocates\u201d', { bold: true }),
-    antiqua(` means Messrs. ${d.vendor_advocate_firm || ''} of ${d.vendor_advocate_address || ''};`)
+    antiqua(`${advocatesDefinition(advs.vendor)};`)
   ]));
   children.push(definitionPara([
     antiqua('\u201cThe Purchaser\u2019s Advocates\u201d', { bold: true }),
-    antiqua(` means Messrs. ${d.purchaser_advocate_firm || ''} of ${d.purchaser_advocate_address || ''}.`)
+    antiqua(`${advocatesDefinition(advs.purchaser)}.`)
   ]));
   children.push(spacer());
 
@@ -682,15 +956,15 @@ function buildSaleAgreement() {
   children.push(spacer());
 
   children.push(subClause('3.1', [
-    antiqua(`The Property is all that piece and parcel of land known as ${d.property_lr_no || ''}, containing by measurement ${d.property_area_words || ''} (${d.property_area_figures || ''}) hectares or thereabouts.`)
+    antiqua(`The Property is all that piece and parcel of land known as ${d.property_lr_no || ''}, containing by measurement ${areaText()} or thereabouts.`)
   ]));
 
   children.push(subClause('3.2', [
     antiqua('The Vendor hereby agrees to sell and the Purchaser hereby agrees to purchase the Property together with all improvements thereon at the Purchase Price and upon the terms and conditions set out in this Agreement.')
   ]));
 
-  const interestSold = d.is_leasehold
-    ? `the leasehold interest for the unexpired residue of the term of ${d.lease_term_years || '___'} years from ${d.lease_start_date || '___'}`
+  const interestSold = isLease
+    ? `the leasehold interest for the unexpired residue of the term of ${leaseTerm}`
     : 'the freehold interest';
   children.push(subClause('3.3', [
     antiqua(`The interest sold is ${interestSold}, free from all encumbrances.`)
@@ -701,13 +975,21 @@ function buildSaleAgreement() {
   children.push(clauseHeading('4', 'PURCHASE PRICE AND DEPOSIT'));
   children.push(spacer());
 
-  children.push(subClause('4.1', [
-    antiqua(`The Purchaser shall upon execution of this Agreement pay the Deposit of Kenya Shillings ${d.deposit_words || ''} (Kshs. ${d.deposit_figures || ''}/-) being ten percentum (10%) of the Purchase Price to the Vendor\u2019s Advocates to hold as stakeholders in their client account pending Completion.`)
-  ]));
-
-  children.push(subClause('4.2', [
-    antiqua(`The Balance of the Purchase Price, being Kenya Shillings ${d.balance_words || ''} (Kshs. ${d.balance_figures || ''}/-), shall be paid to the Vendor\u2019s Advocates on or before the Completion Date in exchange for which the Vendor\u2019s Advocates shall release the Completion Documents to the Purchaser\u2019s Advocates.`)
-  ]));
+  if (noDeposit) {
+    children.push(subClause('4.1', [
+      antiqua('No deposit is payable under this Agreement.')
+    ]));
+    children.push(subClause('4.2', [
+      antiqua(`The Purchase Price of Kenya Shillings ${d.purchase_price_words} (Kshs. ${d.purchase_price_figures}/-) shall be paid in full to the Vendor\u2019s Advocates on or before the Completion Date in exchange for which the Vendor\u2019s Advocates shall release the Completion Documents to the Purchaser\u2019s Advocates.`)
+    ]));
+  } else {
+    children.push(subClause('4.1', [
+      antiqua(`The Purchaser shall upon execution of this Agreement pay the Deposit of Kenya Shillings ${known(d.deposit_words)} (Kshs. ${known(d.deposit_figures)}/-)${depositPct} to the Vendor\u2019s Advocates to hold as stakeholders in their client account pending Completion.`)
+    ]));
+    children.push(subClause('4.2', [
+      antiqua(`The Balance of the Purchase Price, being Kenya Shillings ${known(d.balance_words)} (Kshs. ${known(d.balance_figures)}/-), shall be paid to the Vendor\u2019s Advocates on or before the Completion Date in exchange for which the Vendor\u2019s Advocates shall release the Completion Documents to the Purchaser\u2019s Advocates.`)
+    ]));
+  }
   children.push(spacer());
 
   // ── CLAUSE 5: COMPLETION ──────────────────────────────────────────────────
@@ -723,46 +1005,38 @@ function buildSaleAgreement() {
   ]));
   children.push(spacer());
 
-  children.push(romanItem('(i)', 'Duly executed Instrument of Transfer in triplicate in favour of the Purchaser and/or their nominee;'));
-  children.push(romanItem('(ii)', 'Original title document in respect of the Property;'));
-  children.push(romanItem('(iii)', 'Valid Rates Clearance Certificate for the Property (valid for at least twenty-one (21) days from the Completion Date) together with receipts evidencing payment of land rates for the last three (3) years;'));
-
-  if (d.is_leasehold) {
-    children.push(romanItem('(iv)', 'Original valid Land Rent Clearance Certificate issued by the National Land Commission, together with receipts evidencing payment of land rent for the last three (3) years;'));
-    children.push(romanItem('(v)', 'Valid consent of the National Land Commission to the transfer;'));
+  // The list is numbered as it is built, so an item added or left out never skips or repeats a numeral.
+  // A company vendor has no identity card, passport photographs or spouse: its directors' documents
+  // and board resolution stand in their place.
+  const completionDocs = [
+    'Duly executed Instrument of Transfer in triplicate in favour of the Purchaser and/or their nominee;',
+    'Original title document in respect of the Property;',
+    'Valid Rates Clearance Certificate for the Property (valid for at least twenty-one (21) days from the Completion Date) together with receipts evidencing payment of land rates for the last three (3) years;',
+  ];
+  if (isLease) {
+    const lessor = known(d.lessor);
+    const stateLessor = /national land commission|\bnlc\b|government of (the republic of )?kenya|national government|republic of kenya|president|commissioner of lands/i.test(lessor);
+    completionDocs.push('Original valid Land Rent Clearance Certificate issued by the National Land Commission, together with receipts evidencing payment of land rent for the last three (3) years;');
+    completionDocs.push(stateLessor
+      ? 'Valid consent of the National Land Commission to the transfer;'
+      : `Valid consent of the lessor, ${lessor}, to the transfer;`);
   }
-
-  if (d.is_agricultural) {
-    children.push(romanItem(d.is_leasehold ? '(vi)' : '(iv)', 'Valid consent of the Land Control Board to the transfer;'));
+  if (d.is_agricultural) completionDocs.push('Valid consent of the Land Control Board to the transfer;');
+  completionDocs.push('Copies of the latest utility bills for the Property paid up to the Completion Date;');
+  if (!vendorCo) completionDocs.push('Copy of the Vendor’s National Identity Card or Passport;');
+  completionDocs.push('Copy of the Vendor’s KRA PIN Certificate;');
+  if (!vendorCo) {
+    completionDocs.push('Three (3) coloured passport-size photographs of the Vendor;');
+    completionDocs.push('Spousal consent from the Vendor’s spouse consenting to the sale of the Property;');
+  } else {
+    completionDocs.push('Certified copy of the Certificate of Incorporation; Copies of National Identity Cards and KRA PIN certificates of each Director; Three (3) passport-size photographs of each Director; Board Resolution authorising the sale;');
   }
-
-  // Continuing items — determine next roman numeral offset
-  let romanOffset = 4;
-  if (d.is_leasehold) romanOffset += 2;
-  if (d.is_agricultural) romanOffset += 1;
-
-  const romanNumerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii'];
-
-  const utilityIdx = romanOffset - 1;
-  children.push(romanItem(`(${romanNumerals[utilityIdx]})`, 'Copies of the latest utility bills for the Property paid up to the Completion Date;'));
-  children.push(romanItem(`(${romanNumerals[utilityIdx + 1]})`, 'Copy of the Vendor\u2019s National Identity Card or Passport;'));
-  children.push(romanItem(`(${romanNumerals[utilityIdx + 2]})`, 'Copy of the Vendor\u2019s KRA PIN Certificate;'));
-  children.push(romanItem(`(${romanNumerals[utilityIdx + 3]})`, 'Three (3) coloured passport-size photographs of the Vendor;'));
-  children.push(romanItem(`(${romanNumerals[utilityIdx + 4]})`, 'Spousal consent from the Vendor\u2019s spouse consenting to the sale of the Property;'));
-
-  let nextIdx = utilityIdx + 5;
-
-  if (d.vendor_is_company) {
-    children.push(romanItem(`(${romanNumerals[nextIdx]})`, 'Certified copy of the Certificate of Incorporation; Copies of National Identity Cards and KRA PIN certificates of each Director; Three (3) passport-size photographs of each Director; Board Resolution authorising the sale;'));
-    nextIdx++;
-  }
-
   if (d.is_charged) {
-    children.push(romanItem(`(${romanNumerals[nextIdx]})`, 'Duly executed Discharge of Charge in favour of the Purchaser, signed by the Chargee;'));
-    nextIdx++;
+    completionDocs.push(`Duly executed Discharge of Charge in respect of the Property, executed by the Chargee, ${chargee || DOT_RULE}` +
+      `${d.charge_redeemed_on_completion === true ? ', the charge being redeemed on Completion' : ''};`);
   }
-
-  children.push(romanItem(`(${romanNumerals[nextIdx]})`, 'Every other document necessary to enable the Purchaser to become the registered proprietor of the Property free of any encumbrance.'));
+  completionDocs.push('Every other document necessary to enable the Purchaser to become the registered proprietor of the Property free of any encumbrance.');
+  completionDocs.forEach((t, i) => children.push(romanItem(`(${roman(i + 1)})`, t)));
   children.push(spacer());
 
   // ── CLAUSE 6: MATTERS AFFECTING THE PROPERTY ─────────────────────────────
@@ -908,15 +1182,16 @@ function buildSaleAgreement() {
   children.push(spacer());
 
   // ── VENDOR EXECUTION BLOCK ────────────────────────────────────────────────
-  children.push(buildExecutionBlock(d.vendor_name, 'Vendor'));
+  children.push(buildExecutionBlock(d.vendor_name, 'Vendor', 'vendor'));
   children.push(spacer());
 
   // ── PURCHASER EXECUTION BLOCK ─────────────────────────────────────────────
-  children.push(buildExecutionBlock(d.purchaser_name, 'Purchaser'));
+  children.push(buildExecutionBlock(d.purchaser_name, 'Purchaser', 'purchaser'));
   children.push(spacer());
 
   // ── SPOUSAL CONSENT ───────────────────────────────────────────────────────
-  if (d.include_spousal_consent) {
+  // A company vendor has no spouse; the consent is for an individual vendor who is or may be married.
+  if (d.include_spousal_consent && !vendorCo) {
     children.push(spacer());
     children.push(bodyPara([
       antiqua('SPOUSAL CONSENT AND EXECUTION', { bold: true, underline: { type: UnderlineType.SINGLE } })
@@ -974,64 +1249,73 @@ function buildSaleAgreement() {
 
 // ─── Execution block builder ──────────────────────────────────────────────────
 // Produces the "SIGNED by the Vendor/Purchaser" block with witness certification
-function buildExecutionBlock(partyName, partyRole) {
+// One execution block (the signing words, the signature, the witness or advocate's certificate)
+// never breaks across a page: the witness signs on the page that carries the party's name. Keep
+// with next is not honoured on every renderer, so the whole block sits in a single unsplittable row.
+function keepTogether(items) {
+  const none = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  return new Table({
+    width: { size: 9026, type: WidthType.DXA },
+    columnWidths: [9026],
+    borders: { top: none, bottom: none, left: none, right: none, insideH: none, insideV: none },
+    rows: [new TableRow({ cantSplit: true, children: [new TableCell({
+      borders: { top: none, bottom: none, left: none, right: none },
+      width: { size: 9026, type: WidthType.DXA },
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      children: items,
+    })] })],
+  });
+}
+
+function buildExecutionBlock(partyName, partyRole, pre) {
+  if (pre && isCompanyParty(pre)) return buildCompanyExecutionBlock(partyName, partyRole, pre);
   const items = [];
-  const roleUpper = partyRole.toUpperCase();
 
   // Using a table for the execution block: name on left, signature space on right
   const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
   const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
+  // The signing words, the party's name and the witness certificate stay on one page: the witness
+  // signs on the same page as the name, and a block split across a page break invites a challenge.
+  const kp = (text, opts = {}) => new Paragraph({ children: [antiqua(text, opts)], spacing: spacingB(80), keepNext: true, keepLines: true });
 
+  // Three columns, the way the registry's jurat is set: the signing words, the brace
+  // that gathers them, then the signature. The braces used to sit between the text
+  // lines in the left column, so the page printed three paragraphs whose only content
+  // was a closing bracket, and the rule was longer than its column and wrapped.
+  const braceCell = (n) => new TableCell({
+    borders: noBorders,
+    width: { size: 400, type: WidthType.DXA },
+    children: Array.from({ length: n }, () => kp(')')),
+  });
   items.push(new Table({
-    width: { size: 9026, type: WidthType.DXA },
-    columnWidths: [6200, 2826],
+    width: { size: 9000, type: WidthType.DXA },
+    columnWidths: [5400, 400, 3200],
     borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideH: noBorder, insideV: noBorder },
     rows: [
       new TableRow({
+        cantSplit: true,
         children: [
           new TableCell({
             borders: noBorders,
-            width: { size: 6200, type: WidthType.DXA },
+            width: { size: 5400, type: WidthType.DXA },
             children: [
-              new Paragraph({
-                children: [antiqua(`SIGNED by the ${partyRole} the said`)],
-                spacing: spacingB(80),
-              }),
-              new Paragraph({
-                children: [antiqua(partyName || '', { bold: true })],
-                spacing: spacingB(80),
-              }),
-              new Paragraph({
-                children: [antiqua(')')],
-                spacing: spacingB(80),
-              }),
-              new Paragraph({
-                children: [antiqua('in the presence of:')],
-                spacing: spacingB(80),
-              }),
-              new Paragraph({
-                children: [antiqua(')')],
-                spacing: spacingB(80),
-              }),
-              new Paragraph({
-                children: [antiqua('Advocate')],
-                spacing: spacingB(80),
-              }),
-              new Paragraph({
-                children: [antiqua(')')],
-                spacing: spacingB(80),
-              }),
+              kp(`SIGNED by the ${partyRole} the said`),
+              kp(partyName || '', { bold: true }),
+              kp('in the presence of:'),
+              kp('Advocate'),
             ]
           }),
+          braceCell(4),
           new TableCell({
             borders: noBorders,
-            width: { size: 2826, type: WidthType.DXA },
+            width: { size: 3200, type: WidthType.DXA },
             verticalAlign: VerticalAlign.CENTER,
             children: [
               new Paragraph({
-                children: [antiqua('___________________________')],
+                children: [antiqua('_____________________')],
                 alignment: AlignmentType.CENTER,
                 spacing: spacingB(80),
+                keepNext: true,
               })
             ]
           })
@@ -1040,168 +1324,114 @@ function buildExecutionBlock(partyName, partyRole) {
     ]
   }));
 
-  items.push(spacer());
-  items.push(bodyPara([
-    antiqua(`I CERTIFY THAT I was present and saw ${partyName || ''} the ${partyRole} executing this Agreement for Sale.`)
-  ]));
-  items.push(spacer());
-  items.push(bodyPara([antiqua('Signature of Witness: .............................................')]));
-  items.push(bodyPara([antiqua('Name: .................................................................')]));
-  items.push(bodyPara([antiqua('Address: ..............................................................')]));
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 160 }, keepNext: true }));
+  items.push(new Paragraph({ children: [antiqua(`I CERTIFY THAT I was present and saw ${partyName || ''} the ${partyRole} executing this Agreement for Sale.`)],
+    spacing: spacingB(80), alignment: AlignmentType.JUSTIFIED, keepNext: true, keepLines: true }));
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 160 }, keepNext: true }));
+  items.push(kp('Signature of Witness: .............................................'));
+  items.push(kp('Name: .................................................................'));
+  items.push(kp('Address: ..............................................................'));
   items.push(bodyPara([antiqua('Occupation: ...........................................................')]));
 
-  return items;
+  return [keepTogether(items)];
 }
+
+// A company executes under its common seal in the presence of its officers, with the advocate's
+// certificate that they appeared (the firm's own template, references/sale-agreement.md). Signing a
+// company "the said" as if it were a person, before one witness, is not execution by the company.
+function buildCompanyExecutionBlock(partyName, partyRole, pre) {
+  const items = [];
+  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
+  const kp = (text, opts = {}, para = {}) => new Paragraph({ children: [antiqua(text, opts)], spacing: spacingB(80), keepNext: true, keepLines: true, ...para });
+  const cell = (w, children, extra = {}) => new TableCell({ borders: noBorders, width: { size: w, type: WidthType.DXA }, children, ...extra });
+  const officers = companyOfficers(pre);
+
+  const rows = [
+    new TableRow({ cantSplit: true, children: [
+      cell(5400, [kp('SEALED with the Common Seal of'), kp(partyName || '', { bold: true }), kp(`the ${partyRole} in the presence of:`)]),
+      cell(400, [kp(')'), kp(')'), kp(')')]),
+      cell(3200, [kp('')]),
+    ] }),
+  ];
+  officers.forEach((o) => {
+    rows.push(new TableRow({ cantSplit: true, children: [
+      cell(5400, [kp(''), kp(o.title, { bold: true }), kp(o.name ? o.name : 'Name: ' + DOT_RULE)]),
+      cell(400, [kp(')'), kp(')'), kp(')')]),
+      cell(3200, [kp(''), kp('_____________________', {}, { alignment: AlignmentType.CENTER })], { verticalAlign: VerticalAlign.BOTTOM }),
+    ] }));
+  });
+  items.push(new Table({
+    width: { size: 9000, type: WidthType.DXA },
+    columnWidths: [5400, 400, 3200],
+    borders: { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder, insideH: noBorder, insideV: noBorder },
+    rows,
+  }));
+
+  const titles = officers.map(o => titleCaseName(o.title).replace(/\/(\w)/g, (m, c) => '/' + c.toUpperCase()));
+  const named = titles.length > 1 ? titles.slice(0, -1).join(', ') + ' and ' + titles[titles.length - 1] : titles[0];
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 160 }, keepNext: true }));
+  items.push(new Paragraph({ children: [antiqua(`I CERTIFY that the above-named ${named} respectively appeared before me on the _________ day of _________________ 20_____, and being known to me/identified by _________________________, acknowledged the above signatures to be theirs and that they had freely and voluntarily executed this Agreement and understood its contents.`)],
+    spacing: spacingB(80), alignment: AlignmentType.JUSTIFIED, keepNext: true, keepLines: true }));
+  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 160 }, keepNext: true }));
+  items.push(kp('..................................................'));
+  items.push(bodyPara([antiqua('ADVOCATE')]));
+  return [keepTogether(items)];
+}
+
 
 // ─── Conveyance Letter builder ────────────────────────────────────────────────
 function buildConveyanceLetter() {
-  const items = [];
-
-  // Letterhead
-  items.push(...buildLetterhead());
-  items.push(spacerSm());
-
-  const TEXT_WIDTH = A4_W - (2 * MARGIN_SIDE); // 9026 DXA
-  // Correspondence reference block: bold labels/values, then a divider before
-  // the recipient block so the opening reads as a deliberate unit.
-  const refNoBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
-  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 480 } }));
-  items.push(new Table({
-    width: { size: TEXT_WIDTH, type: WidthType.DXA },
-    columnWidths: [3600, 2800, 2626],
-    borders: {
-      top: refNoBorder,
-      left: refNoBorder,
-      right: refNoBorder,
-      insideH: refNoBorder,
-      insideV: refNoBorder,
-      bottom: refNoBorder
-    },
-    rows: [new TableRow({
-      children: [
-        new TableCell({
-          width: { size: 3600, type: WidthType.DXA },
-          borders: { top: refNoBorder, left: refNoBorder, right: refNoBorder, bottom: refNoBorder },
-          children: [new Paragraph({ children: [antiqua(`Our Ref: ${d.ref || 'TBD'}`, { bold: true, size: 20 })], spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO } })]
-        }),
-        new TableCell({
-          width: { size: 2800, type: WidthType.DXA },
-          borders: { top: refNoBorder, left: refNoBorder, right: refNoBorder, bottom: refNoBorder },
-          children: [new Paragraph({ children: [antiqua(`Your Ref: ${d.your_ref || 'TBD'}`, { bold: true, size: 20 })], spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO }, alignment: AlignmentType.CENTER })]
-        }),
-        new TableCell({
-          width: { size: 2626, type: WidthType.DXA },
-          borders: { top: refNoBorder, left: refNoBorder, right: refNoBorder, bottom: refNoBorder },
-          children: [new Paragraph({ children: [antiqua(`Date: ${d.date || ''}`, { bold: true, size: 20 })], spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO }, alignment: AlignmentType.RIGHT })]
-        })
-      ]
-    })]
-  }));
-  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 160 } }));
-
-  // Recipient block
-  if (d.recipient_lines && d.recipient_lines.length) {
-    d.recipient_lines.forEach(line => {
-      items.push(new Paragraph({
-        children: [antiqua(line)],
-        spacing: { before: 0, after: line === d.recipient_lines[d.recipient_lines.length - 1] && !d.attn ? 160 : 0, line: 240, lineRule: LineRuleType.AUTO }
-      }));
-    });
-    // Attention line
-    if (d.attn) {
-      items.push(new Paragraph({
-        children: [antiqua(`Attn: ${d.attn}`)],
-        spacing: { before: 0, after: 160, line: 240, lineRule: LineRuleType.AUTO }
-      }));
-    }
-  }
-
-  // Salutation
-  items.push(new Paragraph({
-    children: [antiqua(d.salutation || 'Dear Sir/Madam,')],
-    spacing: { before: 0, after: 180, line: 240, lineRule: LineRuleType.AUTO }
-  }));
-
-  // Subject line — bold with the MAK yellow rule used by the reference letter.
-  if (d.subject) {
-    items.push(new Paragraph({
-      children: [antiqua(d.subject, { bold: true })],
-      spacing: { before: 0, after: 200, line: 240, lineRule: LineRuleType.AUTO },
-      alignment: AlignmentType.JUSTIFIED,
-      border: { bottom: { style: BorderStyle.SINGLE, size: 8, space: 1, color: 'FFDD16' } }
-    }));
-  }
-
-  // Body paragraphs
-  // - string → plain justified paragraph (all-caps short strings render as bold section headers)
-  // - array of {text, bold?} → mixed-run justified paragraph
-  if (d.paragraphs && d.paragraphs.length) {
-    d.paragraphs.forEach(para => {
-      if (Array.isArray(para)) {
-        items.push(new Paragraph({
-          children: para.map(r => antiqua(r.text, r.bold ? { bold: true } : {})),
-          spacing: spacingB(80),
-          alignment: AlignmentType.JUSTIFIED
-        }));
-      } else {
-        const isSectionHeader = /^[A-Z][A-Z\s'&\/\(\)-]{0,60}$/.test(para.trim());
-        if (isSectionHeader) {
-          items.push(new Paragraph({
-            children: [antiqua(para, { bold: true })],
-            spacing: spacingB(120),
-            alignment: AlignmentType.LEFT
-          }));
-        } else {
-          items.push(paraB(para));
-        }
-      }
-    });
-  }
-
-  items.push(spacer());
-
-  // Closing
-  items.push(paraB(d.closing || 'Yours faithfully,'));
-  items.push(spacer());
-  items.push(spacer());
-  items.push(spacer());
-
-  // Signature block
-  items.push(new Paragraph({
-    children: [antiqua('_________________________________')],
-    spacing: spacingB(80)
-  }));
-  items.push(new Paragraph({
-    children: [antiqua(FIRM_NAME_TC, { bold: true })],
-    spacing: spacingB(80)
-  }));
-  items.push(new Paragraph({
-    children: [antiqua('Advocates for the ' + (d.signing_for || 'Vendor'))],
-    spacing: spacingB(80)
-  }));
-
-  return items;
+  // Correspondence on the letterhead: the shared firm letter page. Signed by the advocate running the plugin.
+  return FirmLetter.buildLetter(d, {
+    size: 24, signatoryName: advocateNameCaps(), signatoryRole: 'Advocate (' + advocateP105('conveyance_letter') + ')',
+    signatoryLine2: d.signing_for ? 'Advocates for the ' + d.signing_for : '',
+  });
 }
-
 // ─── Undertaking Request builder ──────────────────────────────────────────────
 // Firm writes to other side asking them to give a Professional Undertaking
 function buildUndertakingRequest() {
   const paras = [];
+  // The side comes from acting_for (or, failing that, signing_for). It used to be hard-wired to the
+  // Purchaser, so a vendor-side firm's request recited "we act for the Purchaser" over a signature
+  // "Advocates for the Vendor".
+  const side = actingFor('undertaking_request') || 'purchaser';
+  const [ourName, ourRole, theirName, theirRole] = side === 'vendor'
+    ? [d.vendor_name, 'Vendor', d.purchaser_name, 'Purchaser']
+    : [d.purchaser_name, 'Purchaser', d.vendor_name, 'Vendor'];
 
   paras.push([
     { text: 'We refer to the above subject matter in which we act for ' },
-    { text: d.purchaser_name || '…', bold: true },
-    { text: ' ("the Purchaser") while you act for ' },
-    { text: d.vendor_name || '…', bold: true },
-    { text: ' ("the Vendor") herein.' },
+    { text: ourName || '…', bold: true },
+    { text: ` ("the ${ourRole}") while you act for ` },
+    { text: theirName || '…', bold: true },
+    { text: ` ("the ${theirRole}") herein.` },
   ]);
-  paras.push([
+  paras.push(side === 'vendor' ? [
+    { text: 'To enable our client release the completion documents to you, kindly give us your unequivocal and irrevocable Professional Undertaking to pay the balance of the Purchase Price being Kenya Shillings ' },
+    { text: `${d.balance_words || '…'} (Kshs. ${d.balance_figures || '…'}/=)`, bold: true },
+    { text: ' in the following terms:' },
+  ] : [
     { text: 'To enable our client release the balance of the Purchase Price being Kenya Shillings ' },
     { text: `${d.balance_words || '…'} (Kshs. ${d.balance_figures || '…'}/=)`, bold: true },
     { text: ' to you, kindly give us your unequivocal and irrevocable Professional Undertaking in the following terms:' },
   ]);
 
-  (d.that_clauses || []).forEach(clause => paras.push(clause));
+  // D1's twin, found in the review of the D1 fix. This read only "that_clauses", a name that
+  // appears nowhere in commands, skills or the README, while "paragraphs" is the only terms
+  // field the plugin documents for any letter. A drafter following the documentation sent the
+  // other side a request for a professional undertaking with no terms between the words "in the
+  // following terms:" and the generic tail, silently and with exit code 0. Read the documented
+  // name, keep the old one working, and refuse rather than ask for an undertaking in no terms.
+  const requestTerms = [d.paragraphs, d.that_clauses, d.undertaking_terms]
+    .find(v => Array.isArray(v) && v.some(t => String(t == null ? '' : t).trim() !== '')) || [];
+  const cleanRequestTerms = requestTerms
+    .map(t => (Array.isArray(t) ? t : String(t == null ? '' : t).trim()))
+    .filter(t => (Array.isArray(t) ? t.length : t));
+  if (!cleanRequestTerms.length) refuse('[undertaking_request] the request sets out no terms. Pass them in ' +
+    '"paragraphs", one term per entry, each beginning "THAT ". This letter asks the other side for a ' +
+    'professional undertaking, and one that names no terms asks them to promise nothing.');
+  cleanRequestTerms.forEach(clause => paras.push(clause));
 
   paras.push(
     'THAT this Professional Undertaking will remain in force until such time that we will ' +
@@ -1219,16 +1449,37 @@ function buildUndertakingRequest() {
   paras.push('THAT this undertaking shall be governed by the Laws of Kenya.');
 
   d.paragraphs = paras;
-  d.signing_for = d.signing_for || 'Purchaser';
+  d.signing_for = d.signing_for || (side === 'vendor' ? 'Vendor' : 'Purchaser');
   return buildConveyanceLetter();
 }
 
 // ─── Undertaking Letter builder ────────────────────────────────────────────────
 // Firm gives its own irrevocable undertaking to the other side
 function buildUndertakingLetter() {
+  // The terms come from the field the plugin's own command documents, "paragraphs".
+  // It used to read "clauses", a name that appears nowhere in commands, skills or the
+  // README, so a drafter who followed the documentation produced an undertaking with
+  // no terms in it and a blank expiry, exit code 0. A professional undertaking is the
+  // advocate's personal guarantee: an empty one is refused, not printed.
+  const terms = [d.undertaking_terms, d.paragraphs, d.clauses]
+    .find(v => Array.isArray(v) && v.some(t => String(t == null ? '' : t).trim() !== '')) || [];
+  const cleanTerms = terms.map(t => String(t == null ? '' : t).trim()).filter(Boolean);
+  if (!cleanTerms.length) refuse('[undertaking_letter] the undertaking has no terms. Pass them in "paragraphs", ' +
+    'one term per entry. A professional undertaking is the advocate\'s personal guarantee and will not be ' +
+    'issued with nothing undertaken in it.');
+  const longStop = String(d.long_stop_date == null ? '' : d.long_stop_date).trim();
+  if (!longStop) refuse('[undertaking_letter] the undertaking has no expiry date. Pass "long_stop_date": the ' +
+    'date the undertaking lapses. An undertaking with an open-ended expiry binds the firm indefinitely.');
   const paras = [];
+  const side = actingFor('undertaking_letter') || 'purchaser';
 
-  paras.push([
+  paras.push(side === 'vendor' ? [
+    { text: 'We act for ' },
+    { text: d.vendor_name || '…', bold: true },
+    { text: ' ("the Vendor") in connection with the sale of the above property to your client, ' },
+    { text: d.purchaser_name || '…', bold: true },
+    { text: ' ("the Purchaser").' },
+  ] : [
     { text: 'We act for ' },
     { text: d.purchaser_name || '…', bold: true },
     { text: ' ("the Purchaser") in connection with the purchase of the above property from your client, ' },
@@ -1241,102 +1492,21 @@ function buildUndertakingLetter() {
     { text: ' as follows:' },
   ]);
 
-  (d.clauses || []).forEach((clause, i) => paras.push(`${i + 1}.   ${clause}`));
+  cleanTerms.forEach((clause, i) => paras.push(`${i + 1}.   ${clause}`));
 
   paras.push([
     { text: 'This undertaking shall be effective from the date hereof until ' },
-    { text: d.long_stop_date || '…', bold: true },
+    { text: longStop, bold: true },
     { text: '.' },
   ]);
 
   d.paragraphs = paras;
-  d.signing_for = d.signing_for || 'Purchaser';
+  d.signing_for = d.signing_for || (side === 'vendor' ? 'Vendor' : 'Purchaser');
   return buildConveyanceLetter();
 }
 
 // ─── Shared transfer form builder (LRA 33, LRA 63, …) ────────────────────────
 // opts: { formNo, regulation, docTitle, buildDetailRows, buildBody }
-// MAK's statutory-form cover is a plain, centered title sheet. It is separate
-// from the correspondence letterhead and is shared by every LRA instrument.
-function buildLraCoverPage(opts = {}) {
-  const titleNo = d.title_no || d.title_number || d.property_lr_no || '';
-  const text = (value, extra = {}) => new TextRun({
-    text: String(value ?? ''), font: FONT_LRA_COVER, size: 24, color: BLACK, ...extra
-  });
-  const para = (runs, extra = {}) => new Paragraph({
-    children: Array.isArray(runs) ? runs : [text(runs)],
-    alignment: AlignmentType.CENTER,
-    spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO },
-    ...extra,
-  });
-  const gap = (after) => new Paragraph({ children: [], spacing: { before: 0, after } });
-  const rule = () => new Paragraph({
-    children: [],
-    spacing: { before: 80, after: 80 },
-    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: BLACK, space: 1 } },
-  });
-  const partyName = (field, fallback) => {
-    if (opts[field]) return opts[field];
-    const list = d[field === 'coverTransferorName' ? 'transferors' : 'transferees'];
-    if (Array.isArray(list) && list.length) return list.map(p => p.company_name || p.name || '').filter(Boolean).join(', ');
-    return fallback || '';
-  };
-  const transferor = partyName('coverTransferorName', d.vendor_name || '');
-  const transferee = partyName('coverTransfereeName', d.purchaser_name || '');
-  const propertyLines = opts.propertyLines || d.cover_property_description_lines;
-  const propertyDescription = d.cover_property_description || [
-    `All that Property known as ${d.apartment_number ? `Apartment Number ${d.apartment_number} ` : ''}Title Number ${titleNo}`,
-    d.property_location ? `situated at ${d.property_location}` : '',
-  ].filter(Boolean).join(', ');
-  const lines = Array.isArray(propertyLines) && propertyLines.length ? propertyLines : [propertyDescription];
-  const logoPath = path.join(__dirname, 'assets', 'sale-agreement-logo.png');
-  const logo = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
-  const items = [gap(80)];
-
-  if (transferor) {
-    items.push(para([text(transferor, { bold: true })]));
-    items.push(gap(520));
-    items.push(para([text(opts.transferorRole || '(as Transferor)', { bold: true })]));
-    items.push(gap(520));
-    items.push(para([text('AND', { bold: true })]));
-    items.push(gap(520));
-    items.push(para([text(transferee || '[*]', { bold: true })]));
-    items.push(gap(520));
-    items.push(para([text(opts.transfereeRole || '(as Transferee)', { bold: true })]));
-    items.push(gap(260));
-  }
-  items.push(rule());
-  items.push(gap(80));
-  items.push(para([text(opts.coverTitle || 'TRANSFER', { bold: true })]));
-  if (opts.coverSubtitle !== false) items.push(para([text(opts.coverSubtitle || '(Sectional Title)', { bold: true })]));
-  items.push(para([text(opts.coverRelation || 'in respect of', { bold: true })]));
-  items.push(gap(80));
-  lines.forEach(line => items.push(para([text(line, { bold: true })])));
-  items.push(gap(80));
-  items.push(rule());
-  items.push(gap(180));
-  items.push(para([text('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  items.push(gap(80));
-  if (logo) items.push(new Paragraph({
-    children: [new ImageRun({ data: logo, transformation: { width: 166, height: 69 }, type: 'png' })],
-    alignment: AlignmentType.CENTER,
-    spacing: { before: 0, after: 0 },
-  }));
-  [
-    '4th Floor, Victoria at Two Rivers,',
-    'Two Rivers Development, Limuru Road,',
-    'P.O Box 10644 - 00100, Nairobi, Kenya',
-    `E: ${FIRM_EMAIL}`,
-    firmConfig.firm_website || 'www.makadvocates.com',
-  ].forEach(line => items.push(new Paragraph({
-    children: [new TextRun({ text: line, font: FONT_LRA_COVER, size: 24, bold: true, color: BLACK })],
-    alignment: AlignmentType.CENTER,
-    spacing: { before: 0, after: 0, line: 240, lineRule: LineRuleType.AUTO },
-  })));
-  items.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-  return items;
-}
-
 function buildTransferForm(opts) {
   const items = [];
   const TW = 8600;
@@ -1346,10 +1516,10 @@ function buildTransferForm(opts) {
   const noBorder    = noB; // alias used in execution blocks
 
   function lp(text, opts2 = {}) {
-    return new Paragraph({ children: Array.isArray(text) ? text : [antiqua(text, opts2)], spacing: spacingB(80) });
+    return new Paragraph({ children: asRuns(text, (t) => antiqua(t, opts2)), spacing: spacingB(80) });
   }
   function lpc(runs, opts2 = {}) {
-    const children = Array.isArray(runs) ? runs : [antiqua(runs)];
+    const children = asRuns(runs);
     return new Paragraph({ children, alignment: AlignmentType.CENTER, spacing: spacingB(80), ...opts2 });
   }
   function numbered(n, text) {
@@ -1358,10 +1528,56 @@ function buildTransferForm(opts) {
   function lettered(l, text) {
     return new Paragraph({ children: [antiqua(`${l}.\t${text}`)], spacing: spacingB(80), indent: { left: 720, hanging: 360 } });
   }
+  // A ruled grid: the form's own column headings over one row per line of data.
+  function gridTable(columns, rows) {
+    const cols = Math.max(columns.length, 1);
+    const cw = Math.floor(TW / cols);
+    const widthOf = (i) => i === cols - 1 ? TW - cw * (cols - 1) : cw;
+    const gcell = (txt, i, bold) => new TableCell({
+      borders: cellBorders, width: { size: widthOf(i), type: WidthType.DXA },
+      children: [new Paragraph({ children: [antiqua(txt, { bold })], spacing: spacingB(80) })],
+    });
+    return new Table({
+      width: { size: TW, type: WidthType.DXA },
+      columnWidths: columns.map((_, i) => widthOf(i)),
+      borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder, insideH: thinBorder, insideV: thinBorder },
+      rows: [
+        new TableRow({ children: columns.map((c, i) => gcell(c, i, true)) }),
+        ...rows.map(r => new TableRow({ children: columns.map((_, i) => gcell(r[i] || '', i, false)) })),
+      ],
+    });
+  }
 
-  items.push(...buildLraCoverPage(opts.cover || opts));
+  // The passport photograph box the registry requires beside a signature.
+  function photoBoxTable(w, caption) {
+    const photoB = { style: BorderStyle.SINGLE, size: 6, color: '999999', space: 0 };
+    return new Table({
+      width: { size: w, type: WidthType.DXA },
+      columnWidths: [w],
+      borders: { top: photoB, bottom: photoB, left: photoB, right: photoB, insideH: noB, insideV: noB },
+      rows: [new TableRow({ children: [new TableCell({
+        borders: { top: photoB, bottom: photoB, left: photoB, right: photoB },
+        width: { size: w, type: WidthType.DXA },
+        margins: { top: 160, bottom: 160, left: 80, right: 80 },
+        children: [
+          new Paragraph({ children: [], spacing: { before: 0, after: 160 } }),
+          new Paragraph({ children: [], spacing: { before: 0, after: 160 } }),
+          new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: caption, font: 'Garamond', size: 18, color: 'BBBBBB', italics: true })], spacing: { before: 0, after: 160 } }),
+          new Paragraph({ children: [], spacing: { before: 0, after: 160 } }),
+          new Paragraph({ children: [], spacing: { before: 0, after: 160 } }),
+        ]
+      })]})],
+    });
+  }
 
   // ── Form header ──────────────────────────────────────────────────────────────
+  // ── Head lines a form carries of its own, above everything else ─────────────
+  // LRA 96 heads its page SECOND SCHEDULE, over the form number and the Act lines.
+  if (Array.isArray(opts.headLines) && opts.headLines.length) {
+    opts.headLines.forEach(line => items.push(lpc([antiqua(fill(line, 'head_lines'), { bold: true })])));
+    items.push(spacer());
+  }
+
   items.push(new Paragraph({
     children: [
       antiqua(`Form ${opts.formNo}`),
@@ -1372,13 +1588,35 @@ function buildTransferForm(opts) {
     spacing: spacingB(80),
   }));
   items.push(lpc('REPUBLIC OF KENYA'));
-  items.push(lpc('THE LAND REGISTRATION ACT'));
-  items.push(lpc('THE LAND REGISTRATION (GENERAL) REGULATIONS, 2017'));
+  // The lines under REPUBLIC OF KENYA, where a form sets its own (LRA 83 cites the
+  // Act by number where the default cites the Regulations).
+  if (Array.isArray(opts.actLines) && opts.actLines.length) {
+    opts.actLines.forEach(line => items.push(lpc(fill(line, 'act_lines'))));
+  } else {
+    items.push(lpc('THE LAND REGISTRATION ACT'));
+    items.push(lpc('THE LAND REGISTRATION (GENERAL) REGULATIONS, 2017'));
+  }
   items.push(spacer());
 
   // ── Registry filing box — top/bottom lines, no verticals ────────────────────
+  // Not every form carries one: filingBox "none" leaves it out, and an array of
+  // lines gives the box the form's own wording, one line per column.
+  const filingBox = opts.filingBox || 'default';
   const rCol = Math.floor(TW / 3);
-  items.push(new Table({
+  if (Array.isArray(filingBox) && filingBox.length) {
+    const bCol = Math.floor(TW / filingBox.length);
+    items.push(new Table({
+      width: { size: TW, type: WidthType.DXA },
+      columnWidths: filingBox.map((_, i) => i === filingBox.length - 1 ? TW - bCol * (filingBox.length - 1) : bCol),
+      borders: { top: noB, bottom: noB, left: noB, right: noB, insideH: noB, insideV: noB },
+      rows: [new TableRow({ children: filingBox.map((line, i) => new TableCell({
+        borders: { top: thinBorder, bottom: thinBorder, left: noB, right: noB },
+        width: { size: i === filingBox.length - 1 ? TW - bCol * (filingBox.length - 1) : bCol, type: WidthType.DXA },
+        // a column may carry its label over its blank, as the registry's boxes read
+        children: fill(line, 'filing_box').split('\n').map(part => lp(part)),
+      })) })],
+    }));
+  } else if (filingBox !== 'none') items.push(new Table({
     width: { size: TW, type: WidthType.DXA },
     columnWidths: [rCol, rCol, TW - rCol * 2],
     borders: { top: noB, bottom: noB, left: noB, right: noB, insideH: noB, insideV: noB },
@@ -1397,13 +1635,34 @@ function buildTransferForm(opts) {
   }));
 
   items.push(spacer());
+  // Lines a form prints between the filing box and its title (a matter heading, the
+  // Act, the title number), verbatim and in order.
+  if (Array.isArray(opts.preTitleLines) && opts.preTitleLines.length) {
+    opts.preTitleLines.forEach(line => items.push(lpc([antiqua(fill(line, 'pre_title_lines'), { bold: true })])));
+    items.push(spacer());
+  }
   items.push(lpc(opts.docTitle));
-  items.push(lpc([antiqua(`TITLE NO: ${d.title_no || d.property_lr_no || ''}`, { bold: true })]));
+  // The title line: the standard "<label>: <number>", nothing at all, or the lines the
+  // form prints in its place (a matter heading, for one), verbatim and in order.
+  const titleLine = opts.titleLine || 'default';
+  if (Array.isArray(titleLine)) {
+    titleLine.forEach(line => items.push(lpc([antiqua(fill(line, 'title_line'), { bold: true })])));
+  } else if (titleLine !== 'none') {
+    const titleNo = String(d.title_no || d.property_lr_no || '').trim();
+    if (!titleNo) refuse(`[${d.doc_type}] the form prints a title number and the data file carries neither ` +
+      '"property_lr_no" nor "title_no". A registry form must not be lodged with a blank title line.');
+    items.push(lpc([antiqua(`${opts.titleLabel || 'TITLE NO'}: ${titleNo}`, { bold: true })]));
+  }
   items.push(spacer());
 
   // ── Parties (allow override for forms like LRA 58 that use different party types) ─
-  const transferors = (opts._partyOverride?.transferors) || d.transferors || [{ name: d.vendor_name || '', id_no: d.vendor_id || '', pin: '' }];
-  const transferees = (opts._partyOverride?.transferees) ?? d.transferees ?? [{ name: d.purchaser_name || '', id_no: d.purchaser_id || '', pin: '' }];
+  // partyMode: two_party (default) names both sides; single_party names only the first
+  // side; none names neither (a form whose facts are all in its own detail rows).
+  const partyMode = opts.partyMode || 'two_party';
+  const transferorsAll = (opts._partyOverride?.transferors) || d.transferors || [{ name: d.vendor_name || '', id_no: d.vendor_id || '', pin: '' }];
+  const transfereesAll = (opts._partyOverride?.transferees) ?? d.transferees ?? [{ name: d.purchaser_name || '', id_no: d.purchaser_id || '', pin: '' }];
+  const transferors = partyMode === 'none' ? [] : transferorsAll;
+  const transferees = partyMode === 'two_party' ? transfereesAll : [];
 
   const transferorNames = transferors.map(t => t.company_name || t.name || '').join(', ');
   const transferorIDs   = transferors.map(t => t.id_no || t.reg_no || '').join(', ');
@@ -1413,42 +1672,109 @@ function buildTransferForm(opts) {
   const dLabelW = 2600;
   const dValueW = TW - dLabelW;
 
-  function idLabelRuns(idValue) {
+  // The registry's ID/ Passport/ Company Registration No. label, with the two that do
+  // not apply struck through. The party decides: a company's registration number was
+  // being labelled a passport because the old classifier guessed from the string, and a
+  // Kenyan ID left "Company Registration No." standing.
+  function idLabelRuns(idValue, parties) {
     const v = (idValue || '').trim();
-    const strike = { strikethrough: true };
+    const strike = { strike: true }; // docx's TextRun option is "strike", not "strikethrough"
+    const keep = (which) => [
+      antiqua('ID/ ', which === 'id' ? {} : strike),
+      antiqua('Passport/', which === 'passport' ? {} : strike),
+      antiqua('Company Registration No.', which === 'company' ? {} : strike),
+    ];
     if (!v) return [antiqua('ID/ Passport/Company Registration No.')];
-    if (/^\d+$/.test(v)) return [antiqua('ID/ '), antiqua('Passport/', strike), antiqua('Company Registration No.')];
-    if (/^[A-Za-z]/.test(v)) return [antiqua('ID/ ', strike), antiqua('Passport/'), antiqua('Company Registration No.', strike)];
-    return [antiqua('ID/ ', strike), antiqua('Passport/', strike), antiqua('Company Registration No.')];
+    const list = Array.isArray(parties) ? parties.filter(Boolean) : [];
+    if (list.length && list.every(p => p.company_name || p.is_company || (!p.id_no && p.reg_no))) return keep('company');
+    if (list.length && list.some(p => p.company_name || p.is_company)) return keep('company');
+    if (/^\d+$/.test(v)) return keep('id');                       // a Kenyan ID number
+    if (/[\/]/.test(v) || /^[A-Za-z]{1,4}[.\-\/]/.test(v)) return keep('company'); // CPR/2009/112233, C.123
+    if (/^[A-Za-z]/.test(v)) return keep('passport');
+    return keep('id');
   }
 
   function detailRow2(label, value, valueBold = false) {
-    const labelChildren = Array.isArray(label) ? label : [antiqua(label)];
+    const labelChildren = asRuns(label);
+    // A value given one item per line prints one paragraph per line. A single text node
+    // carrying newlines renders as a space in Word, so several prompts that promise
+    // per-line entry produced one solid paragraph in the cell.
+    const lines = String(value === undefined || value === null ? '' : value).split('\n');
+    const valueParas = (lines.length > 1 ? lines.map(l => l.trim()).filter(Boolean) : lines)
+      .map(line => new Paragraph({ children: [antiqua(line, { bold: valueBold })], spacing: spacingB(80) }));
     return new TableRow({ children: [
       new TableCell({ borders: cellBorders, width: { size: dLabelW, type: WidthType.DXA },
         children: [new Paragraph({ children: labelChildren, spacing: spacingB(80) })] }),
       new TableCell({ borders: cellBorders, width: { size: dValueW, type: WidthType.DXA },
-        children: [new Paragraph({ children: [antiqua(value || '', { bold: valueBold })], spacing: spacingB(80) })] }),
+        children: valueParas.length ? valueParas : [new Paragraph({ children: [antiqua('')], spacing: spacingB(80) })] }),
     ]});
   }
 
   // ── Details table (form-specific rows injected via opts) ─────────────────────
-  items.push(new Table({
-    width: { size: TW, type: WidthType.DXA },
-    columnWidths: [dLabelW, dValueW],
-    borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder, insideH: thinBorder, insideV: thinBorder },
-    rows: opts.buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }),
-  }));
+  // A form whose facts all live in its body (LRA 16, for one) has no detail rows at
+  // all; a table with no rows is not a valid document part, so it is simply omitted.
+  const detailRows = opts.buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs, transferors, transferees });
+  if (detailRows.length) {
+    items.push(new Table({
+      width: { size: TW, type: WidthType.DXA },
+      columnWidths: [dLabelW, dValueW],
+      borders: { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder, insideH: thinBorder, insideV: thinBorder },
+      rows: detailRows,
+    }));
+  }
 
   // ── Body (form-specific, injected via opts) ──────────────────────────────────
   items.push(spacer());
-  opts.buildBody({ lp, lpc, spacer, numbered, lettered }).forEach(p => items.push(p));
-  items.push(spacer());
-  items.push(lp('EXECUTION:'));
+  opts.buildBody({ lp, lpc, spacer, numbered, lettered, gridTable }).forEach(p => items.push(p));
   items.push(spacer());
 
+  // ── Execution mode ───────────────────────────────────────────────────────────
+  // deed        the registry deed blocks with their verification certificate (default)
+  // witnessed   one signature attested in the presence of a witness (LRA 67 and kin)
+  // declaration a jurat sworn or declared before a Commissioner for Oaths
+  // signature   a plain signature, name and date line
+  // none        the form carries no signature of its own
+  const execMode   = (opts.execution && opts.execution.mode) || 'deed';
+  const signerSide = (opts.execution && opts.execution.signer) || 'both';
+  const execLabel  = (opts.execution && opts.execution.signer_label) || '';
+  // The section 45 certificate is on unless a form says it has none. The four
+  // hand-built forms pass no execution at all, so they keep theirs.
+  const deedVerification = !(opts.execution && opts.execution.verification === false);
+  // An execution option may be one string for both sides, or { transferor, transferee }
+  // where the two sides are worded differently (LRA 60 signs one side SIGNED by the
+  // duly authorised attorneys of the and the other SIGNED AND SEALED by the ...).
+  const perSide = (v, role) => (v && typeof v === 'object' && !Array.isArray(v)) ? (v[role] || '') : (v || '');
+  // over is an extra block's own wording, which wins over the form's. A key the entry
+  // carries wins even when it is empty: that is how a block says it has no recital of
+  // its own, and a deed that misstates the authority a party signed under is the worst
+  // defect this library can print. Only an absent key falls through to the form.
+  const execOpt = (over, key) => (over && over[key] !== undefined)
+    ? over[key]
+    : (opts.execution ? opts.execution[key] : undefined);
+  const signedLabelOf = (role, over, fallback) => fill(perSide(execOpt(over, 'signed_label'), role), 'execution.signed_label') || fallback;
+  const recitalOf     = (role, over) => fill(perSide(execOpt(over, 'signing_recital'), role), 'execution.signing_recital');
+  const cellStyleOf   = (over) => execOpt(over, 'signatory_cell') || 'default';
+  const headingOf     = (role, over, fallback) => fill(perSide(execOpt(over, 'verification_heading'), role), 'execution.verification_heading') || fallback;
+  // The coloured photograph cell, which not every form's execution carries.
+  const wantPhoto     = (over) => {
+    const v = execOpt(over, 'photograph');
+    return v === undefined ? true : v !== false;
+  };
+  const variantOf     = (over) => execOpt(over, 'verification_variant') || 'default';
+  // The common seal block and the director's certificate, which a form that routes a
+  // company straight to its attorneys does not print.
+  const wantSeal      = (over) => {
+    const v = execOpt(over, 'company_seal');
+    return v === undefined ? true : v !== false;
+  };
+  const CERT_HEADING  = 'Certificate of Verification under Section 45 of the Land Registration Act';
+  if (execMode === 'deed' || execMode === 'witnessed') {
+    items.push(lp('EXECUTION:'));
+    items.push(spacer());
+  }
+
   // ── Company execution block ───────────────────────────────────────────────────
-  function companyExecutionBlock(party, role, isFirst = false) {
+  function companyExecutionBlock(party, role, isFirst = false, over = {}) {
     const blockItems = [];
     const roleLabel = role === 'transferor'
       ? (opts.roleLabels?.transferorSingle || opts.roleLabels?.transferor || 'Transferor')
@@ -1472,7 +1798,7 @@ function buildTransferForm(opts) {
         width: { size: photoBoxW, type: WidthType.DXA },
         columnWidths: [photoBoxW],
         borders: { top: photoB, bottom: photoB, left: photoB, right: photoB, insideH: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' }, insideV: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' } },
-        rows: [new TableRow({
+        rows: [new TableRow({ cantSplit: true,
           height: { value: 1400, rule: 'exact' },
           children: [new TableCell({
             borders: { top: photoB, bottom: photoB, left: photoB, right: photoB },
@@ -1509,7 +1835,7 @@ function buildTransferForm(opts) {
       width: { size: leftW - 240, type: WidthType.DXA },
       columnWidths: [sigW, sigW],
       borders: { top: noB, bottom: noB, left: noB, right: noB, insideH: noB, insideV: noB },
-      rows: [new TableRow({ children: [signatoryCell('Director'), signatoryCell('Secretary')] })]
+      rows: [new TableRow({ cantSplit: true, children: [signatoryCell('Director'), signatoryCell(opts.execution ? 'Director/Secretary' : 'Secretary')] })]
     });
 
     if (!isFirst) blockItems.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
@@ -1519,8 +1845,13 @@ function buildTransferForm(opts) {
       borders: { top: vb, bottom: vb, left: vb, right: vb, insideH: vb, insideV: vb },
       rows: [
 
+        // Rows 1 to 3 are the common seal and the director's certificate. A form that
+        // routes the company straight to its attorneys prints neither. They are kept
+        // regardless when there is no attorney paragraph, so a block is never empty.
+        ...((wantSeal(over) || !party.attorneys) ? [
+
         // Row 1: Left = header + signatory table | Right = seal column (empty, column IS the box)
-        new TableRow({ height: { value: 5000, rule: 'atLeast' }, children: [
+        new TableRow({ cantSplit: true, height: { value: 5000, rule: 'atLeast' }, children: [
           new TableCell({
             borders: vBorders, width: { size: leftW, type: WidthType.DXA },
             margins: padded, verticalAlign: VerticalAlign.TOP,
@@ -1546,14 +1877,13 @@ function buildTransferForm(opts) {
           }),
         ]}),
 
-        // Row 2: Certificate title (full width)
-        new TableRow({ children: [new TableCell({
+        // Rows 2 and 3: the section 45 certificate, unless the form has none
+        ...(deedVerification ? [
+        new TableRow({ cantSplit: true, children: [new TableCell({
           columnSpan: 2, borders: vBorders, margins: padded,
-          children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [antiqua('Certificate of Verification under Section 45 of the Land Registration Act')], spacing: spacingB(80) })]
+          children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [antiqua(headingOf(role, over, CERT_HEADING))], spacing: spacingB(80) })]
         })]}),
-
-        // Row 3: I CERTIFY text + signature (full width)
-        new TableRow({ children: [new TableCell({
+        new TableRow({ cantSplit: true, children: [new TableCell({
           columnSpan: 2, borders: vBorders, margins: padded,
           children: [
             new Paragraph({
@@ -1569,6 +1899,9 @@ function buildTransferForm(opts) {
             new Paragraph({ children: [antiqua('Name and signature of person certifying')], alignment: AlignmentType.RIGHT, spacing: spacingB(80) }),
           ]
         })]}),
+        ] : []),
+
+        ] : []),
 
         // Row 4 & 5: Attorney execution — conditional, only when attorney data provided
         ...(party.attorneys ? (() => {
@@ -1577,7 +1910,7 @@ function buildTransferForm(opts) {
           const rdnNos    = (party.rdn_nos || ['\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026', '\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026']);
           return [
             // Attorney signing text
-            new TableRow({ children: [new TableCell({
+            new TableRow({ cantSplit: true, children: [new TableCell({
               columnSpan: 2, borders: vBorders, margins: padded,
               children: [
                 new Paragraph({
@@ -1592,12 +1925,12 @@ function buildTransferForm(opts) {
               ]
             })]}),
             // Attorney certificate title
-            new TableRow({ children: [new TableCell({
+            new TableRow({ cantSplit: true, children: [new TableCell({
               columnSpan: 2, borders: vBorders, margins: padded,
-              children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [antiqua('Certificate of Verification under Section 45 of the Land Registration Act')], spacing: spacingB(80) })]
+              children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [antiqua(headingOf(role, over, CERT_HEADING))], spacing: spacingB(80) })]
             })]}),
             // Attorney I CERTIFY
-            new TableRow({ children: [new TableCell({
+            new TableRow({ cantSplit: true, children: [new TableCell({
               columnSpan: 2, borders: vBorders, margins: padded,
               children: [
                 new Paragraph({
@@ -1623,15 +1956,17 @@ function buildTransferForm(opts) {
   }
 
   // ── Execution + Verification — one connected table per party ─────────────────
-  function executionBlock(party, role, isFirst = false) {
+  function executionBlock(party, role, isFirst = false, over = {}) {
     // Route to company block if party has a company name
     if (party.company_name || party.is_company) {
-      return companyExecutionBlock(party, role, isFirst);
+      return companyExecutionBlock(party, role, isFirst, over);
     }
     const blockItems = [];
-    const roleLabel = role === 'transferor'
+    const roleLabel = over.signerLabel !== undefined ? over.signerLabel : (role === 'transferor'
       ? (opts.roleLabels?.transferor || 'Transferor(s)')
-      : (opts.roleLabels?.transferee || 'Transferee(s)');
+      : (opts.roleLabels?.transferee || 'Transferee(s)'));
+    // an extra block says for itself whether it carries a certificate
+    const wantCert = over.verification !== undefined ? over.verification : deedVerification;
     const vb = { style: BorderStyle.SINGLE, size: 4, color: BLACK, space: 0 };
     const vBorders = { top: vb, bottom: vb, left: vb, right: vb };
     const photoB = { style: BorderStyle.SINGLE, size: 6, color: '999999', space: 0 };
@@ -1645,7 +1980,7 @@ function buildTransferForm(opts) {
       width: { size: 2200, type: WidthType.DXA },
       columnWidths: [2200],
       borders: { top: photoB, bottom: photoB, left: photoB, right: photoB, insideH: noBorder, insideV: noBorder },
-      rows: [new TableRow({ children: [
+      rows: [new TableRow({ cantSplit: true, children: [
         new TableCell({
           borders: { top: photoB, bottom: photoB, left: photoB, right: photoB },
           width: { size: 2200, type: WidthType.DXA },
@@ -1676,13 +2011,14 @@ function buildTransferForm(opts) {
       rows: [
 
         // ── Row 1: Execution ──────────────────────────────────────────────────
-        new TableRow({
+        new TableRow({ cantSplit: true,
           children: [
             new TableCell({
               borders: vBorders, width: { size: leftW, type: WidthType.DXA },
               margins: padded, verticalAlign: VerticalAlign.TOP,
               children: [
-                new Paragraph({ children: [antiqua(`SIGNED as a deed by the ${roleLabel}`)], spacing: spacingB(80) }),
+                new Paragraph({ children: [antiqua(`${signedLabelOf(role, over, 'SIGNED as a deed by the')} ${roleLabel}`)], spacing: spacingB(80) }),
+                ...(recitalOf(role, over) ? [new Paragraph({ children: [antiqua(recitalOf(role, over))], spacing: spacingB(80) })] : []),
                 new Paragraph({ children: [antiqua('in the presence of:-')], spacing: spacingB(700) }),
                 new Paragraph({ children: [antiqua('\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026')], spacing: spacingB(80) }),
                 new Paragraph({ children: [antiqua('Name and signature of person certifying')], spacing: spacingB(80) }),
@@ -1691,9 +2027,12 @@ function buildTransferForm(opts) {
             new TableCell({
               borders: vBorders, width: { size: rightW, type: WidthType.DXA },
               margins: padded, verticalAlign: VerticalAlign.TOP,
-              children: [
-                photoBox,
-                new Paragraph({ children: [], spacing: { before: 0, after: 120 } }),
+              children: cellStyleOf(over) === 'attorney' ? [
+                ...(wantPhoto(over) ? [photoBox, new Paragraph({ children: [], spacing: { before: 0, after: 120 } })] : []),
+                new Paragraph({ children: [antiqua('Name' + '\u2026'.repeat(18))], spacing: spacingB(240) }),
+                new Paragraph({ children: [antiqua('Signature of Attorney(s)' + '\u2026'.repeat(12))], spacing: spacingB(80) }),
+              ] : [
+                ...(wantPhoto(over) ? [photoBox, new Paragraph({ children: [], spacing: { before: 0, after: 120 } })] : []),
                 new Paragraph({ children: [antiqua(party.name || '', { bold: true })], spacing: spacingB(80) }),
                 new Paragraph({ children: [antiqua(`ID/ Passport Number: ${party.id_no || '\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026'}`, { bold: true })], spacing: spacingB(80) }),
                 new Paragraph({ children: [antiqua(`PIN No: ${party.pin || '\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026'}`)], spacing: spacingB(80) }),
@@ -1703,8 +2042,9 @@ function buildTransferForm(opts) {
           ]
         }),
 
-        // ── Row 2: Certificate title (full width) ─────────────────────────────
-        new TableRow({
+        // ── Rows 2 and 3: the section 45 certificate, unless the form has none ──
+        ...(wantCert ? [
+        new TableRow({ cantSplit: true,
           children: [
             new TableCell({
               columnSpan: 2,
@@ -1713,16 +2053,14 @@ function buildTransferForm(opts) {
               children: [
                 new Paragraph({
                   alignment: AlignmentType.CENTER,
-                  children: [antiqua('Certificate of Verification under Section 45 of the Land Registration Act')],
+                  children: [antiqua(headingOf(role, over, CERT_HEADING))],
                   spacing: spacingB(80)
                 })
               ]
             })
           ]
         }),
-
-        // ── Row 3: Cert text left, signature right (full width cell, right-aligned sig) ──
-        new TableRow({
+        new TableRow({ cantSplit: true,
           children: [
             new TableCell({
               columnSpan: 2,
@@ -1730,7 +2068,12 @@ function buildTransferForm(opts) {
               margins: padded,
               children: [
                 new Paragraph({
-                  children: [
+                  children: variantOf(over) === 'attorney' ? [
+                    antiqua('I CERTIFY that \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 and \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 being the duly constituted attorney(s) of the '),
+                    antiqua(`${roleLabel} `, { bold: true }),
+                    antiqua(party.company_name || party.name || '', { bold: true }),
+                    antiqua(' appeared before me on the \u2026\u2026\u2026\u2026\u2026\u2026\u2026 day of \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 20\u2026\u2026\u2026\u2026 and being known to me/being identified by \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 of \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 acknowledged the above signature or mark to be his/hers/theirs and that he/she/they had freely and voluntarily executed this instrument and understood its contents.'),
+                  ] : [
                     antiqua('I CERTIFY that the above-named '),
                     antiqua(`${roleLabel} `, { bold: true }),
                     antiqua(party.company_name || party.name || '', { bold: true }),
@@ -1744,6 +2087,7 @@ function buildTransferForm(opts) {
             })
           ]
         }),
+        ] : []),
 
       ]
     }));
@@ -1752,14 +2096,208 @@ function buildTransferForm(opts) {
     return blockItems;
   }
 
-  const allParties = [
-    ...transferors.map(t => ({ party: t, role: 'transferor' })),
-    ...transferees.map(t => ({ party: t, role: 'transferee' })),
-  ];
-  allParties.forEach(({ party, role }, idx) => items.push(...executionBlock(party, role, idx === 0)));
+  // ── Witnessed execution: one attested signature per signing party ──────────
+  // The LRA 67 shape: the signing clause on the left, the coloured photograph with
+  // the signatory's identifiers on the right, and the verification certificate under
+  // both. It shares the deed block's frame but not its deed wording or its seal.
+  // over: an extra signatory the two party sides cannot express, carrying its own
+  // leading words, its own role label, its own name and its own certificate.
+  function witnessedBlock(party, role, isFirst = false, over = {}) {
+    const blockItems = [];
+    const label = over.signerLabel !== undefined ? over.signerLabel : (execLabel || (role === 'transferor'
+      ? (opts.roleLabels?.transferorSingle || opts.roleLabels?.transferor || 'Transferor')
+      : (opts.roleLabels?.transfereeSingle || opts.roleLabels?.transferee || 'Transferee')));
+    const partyName = over.name !== undefined ? over.name : (party.company_name || party.name || '');
+    const wantVerification = over.verification !== undefined
+      ? over.verification
+      : !!(opts.execution && opts.execution.verification);
+    const vb = { style: BorderStyle.SINGLE, size: 4, color: BLACK, space: 0 };
+    const vBorders = { top: vb, bottom: vb, left: vb, right: vb };
+    const padded = { top: 120, bottom: 120, left: 120, right: 120 };
+    const leftW  = Math.round(TW * 0.55);
+    const rightW = TW - leftW;
+    const dots   = '…'.repeat(8);
 
-  // ── Registry seal section (overridable per form) ──────────────────────────────
-  if (opts.buildRegistrarSection) {
+    if (!isFirst) blockItems.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
+
+    const rows = [
+      new TableRow({ cantSplit: true, children: [
+        new TableCell({
+          borders: vBorders, width: { size: leftW, type: WidthType.DXA }, margins: padded, verticalAlign: VerticalAlign.TOP,
+          children: [
+            new Paragraph({ children: [antiqua(`${signedLabelOf(role, over, 'SIGNED by the')} ${label}`)], spacing: spacingB(80) }),
+            ...(recitalOf(role, over) ? [new Paragraph({ children: [antiqua(recitalOf(role, over))], spacing: spacingB(80) })] : []),
+            new Paragraph({ children: [antiqua('in the presence of:-')], spacing: spacingB(700) }),
+            new Paragraph({ children: [antiqua('…'.repeat(16))], spacing: spacingB(80) }),
+            new Paragraph({ children: [antiqua('Signature of witness')], spacing: spacingB(80) }),
+          ]
+        }),
+        new TableCell({
+          borders: vBorders, width: { size: rightW, type: WidthType.DXA }, margins: padded, verticalAlign: VerticalAlign.TOP,
+          children: cellStyleOf(over) === 'attorney' ? [
+            ...(wantPhoto(over) ? [photoBoxTable(2200, 'Coloured Photograph'), new Paragraph({ children: [], spacing: { before: 0, after: 120 } })] : []),
+            new Paragraph({ children: [antiqua('Name' + dots)], spacing: spacingB(240) }),
+            new Paragraph({ children: [antiqua('Signature of Attorney(s)' + dots)], spacing: spacingB(80) }),
+          ] : [
+            ...(wantPhoto(over) ? [photoBoxTable(2200, 'Coloured Photograph'), new Paragraph({ children: [], spacing: { before: 0, after: 120 } })] : []),
+            new Paragraph({ children: [antiqua(partyName, { bold: true })], spacing: spacingB(80) }),
+            new Paragraph({ children: [antiqua(`ID/No${party.id_no ? ': ' + party.id_no : dots}`)], spacing: spacingB(80) }),
+            new Paragraph({ children: [antiqua(`PIN No${party.pin ? ': ' + party.pin : dots}`)], spacing: spacingB(80) }),
+            new Paragraph({ children: [antiqua('Signature' + dots)], spacing: spacingB(80) }),
+          ]
+        }),
+      ]}),
+    ];
+
+    if (wantVerification) {
+      rows.push(new TableRow({ cantSplit: true, children: [new TableCell({
+        columnSpan: 2, borders: vBorders, margins: padded,
+        children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [antiqua(headingOf(role, over, 'Certificate of Verification'))], spacing: spacingB(80) })]
+      })]}));
+      rows.push(new TableRow({ cantSplit: true, children: [new TableCell({
+        columnSpan: 2, borders: vBorders, margins: padded,
+        children: [
+          new Paragraph({
+            children: [
+              ...(variantOf(over) === 'attorney'
+                ? [antiqua('I CERTIFY that ……………………… and ……………………… being the duly constituted attorney(s) of the ')]
+                : [antiqua('I CERTIFY that the above-named ')]),
+              antiqua(partyName, { bold: true }),
+              antiqua(' appeared before me on the ……… day of …………………………. 20…… and being known to me/being identified by*……………………………… of ……………………… acknowledge the above signatures or marks to be his/hers and that he/she had freely and voluntarily executed this instrument and understood its contents.'),
+            ],
+            spacing: spacingB(200)
+          }),
+          new Paragraph({ children: [antiqua('…'.repeat(30))], alignment: AlignmentType.RIGHT, spacing: spacingB(80) }),
+          new Paragraph({ children: [antiqua('Signature and Designation of Person Certifying**')], alignment: AlignmentType.RIGHT, spacing: spacingB(80) }),
+        ]
+      })]}));
+    }
+
+    blockItems.push(new Table({
+      width: { size: TW, type: WidthType.DXA },
+      columnWidths: [leftW, rightW],
+      borders: { top: vb, bottom: vb, left: vb, right: vb, insideH: vb, insideV: vb },
+      rows,
+    }));
+    blockItems.push(spacer());
+    return blockItems;
+  }
+
+  // ── Jurat: a declaration sworn or declared before a Commissioner for Oaths ──
+  function juratBlock(signerName) {
+    const blockItems = [];
+    const verb = (opts.execution && opts.execution.verb) === 'declared' ? 'DECLARED' : 'SWORN';
+    const noB2 = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+    const leftW = Math.round(TW * 0.62);
+    const rightW = TW - leftW;
+    const bracket = () => new Paragraph({ children: [antiqua(')')], spacing: spacingB(80) });
+    blockItems.push(new Table({
+      width: { size: TW, type: WidthType.DXA },
+      columnWidths: [leftW, rightW],
+      borders: { top: noB2, bottom: noB2, left: noB2, right: noB2, insideH: noB2, insideV: noB2 },
+      rows: [new TableRow({ children: [
+        new TableCell({ borders: { top: noB2, bottom: noB2, left: noB2, right: noB2 }, width: { size: leftW, type: WidthType.DXA }, children: [
+          new Paragraph({ children: [antiqua(`${verb} at ${d.sworn_at || '…'.repeat(12)}`)], spacing: spacingB(80) }),
+          new Paragraph({ children: [antiqua('by the said '), antiqua(signerName || '', { bold: true })], spacing: spacingB(80) }),
+          new Paragraph({ children: [antiqua('this ………… day of …………………… 20……')], spacing: spacingB(80) }),
+        ]}),
+        new TableCell({ borders: { top: noB2, bottom: noB2, left: noB2, right: noB2 }, width: { size: rightW, type: WidthType.DXA }, children: [
+          bracket(), bracket(), bracket(),
+          new Paragraph({ children: [antiqua('…'.repeat(12))], spacing: spacingB(80) }),
+        ]}),
+      ]})],
+    }));
+    blockItems.push(spacer());
+    blockItems.push(lp('BEFORE ME:'));
+    blockItems.push(spacer());
+    blockItems.push(lp('…'.repeat(30)));
+    blockItems.push(lp((opts.execution && opts.execution.jurat_signatory) || 'COMMISSIONER FOR OATHS'));
+    blockItems.push(spacer());
+    return blockItems;
+  }
+
+  // The section 45 certificate on its own, for a form that carries no photograph or
+  // identifier cell and only a signature rule under it (LRA 34).
+  function plainVerification(signerName) {
+    return [
+      spacer(),
+      lpc([antiqua(headingOf('transferor', null, CERT_HEADING))]),
+      spacer(),
+      new Paragraph({
+        children: [
+          antiqua('I CERTIFY that the above-named '),
+          antiqua(signerName || '', { bold: true }),
+          antiqua(' appeared before me on the \u2026\u2026\u2026 day of \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026. 20\u2026\u2026 and being known to me/being identified by*\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 of \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026 acknowledge the above signatures or marks to be his/hers and that he/she had freely and voluntarily executed this instrument and understood its contents.'),
+        ],
+        spacing: spacingB(200),
+      }),
+      lp('\u2026'.repeat(30)),
+      lp('Signature and Designation of Person Certifying**'),
+      spacer(),
+    ];
+  }
+
+  // ── The parties that sign, per the form's execution.signer ───────────────────
+  const signingParties = [
+    ...((signerSide === 'transferor' || signerSide === 'both') ? transferors.map(t => ({ party: t, role: 'transferor' })) : []),
+    ...((signerSide === 'transferee' || signerSide === 'both') ? transferees.map(t => ({ party: t, role: 'transferee' })) : []),
+  ];
+
+  if (execMode === 'deed') {
+    signingParties.forEach(({ party, role }, idx) => items.push(...executionBlock(party, role, idx === 0)));
+  } else if (execMode === 'witnessed') {
+    signingParties.forEach(({ party, role }, idx) => items.push(...witnessedBlock(party, role, idx === 0)));
+  } else if (execMode === 'declaration') {
+    // A jurat names the person who swore it. Where the data file carries a declarant
+    // (the form's own field), that is the name; otherwise the signing party's.
+    const signer = signingParties[0]?.party || {};
+    items.push(...juratBlock(String(d.declarant_name || '').trim() || signer.company_name || signer.name || ''));
+  } else if (execMode === 'signature') {
+    const label = execLabel || opts.roleLabels?.transferorSingle || opts.roleLabels?.transferor || 'Applicant';
+    items.push(lp(`Signature of ${label}: ` + '…'.repeat(25)));
+    items.push(lp('Name: ' + '…'.repeat(25)));
+    items.push(lp('Date: ' + '…'.repeat(25)));
+    items.push(spacer());
+    if (opts.execution && opts.execution.verification) {
+      const signer = signingParties[0]?.party || {};
+      items.push(...plainVerification(signer.company_name || signer.name || ''));
+    }
+  }
+
+  // ── A signatory the two party sides cannot express (a borrower on a charge) ──
+  // Each entry carries its own wording, and chooses the frame the official form uses.
+  for (const ex of ((opts.execution && opts.execution.extra_blocks) || [])) {
+    const over = {
+      signerLabel: fill(ex.signer_label || '', 'execution.extra_blocks signer_label'),
+      signed_label: ex.signed_label,
+      signing_recital: ex.signing_recital,
+      signatory_cell: ex.signatory_cell,
+      verification_heading: ex.verification_heading,
+      verification_variant: ex.verification_variant,
+      photograph: ex.photograph,
+      company_seal: ex.company_seal,
+      name: ex.name_field ? String(d[ex.name_field] || '') : '',
+      verification: ex.verification === true,
+    };
+    const party = { name: over.name };
+    items.push(...(ex.frame === 'deed'
+      ? executionBlock(party, 'transferor', false, over)
+      : witnessedBlock(party, 'transferor', false, over)));
+  }
+
+  // ── Registry seal section (per schema, overridable per form) ─────────────────
+  // registryBlock: "default" keeps the judgement below (a sworn declaration and a
+  // form nobody signs are not sealed by the registrar, so neither carries the
+  // block); "none" drops it whatever the execution mode; an explicit block is
+  // supplied by the caller as buildRegistrarSection and printed in its place.
+  // Only 24 of the 95 official forms carry a REGISTERED and SEALED block, so a
+  // form says for itself which of the three it is.
+  const registryBlock = opts.registryBlock || 'default';
+  const noRegistrySection = registryBlock === 'none'
+    || (registryBlock === 'default' && (execMode === 'declaration' || execMode === 'none'));
+  if (noRegistrySection) {
+    // the form carries no registrar section
+  } else if (opts.buildRegistrarSection) {
     opts.buildRegistrarSection({ lp, spacer }).forEach(p => items.push(p));
   } else {
     items.push(spacer());
@@ -1775,6 +2313,74 @@ function buildTransferForm(opts) {
     items.push(lp('Signature: \u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026'));
   }
 
+  // ── DRAWN BY ─────────────────────────────────────────────────────────────────
+  // The presentation clause follows every execution mode except none: a form nobody
+  // signs is not presented by the firm either. It is firm level, never an advocate.
+  if (execMode !== 'none') {
+    items.push(spacer());
+    items.push(new Paragraph({ children: [antiqua('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })], spacing: spacingB(80) }));
+    items.push(lp(FIRM_NAME_TC + ','));
+    items.push(lp(FIRM_LINE2 + ','));
+    items.push(lp(FIRM_PO + '.'));
+    items.push(lp('Tel. ' + FIRM_TEL));
+    items.push(new Paragraph({ children: [antiqua(FIRM_EMAIL, { underline: { type: UnderlineType.SINGLE } })], spacing: spacingB(80) }));
+  }
+
+  // ── Foot notes: the Ministry's asterisked notes, where the form prints them at
+  // the foot rather than beside the paragraph that carries the asterisk ────────
+  if (Array.isArray(opts.footNotes) && opts.footNotes.length) {
+    items.push(spacer());
+    opts.footNotes.forEach((note, i) => items.push(new Paragraph({
+      children: [antiqua(fill(note, 'foot_notes'))],
+      spacing: spacingB(80),
+      keepLines: true,
+      keepNext: i < opts.footNotes.length - 1,
+    })));
+  }
+
+  // ── Annex: a statutory declaration carried on the back of the form ──────────
+  // The form proper ends above; the annexed declaration starts its own page, the way
+  // the official form carries it on the reverse.
+  for (const a of (opts.annex || [])) {
+    if (a.type !== 'statutory_declaration') continue;
+    items.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
+    items.push(lpc([antiqua(a.heading || 'STATUTORY DECLARATION', { bold: true })]));
+    items.push(spacer());
+    const grounds = String(d.declaration_text || '').split('\n').map(t => t.trim()).filter(Boolean);
+    if (!grounds.length && !(a.body_lines || []).length && !(a.closing_lines || []).length) {
+      refuse(`[${d.doc_type}] the annexed statutory declaration has nothing in it. Pass "declaration_text", ` +
+        'one paragraph per line. A declaration with nothing between its opening and its closing is not a document.');
+    }
+    items.push(lp(fill(a.intro || '', 'annex intro')));
+    items.push(spacer());
+    // The form's own pre-printed recitals first, then the deponent's numbered grounds
+    // from the data file, so an annex can carry both.
+    for (const line of (a.body_lines || [])) items.push(lp(fill(line, 'annex body_lines')));
+    if ((a.body_lines || []).length) items.push(spacer());
+    String(d.declaration_text || '').split('\n').map(s => s.trim()).filter(Boolean)
+      .forEach((line, i) => items.push(numbered(i + 1, fill(line, 'declaration_text'))));
+    items.push(spacer());
+    // Lines the official annex prints after the deponent's grounds, such as the list of
+    // documents attached, before its closing sentence.
+    for (const line of (a.closing_lines || [])) items.push(lp(fill(line, 'annex closing_lines')));
+    if ((a.closing_lines || []).length) items.push(spacer());
+    if (a.closing) items.push(lp(fill(a.closing, 'annex closing')));
+    items.push(spacer());
+    items.push(lp(a.jurat || 'DECLARED before me at'));
+    items.push(lp('…'.repeat(30)));
+    items.push(lp('on the …………………… day of ………………………… 20…'));
+    items.push(spacer());
+    // The official annex has two signature runs under the date: the declarant's,
+    // then the person before whom it was declared. Both are drawn here, so the
+    // declarant is not left signing the advocate's line.
+    items.push(lp('…'.repeat(16)));
+    items.push(lp(String(d.declarant_name || '').trim() || 'Declarant'));
+    items.push(spacer());
+    items.push(lp('…'.repeat(30)));
+    if (a.jurat_signatory) items.push(lp(a.jurat_signatory));
+    items.push(spacer());
+  }
+
   return items;
 }
 
@@ -1785,20 +2391,13 @@ function buildLRA33() {
     formNo: 'LRA 33',
     regulation: '(r. 49(1))',
     docTitle: 'TRANSFER OF INTEREST IN LAND',
-    cover: {
-      coverTransferorName: d.vendor_name || (d.transferors || []).map(p => p.company_name || p.name || '').join(', '),
-      coverTransfereeName: d.purchaser_name || (d.transferees || []).map(p => p.company_name || p.name || '').join(', '),
-      coverTitle: 'TRANSFER',
-      coverSubtitle: '(Sectional Title)',
-      propertyLines: d.cover_property_description_lines,
-    },
-    buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }) {
+    buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs, transferors, transferees }) {
       return [
         detailRow2('Date of Transfer', ''),
         detailRow2('Transferor(s)', transferorNames, true),
-        detailRow2(idLabelRuns(transferorIDs), transferorIDs),
+        detailRow2(idLabelRuns(transferorIDs, transferors), transferorIDs),
         detailRow2('Transferee(s)', transfereeNames, true),
-        detailRow2(idLabelRuns(transfereeIDs), transfereeIDs),
+        detailRow2(idLabelRuns(transfereeIDs, transferees), transfereeIDs),
         detailRow2('Consideration', `Kenya Shillings ${d.purchase_price_words || ''} (Kshs. ${d.purchase_price_figures || ''}/=)`),
         detailRow2('Nature of interest to be transferred', d.nature_of_interest || 'ABSOLUTE', true),
       ];
@@ -1826,25 +2425,18 @@ function buildLRA63() {
   requireTransferParties('lra_63');
   return buildTransferForm({
     formNo: 'LRA 63',
-    regulation: '(r. 63(1))',
+    regulation: '(r. 76(2)(g), 77(2)(g))',
     docTitle: 'TRANSFER OF LEASE',
-    cover: {
-      coverTransferorName: d.vendor_name || (d.transferors || []).map(p => p.company_name || p.name || '').join(', '),
-      coverTransfereeName: d.purchaser_name || (d.transferees || []).map(p => p.company_name || p.name || '').join(', '),
-      coverTitle: 'TRANSFER',
-      coverSubtitle: '(Sectional Title)',
-      propertyLines: d.cover_property_description_lines,
-    },
-    buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }) {
+    buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs, transferors, transferees }) {
       return [
         detailRow2('Date of Transfer', ''),
         detailRow2('Original Term of Lease', d.original_term || ''),
         detailRow2('Unexpired Residue of Term', d.unexpired_term || ''),
         detailRow2('Annual Rent', d.annual_rent || ''),
         detailRow2('Transferor(s)', transferorNames, true),
-        detailRow2(idLabelRuns(transferorIDs), transferorIDs),
+        detailRow2(idLabelRuns(transferorIDs, transferors), transferorIDs),
         detailRow2('Transferee(s)', transfereeNames, true),
-        detailRow2(idLabelRuns(transfereeIDs), transfereeIDs),
+        detailRow2(idLabelRuns(transfereeIDs, transferees), transfereeIDs),
         detailRow2('Consideration', `Kenya Shillings ${d.purchase_price_words || ''} (Kshs. ${d.purchase_price_figures || ''}/=)`),
         detailRow2('Nature of Lease to be transferred', d.nature_of_interest || 'LEASEHOLD', true),
       ];
@@ -1873,16 +2465,9 @@ function buildLRA58() {
   const chargees = d.chargees || [{ company_name: d.chargee_name || '', id_no: d.chargee_id || '', reg_no: d.chargee_reg_no || '' }];
   const chargors = d.chargors || [{ name: d.chargor_name || '', id_no: d.chargor_id || '', pin: d.chargor_pin || '' }];
   return buildTransferForm({
-    formNo: 'LRA 58',
+    formNo: 'LRA-58',
     regulation: '(r. 74(1))',
     docTitle: 'DISCHARGE OF CHARGE',
-    cover: {
-      coverTransferorName: chargees.map(c => c.company_name || c.name || '').join(', '),
-      coverTransfereeName: chargors.map(c => c.company_name || c.name || '').join(', '),
-      coverTitle: 'DISCHARGE OF CHARGE',
-      coverSubtitle: false,
-      propertyLines: d.cover_property_description_lines,
-    },
     roleLabels: {
       transferor: 'Chargee(s)', transferorSingle: 'Chargee',
       transferee: 'Chargor(s)', transfereeSingle: 'Chargor',
@@ -1896,7 +2481,7 @@ function buildLRA58() {
         detailRow2('Date of Charge', d.date_of_charge || ''),
         detailRow2('Entry No. in Encumbrances Register', d.charge_entry_no || ''),
         detailRow2('The Chargee', chargeeName, true),
-        detailRow2(idLabelRuns(chargeeID), chargeeID),
+        detailRow2(idLabelRuns(chargeeID, chargees), chargeeID),
         detailRow2('The Chargor', chargorName, true),
         detailRow2('Principal Amount Secured', d.amount_secured || ''),
       ];
@@ -1956,17 +2541,12 @@ function buildLRA84() {
   });
   const dots = '\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026\u2026';
 
-  items.push(...buildLraCoverPage({
-    coverTitle: 'APPLICATION FOR OFFICIAL SEARCH',
-    coverSubtitle: false,
-    propertyLines: d.cover_property_description_lines,
-  }));
   // ── Form header — identical pattern to LRA 33/63/58 ──────────────────────────
   function lp84(text, opts2 = {}) {
-    return new Paragraph({ children: Array.isArray(text) ? text : [antiqua(text, opts2)], spacing: spacingB(80) });
+    return new Paragraph({ children: asRuns(text, (t) => antiqua(t, opts2)), spacing: spacingB(80) });
   }
   function lpc84(text, opts2 = {}) {
-    const children = Array.isArray(text) ? text : [antiqua(text)];
+    const children = asRuns(text);
     return new Paragraph({ children, alignment: AlignmentType.CENTER, spacing: spacingB(80), ...opts2 });
   }
 
@@ -2147,10 +2727,14 @@ function buildLRA84() {
 
 // ─── Generic LRA form builder (schema-driven) ────────────────────────────────
 function buildGenericLRAForm(schema) {
-  if (!schema || !schema.form_number || String(schema.form_number).trim() === '' || !schema.doc_title || String(schema.doc_title).trim() === '') {
-    console.error(`\n[trained form] schema is missing form_number or doc_title (form_number=${JSON.stringify(schema && schema.form_number)}, doc_title=${JSON.stringify(schema && schema.doc_title)}). A registry instrument must not be generated mislabelled ("Form undefined" / blank title). Fix the schema and re-run /train-form.\n`);
-    process.exit(1);
+  // Every fact the form leaves a blank for is declared in the schema. A required one
+  // that the data file does not carry stops the run by name: a registry instrument
+  // with a blank where a fact belongs is worse than no instrument at all.
+  for (const cf of (schema.custom_fields || [])) {
+    if (cf.required === false) continue;
+    if (String(d[cf.name] ?? '').trim() === '') refuse(`[${schema.form_id}] custom field "${cf.name}" (${cf.label}) is required.`);
   }
+
   const transferors = d.transferors || [{ name: d.transferor_name || d.vendor_name || '', id_no: d.transferor_id || d.vendor_id || '' }];
   const transferees = d.transferees || [{ name: d.transferee_name || d.purchaser_name || '', id_no: d.transferee_id || d.purchaser_id || '' }];
 
@@ -2158,19 +2742,30 @@ function buildGenericLRAForm(schema) {
     formNo:     schema.form_number,
     regulation: schema.regulation || '',
     docTitle:   schema.doc_title,
+    titleLabel: schema.title_label || 'TITLE NO',
+    partyMode:  schema.party_mode || 'two_party',
+    execution:  schema.execution,
+    annex:      schema.annex,
+    // the head, per form: the filing box, the title line, any lines of its own
+    actLines:   schema.act_lines,
+    filingBox:  schema.filing_box || 'default',
+    titleLine:  schema.title_line || 'default',
+    headLines:  schema.head_lines,
+    preTitleLines: schema.pre_title_lines,
+    footNotes:  schema.foot_notes,
+    // registry_block: "default", "none", or the form's own block as a list of lines
+    registryBlock: Array.isArray(schema.registry_block) ? 'explicit' : (schema.registry_block || 'default'),
+    buildRegistrarSection: Array.isArray(schema.registry_block)
+      ? ({ lp, spacer }) => [spacer(), ...schema.registry_block.map(line => lp(fill(line, 'registry_block')))]
+      : undefined,
     roleLabels: schema.party_roles ? {
       transferor:       schema.party_roles.transferor       || 'Transferor(s)',
       transferorSingle: schema.party_roles.transferor_single || 'Transferor',
       transferee:       schema.party_roles.transferee       || 'Transferee(s)',
       transfereeSingle: schema.party_roles.transferee_single || 'Transferee',
     } : undefined,
-    cover: {
-      coverTitle: schema.cover_title || schema.doc_title || 'TRANSFER',
-      coverSubtitle: schema.cover_subtitle || false,
-      propertyLines: d.cover_property_description_lines,
-    },
 
-    buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs }) {
+    buildDetailRows({ detailRow2, idLabelRuns, transferorNames, transferorIDs, transfereeNames, transfereeIDs, transferors, transferees }) {
       return (schema.detail_rows || []).map(row => {
         let value = '';
         if (row.value_blank)                value = '';
@@ -2179,21 +2774,37 @@ function buildGenericLRAForm(schema) {
         else if (row.value_field === 'transfereeNames') value = transfereeNames;
         else if (row.value_field === 'transfereeIDs')   value = transfereeIDs;
         else if (row.value_field)           value = d[row.value_field] || '';
-        else if (row.value_template)        value = row.value_template.replace(/\{\{(\w+)\}\}/g, (_, k) => d[k] || '');
-        const label = row.use_id_label ? idLabelRuns(value) : row.label;
+        else if (row.value_template)        value = fill(row.value_template, `detail_rows "${row.label || ''}"`);
+        const side = row.value_field === 'transfereeIDs' ? transferees : transferors;
+        const label = row.use_id_label ? idLabelRuns(value, side) : fill(row.label, 'detail_rows label');
         return detailRow2(label, value, row.bold || false);
       });
     },
 
-    buildBody({ lp, spacer, numbered, lettered }) {
+    buildBody({ lp, spacer, numbered, lettered, gridTable }) {
       const items = [];
       for (const block of (schema.body_text || [])) {
-        if (block.type === 'intro')    items.push(lp(block.text));
-        else if (block.type === 'spacer')   items.push(spacer());
-        else if (block.type === 'numbered') items.push(numbered(block.number, block.text.replace(/\{\{(\w+)\}\}/g, (_, k) => d[k] || '')));
-        else if (block.type === 'lettered') items.push(lettered(block.letter, block.text));
-        else if (block.type === 'witness')  items.push(lp(block.text));
-        else items.push(lp(block.text || ''));
+        if (block.type === 'spacer') { items.push(spacer()); continue; }
+        // An operative schedule prints as the grid the Ministry prints, not as prose:
+        // the form's own column headings, then one row per line of the named field,
+        // its cells split on a pipe.
+        if (block.type === 'table') {
+          const lines = String(d[block.rows_field] || '').split('\n').map(t => t.trim()).filter(Boolean);
+          items.push(gridTable(
+            (block.columns || []).map(c => fill(c, 'a table block\'s columns')),
+            lines.map(line => line.split('|').map(cell => cell.trim())),
+          ));
+          continue;
+        }
+        // A field whose value carries newlines (a list of grounds, a schedule of
+        // parcels) becomes one paragraph per line, each of the block's own kind.
+        // Numbering carries on through them.
+        const lines = fill(block.text, 'body_text').split('\n').map(t => t.trim()).filter((t, i, all) => t !== '' || all.length === 1);
+        lines.forEach((line, i) => {
+          if (block.type === 'numbered')      items.push(numbered(Number(block.number) + i, line));
+          else if (block.type === 'lettered') items.push(i === 0 ? lettered(block.letter, line) : lp(line));
+          else items.push(lp(line));
+        });
       }
       return items;
     },
@@ -2202,128 +2813,93 @@ function buildGenericLRAForm(schema) {
 
 // ─── Build Engagement Letter ─────────────────────────────────────────────────
 function buildEngagementLetter() {
-  const client = d.client_name || d.purchaser_name || '';
-  const pronoun = d.client_pronoun || (d.client_gender === 'company' ? 'its' : 'his/her');
-  const matterTitle = d.matter_title || `SALE AND PURCHASE OF LAND COMPRISED IN TITLE NO. ${d.property_lr_no || ''}`;
-  requireFields(['client_name', 'date', 'ref', 'subject', 'background', 'scope_of_work', 'professional_fee', 'deposit_amount'], 'engagement_letter');
-
-  const items = [];
-  const tw = (text, opts = {}) => new TextRun({ text: String(text ?? ''), font: 'Tw Cen MT', size: 24, color: BLACK, ...opts });
-  const money = (value) => String(value ?? '').replace(/^\s*(?:KES|Kshs?\.?)\s*/i, '').trim();
-  const body = (children, opts = {}) => new Paragraph({
-    children: Array.isArray(children) ? children : [tw(children)],
-    spacing: { before: 120, after: 120, line: 276, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED,
-    indent: { left: 360 },
-    ...opts
-  });
-  const opening = (children, opts = {}) => new Paragraph({
-    children: Array.isArray(children) ? children : [tw(children)],
-    spacing: { before: 120, after: 120, line: 240, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED,
-    ...opts
-  });
-  const heading = (n, title) => new Paragraph({
-    children: [tw(`${n}.  ${title}`, { bold: true })],
-    spacing: { before: 120, after: 120, line: 259, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED
-  });
-  const listItem = (text, label, level = 0) => new Paragraph({
-    children: [tw(`${label}  `, { bold: false }), tw(text)],
-    spacing: { before: 0, after: 0, line: 276, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED,
-    indent: { left: level ? 1080 : 360 }
-  });
-  const gap = () => new Paragraph({ children: [], spacing: { before: 0, after: 120 } });
-  const roman = (n) => ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'][n] || `${n + 1}`;
-  const paragraphList = (value, marker) => (Array.isArray(value) ? value : []).map((text, i) => listItem(text, marker === 'mak-roman' ? `${roman(i)}.` : `${String.fromCharCode(97 + i)}.`, 0));
-  const mixed = (parts) => parts.map(part => typeof part === 'string' ? tw(part) : tw(part.text, part));
-
-  items.push(...buildLetterhead());
-  items.push(new Paragraph({ children: [], spacing: { before: 0, after: 480 } }));
-  items.push(new Paragraph({
-    children: [tw(`Our Ref: ${d.ref}`, { bold: true }), tw('\t'), tw(`Your Ref: ${d.your_ref || 'TBA'}`, { bold: true }), tw('\t'), tw(`Date: ${d.date}`, { bold: true })],
-    tabStops: [
-      { type: TabStopType.CENTER, position: 4513 },
-      { type: TabStopType.RIGHT, position: 9026 }
-    ],
-    spacing: { before: 0, after: 160, line: 240, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.LEFT,
-  }));
-  (d.recipient_lines || []).forEach((line, index, lines) => items.push(new Paragraph({
-    children: [tw(line)],
-    spacing: { before: 0, after: index === lines.length - 1 ? 160 : 0, line: 240, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED
-  })));
-  if (d.client_email) items.push(new Paragraph({
-    children: [tw(`Email: ${d.client_email}`)],
-    spacing: { before: 0, after: 180, line: 240, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED
-  }));
-  items.push(opening(`Dear ${d.salutation || 'Madam/Sir'},`, { indent: undefined, spacing: { before: 0, after: 180, line: 240, lineRule: LineRuleType.AUTO } }));
-  items.push(new Paragraph({
-    children: [tw(`RE: LETTER OF ENGAGEMENT – ${matterTitle}`, { bold: true })],
-    spacing: { before: 0, after: 160, line: 240, lineRule: LineRuleType.AUTO },
-    alignment: AlignmentType.JUSTIFIED,
-    border: { bottom: { style: BorderStyle.SINGLE, size: 8, space: 1, color: 'FFDD16' } }
-  }));
-  items.push(opening(d.opening || 'The above matter refers. Please read through this letter carefully and then sign and return the enclosed copy of this letter to us.', { indent: undefined }));
-  items.push(opening('The terms of this engagement shall be as provided below:', { indent: undefined }));
-
-  items.push(heading(1, 'Terms of Engagement'));
-  items.push(body(mixed([
-    client, ' (', { text: '“the Client”', bold: true }, ') hereby appoints ', { text: FIRM_NAME_TC, bold: true },
-    ' (“', { text: 'the Law Firm', bold: true }, '”) to act on ', pronoun,
-    ' behalf in matters relating to the Scope of Work provided below and other related matters.'
-  ])));
-  items.push(heading(2, 'Commencement'));
-  items.push(body(d.commencement || 'This Engagement Letter shall commence upon execution by the Client and shall terminate upon full payment of fees as agreed under Clause 5 below or shall terminate earlier in accordance with Clause 7 below.'));
-  items.push(body(d.termination_short || 'Either party may terminate the Engagement Letter by issuing seven (7) days\' written notice to the other party to that effect. Termination shall not affect completion of any outstanding assignment or payment of accrued fees, including the minimum stipulated in Clause 5.'));
-
-  items.push(heading(3, 'Background'));
-  items.push(body(d.background));
-  items.push(heading(4, 'Scope of Work'));
-  items.push(body(d.scope_intro || 'Based on the above background, we understand that our Scope of Work will be as follows:'));
-  items.push(...paragraphList(d.scope_of_work, 'mak-alpha'));
-
-  items.push(heading(5, 'Professional Fees and Disbursements'));
-  items.push(body(mixed(['Our professional fee for the above scope of work shall be ', { text: `Kshs ${money(d.professional_fee)}`, bold: true }, ' (exclusive of VAT and disbursements). This fee will cover the following:'])));
-  items.push(...paragraphList(d.fee_inclusions || [], 'mak-roman'));
-  items.push(body(d.additional_expenditure || 'Where the Law Firm anticipates additional expenditure beyond the Scope of Work, the Law Firm shall seek prior authorisation from the Client before incurring the additional cost. Any work undertaken outside the agreed Scope of Work shall be chargeable based on the Law Firm’s hourly rates.'));
-  items.push(body(d.fee_notes || 'The Law Firm shall issue the Client with Fee Notes periodically, providing a breakdown of legal fees and disbursements accrued during the relevant period.'));
-  items.push(body(`It is the Law Firm's policy to request payment on account of fees and disbursements expected to be incurred when acting for clients. Upon acceptance of instructions, we may request payments on account as the matter progresses. To this end, we shall request a deposit of KES ${money(d.deposit_amount)} to allow us to commence the above Scope of Work.`));
-
-  items.push(heading(6, 'Assumptions'));
-  items.push(body(d.assumptions_intro || 'The fee set out above is subject to the following assumptions:'));
-  items.push(...paragraphList(d.assumptions || [], 'mak-alpha'));
-  items.push(heading(7, 'Termination'));
-  items.push(body(d.termination || 'Either party may terminate this Engagement by issuing seven (7) days\' written notice to the other party to that effect. Termination shall not affect completion of any outstanding assignment or payment of any accrued fees. The Client shall remain liable for all charges incurred up to the date of termination.'));
-  items.push(heading(8, 'Confidentiality'));
-  items.push(body(d.confidentiality || 'The Law Firm and its personnel shall not at any time during or after the termination of this agreement or engagement use or disclose to any third parties any confidential information concerning the Client which the Law Firm or its staff may acquire in the course of this engagement, except with the Client’s written consent or as required by law.'));
-  items.push(heading(9, 'Communication'));
-  items.push(body(d.communication || 'There shall be free flow of communication between the parties, and the Law Firm shall keep the Client informed of all pertinent developments in relation to this matter.'));
-  items.push(body(mixed(['For this engagement, ', d.responsible_partner || FIRM_PARTNER, ', ', d.responsible_role || 'Managing Partner', ' (', d.responsible_email || FIRM_EMAIL, ') will be responsible for the day-to-day conduct of the matter. The responsible partner will be assisted by other lawyers within the Law Firm.'])));
-  items.push(heading(10, 'Governing Law and Dispute Resolution'));
-  items.push(body(d.governing_law || 'This Letter of Engagement shall be governed by the laws of Kenya. Any disputes shall be resolved through good faith negotiations. If the parties fail to reach an amicable settlement within fifteen (15) days of the dispute arising, the dispute shall be referred to arbitration under the Arbitration Act, 1995. The tribunal shall consist of a single arbitrator appointed by the Chairman for the time being of the Chartered Institute of Arbitrators, Kenya Branch.'));
-  items.push(heading(11, 'Acceptance of Terms'));
-  items.push(body(d.acceptance_text || 'Kindly confirm your acceptance of this Letter of Engagement by signing duplicate copies of this letter and returning one counterpart to us as soon as possible to enable us to proceed with the engagement.'));
-  items.push(body('For and on behalf of', { indent: { left: 360 }, children: [tw('For and on behalf of', { bold: true })] }));
-  items.push(body(FIRM_NAME.toUpperCase(), { children: [tw(FIRM_NAME.toUpperCase(), { bold: true })] }));
-  items.push(new Paragraph({ children: [tw('ACCEPTANCE', { bold: true, underline: { type: UnderlineType.SINGLE } })], spacing: { before: 360, after: 120, line: 276, lineRule: LineRuleType.AUTO }, indent: { left: 360 }, alignment: AlignmentType.LEFT }));
-  items.push(body(`I ${client} of ID No. ${d.client_id || '……………………'} confirm that I have read and understood the contents of this Letter of Engagement and accept the said terms.`, { indent: { left: 360 } }));
-  items.push(body('………………………………', { indent: { left: 360 } }));
-  items.push(body('Signature', { indent: { left: 360 } }));
-
-  return items;
+  // The firm's engagement letter (template of 11 Sep 2026) takes matter facts by these names; the older
+  // conveyancing fields from /new-conveyance are mapped onto them so nothing that called this breaks.
+  if (!d.re_line && d.property_lr_no) d.re_line = `SALE AND PURCHASE OF ALL THAT PROPERTY OF TITLE NO. ${d.property_lr_no}`;
+  // The client is the side the firm acts for. The defaults below describe a purchase, so a firm acting
+  // for the seller passes its own background and scope: an engagement letter that engages the buyer
+  // while the sale agreement names the firm as the Vendor's advocates put the firm on both sides.
+  if (actingFor('engagement_letter') === 'vendor') {
+    if (!d.client_name && d.vendor_name) d.client_name = d.vendor_name;
+    if (!(d.background && d.background.length) || !(d.scope && d.scope.length)) refuse('[engagement_letter] the firm acts for the ' +
+      'vendor, and the standard background and scope describe a purchase. Pass "scope" (and "background") written for the ' +
+      'sale, as the advocate gives them, one item per entry.');
+  }
+  if (!d.client_name && d.purchaser_name) d.client_name = d.purchaser_name;
+  if (!(d.background && d.background.length) && d.property_lr_no) d.background = [
+    `${d.client_name || 'The Client'} has entered into an agreement with ${d.vendor_name || 'the Vendor'} (the Vendor) to purchase all that property of title number ${d.property_lr_no}${d.property_location ? ' situate at ' + d.property_location : ''}${d.purchase_price_figures ? ' at the purchase price of Kenya Shillings ' + d.purchase_price_figures : ''}.`,
+  ];
+  if (!(d.scope && d.scope.length) && d.property_lr_no) d.scope = [
+    'Reviewing the Sale Agreement;', 'Witnessing the Sale Agreement;', 'Following up on the progress and status of the transaction;',
+    'Negotiating the terms of the Sale Agreement on your behalf;', 'Advising on the costs related to the transfer;', 'Facilitating the valuation for stamp duty assessment;',
+    'Advising on applicable stamp duty (subject to change based on market value);', 'Attending to the payment of stamp duty on the transfer;',
+    'Attending to the registration of the transfer and the issuance of the title in your favour; and', 'Generally safeguarding and protecting your legal interests throughout the transaction.',
+  ];
+  if (!d.fee_text && d.legal_fees) d.fee_text = `Kshs. ${Number(String(d.legal_fees).replace(/[^\d.]/g, '')).toLocaleString('en-KE')}`;
+  if (!d.client_pronoun) d.client_pronoun = d.client_gender === 'company' ? 'its' : 'their';
+  if (!d.assumptions || !d.assumptions.length) d.assumptions = undefined;
+  // Clause 9 names who has conduct and who assists. When the person drafting IS the
+  // responsible partner, naming them again as their own assistant reads as a mistake,
+  // which is what hasUserAdvocate exists to prevent; it was simply never applied here.
+  // The address in that clause must belong to the person the clause names. Clause 9 always
+  // names the responsible partner, so the drafting advocate's own address belongs there only
+  // when the drafting advocate IS that partner. Getting this backwards printed the partner's
+  // name against a fee earner's address, which sends a client who writes to it to the wrong
+  // person; when the partner drafted for herself it fell back to the firm's general address
+  // although her own was to hand. Where a fee earner drafts, the firm address is correct,
+  // because the partner's own is not in the data file.
+  if (!d.responsible_email && !hasUserAdvocate()) d.responsible_email = advocateEmail();
+  return FirmLetter.buildEngagementLetter(d, hasUserAdvocate() ? { assistedBy: advocateName() + ', Advocate' } : {});
 }
+
+// A fee note's service list is the firm's own description of what it did. These neutral defaults
+// stand in until the drafting command passes d.services for the matter in hand.
+// The default depends on the side the firm acts for: a seller-side fee note must not bill the seller
+// for the purchaser's work (stamp duty, registration and a title "in your favour"). Found 28 Sep.
+const DEFAULT_FEE_NOTE_SERVICES = {
+  purchaser: [
+    'Taking instructions and advising on the transaction;',
+    'Perusing and settling the sale agreement;',
+    'Following up the progress of the transaction with the other side;',
+    'Advising on the costs of the transfer, including stamp duty;',
+    'Attending to stamp duty assessment and payment;',
+    'Attending to registration of the transfer and issue of the title in your favour; and',
+    'Protecting your interests throughout the transaction.',
+  ],
+  vendor: [
+    'Taking instructions and advising on the sale;',
+    'Preparing and settling the sale agreement;',
+    'Following up the progress of the transaction with the other side;',
+    'Obtaining the consents and clearances required for the transfer;',
+    'Preparing the transfer and completion documents and attending to their execution; and',
+    'Protecting your interests throughout the transaction.',
+  ],
+  neutral: [
+    'Taking instructions and advising on the transaction;',
+    'Attending to the sale agreement;',
+    'Following up the progress of the transaction with the other side;',
+    'Attending to the documents required for completion and registration; and',
+    'Protecting your interests throughout the transaction.',
+  ],
+};
 
 // ─── Build Fee Note ───────────────────────────────────────────────────────────
 function buildFeeNote() {
   requireFields(['property_lr_no', 'legal_fees', 'legal_fees_vat', 'fee_note_total'], 'fee_note');
   assertVat(d.legal_fees, d.legal_fees_vat, 'fee_note');
+  // The total is what the client pays, so it must be the sum of the lines above it.
+  const lineKeys = ['legal_fees', 'legal_fees_vat', 'disbursements_office', 'disbursements_statutory'];
+  const bad = lineKeys.filter(k => d[k] != null && String(d[k]).trim() !== '' && numOf(d[k]) == null);
+  if (bad.length || numOf(d.fee_note_total) == null) refuse(`[fee_note] ${bad.concat(numOf(d.fee_note_total) == null ? ['fee_note_total'] : []).join(', ')} ` +
+    'must be a number of shillings. A fee note is a demand for money and every figure on it must be one.');
+  const lineSum = lineKeys.reduce((a, k) => a + (numOf(d[k]) || 0), 0);
+  if (Math.abs(lineSum - numOf(d.fee_note_total)) > 1) refuse(`[fee_note] fee_note_total (${d.fee_note_total}) is not the sum of ` +
+    `legal fees, VAT and disbursements (${lineSum.toLocaleString('en-KE')}). Fix the figures before generating: the client would be billed a total the lines do not support.`);
+  const money = (v) => (v == null || String(v).trim() === '') ? '' : (numOf(v) == null ? String(v)
+    : numOf(v).toLocaleString('en-KE', { minimumFractionDigits: Number.isInteger(numOf(v)) ? 0 : 2, maximumFractionDigits: 2 }));
   const items = [];
   const tw = (text, opts = {}) => new TextRun({ text: String(text || ''), font: FONT_BODY, size: 22, color: BLACK, ...opts });
-  const para = (children, opts = {}) => new Paragraph({ children: Array.isArray(children) ? children : [tw(children)], spacing: { before: 60, after: 60 }, alignment: AlignmentType.JUSTIFIED, ...opts });
+  const para = (children, opts = {}) => new Paragraph({ children: asRuns(children, tw), spacing: { before: 60, after: 60 }, alignment: AlignmentType.JUSTIFIED, ...opts });
   const bp = (text, opts = {}) => para([tw(text)], opts);
   const bpB = (text) => para([tw(text, { bold: true })]);
   const gap = () => new Paragraph({ children: [], spacing: { before: 0, after: 120 } });
@@ -2343,14 +2919,20 @@ function buildFeeNote() {
   items.push(gap());
 
   // ── Ref / date line ─────────────────────────────────────────────────────────
-  items.push(para([
-    tw('Our Ref: ', { bold: true }), tw(d.ref || 'TBA'),
-    tw('          Your Ref: TBA          Date: ', { bold: true }), tw(d.date || ''),
-  ], { alignment: AlignmentType.LEFT }));
-  items.push(gap());
+  items.push(FirmLetter.refLine(d.ref, d.your_ref, d.date, 24));
+
+  // ── Addressee ──────────────────────────────────────────────────────────────
+  // The client billed, from the Parties table: name, then the postal address lines.
+  const clientName = known(d.client_name);
+  if (clientName) {
+    items.push(para([tw(clientName.toUpperCase(), { bold: true })], { alignment: AlignmentType.LEFT, spacing: { before: 0, after: 0 } }));
+    (Array.isArray(d.client_address_lines) ? d.client_address_lines : []).map(known).filter(Boolean)
+      .forEach(line => items.push(para([tw(line)], { alignment: AlignmentType.LEFT, spacing: { before: 0, after: 0 } })));
+    items.push(gap());
+  }
 
   // ── Salutation ─────────────────────────────────────────────────────────────
-  items.push(bp('Dear Sir/Madam,', { alignment: AlignmentType.LEFT }));
+  items.push(bp(known(d.salutation) || 'Dear Sir/Madam,', { alignment: AlignmentType.LEFT }));
   items.push(gap());
 
   // ── Subject ────────────────────────────────────────────────────────────────
@@ -2360,27 +2942,17 @@ function buildFeeNote() {
   // ── Body ───────────────────────────────────────────────────────────────────
   items.push(bp('Our fees for professional services as per the Advocates’ Remuneration Order Schedule 1 Part 1, rendered for:'));
   items.push(gap());
-  [
-    'Due Diligence',
-    'Perusal of the Draft Sale Agreement.',
-    'Advising the client on the transaction.',
-    'Following up on the progress and status of the transaction;',
-    'Negotiating the terms of the Sale Agreement on your behalf;',
-    'Advising on the costs related to the transfer;',
-    'Facilitating the valuation for stamp duty assessment;',
-    'Advising on applicable stamp duty (subject to change based on market value);',
-    'Attending to the payment of stamp duty on the transfer;',
-    'Attending to the registration of the transfer and the issuance of the title in your favour; and',
-    'Safeguarding and protecting your legal interests throughout the transaction.',
-  ].forEach(s => items.push(bullet(s)));
+  const services = Array.isArray(d.services) && d.services.length ? d.services
+    : DEFAULT_FEE_NOTE_SERVICES[actingFor('fee_note') || 'neutral'];
+  services.forEach(s => items.push(bullet(s)));
   items.push(gap());
 
   // ── Fee table ──────────────────────────────────────────────────────────────
-  const legalFees = d.legal_fees || '';
-  const vatAmt = d.legal_fees_vat || (legalFees ? '' : '');
-  const disbOffice = d.disbursements_office || '';
-  const disbStatutory = d.disbursements_statutory || '';
-  const total = d.fee_note_total || d.engagement_total || '';
+  const legalFees = money(d.legal_fees);
+  const vatAmt = money(d.legal_fees_vat);
+  const disbOffice = money(d.disbursements_office);
+  const disbStatutory = money(d.disbursements_statutory);
+  const total = money(d.fee_note_total);
 
   items.push(new Table({
     width: { size: 60, type: WidthType.PERCENTAGE },
@@ -2409,1072 +2981,56 @@ function buildFeeNote() {
   items.push(gap());
 
   // ── Account details ─────────────────────────────────────────────────────────
+  // The firm's account can come from the data file as a "firm_bank" block, which the drafting
+  // command reads from the Firm Settings table, or from firm-config.json. The directory is the
+  // route that works at a client: the plugin directory is read only inside the sandbox and keeps
+  // no files between tasks, so a firm that did not hand over its account details before the build
+  // could never add them afterwards. Whichever route supplies them, they are still refused when
+  // absent: a fee note is how a client learns where to send money.
+  const bank = (d.firm_bank && typeof d.firm_bank === 'object') ? d.firm_bank : {};
+  const bankField = (k) => String(bank[k] ?? firmConfig[k] ?? '').trim();
+  if (!bankField('bank_account_no')) refuse('[fee_note] the firm has no bank account on file, so there is nowhere ' +
+    'for the client to send the money. The drafting command reads the Firm Settings table of the conveyancing base and ' +
+    'passes it as a "firm_bank" block (bank_account_name, bank_name, bank_account_no, bank_branch). If Firm Settings has ' +
+    'no bank_account_no, run /setup-conveyancing and answer step 4g, which records it once for the whole firm.');
   items.push(bpB('ACCOUNT DETAILS:'));
-  items.push(bp('Account Name: MAK & PARTNERS ADVOCATES LLP'));
-  items.push(bp('Account No: 1010760016'));
-  items.push(bp('Bank: VICTORIA COMMERCIAL BANK'));
+  items.push(bp(`Account Name: ${bankField('bank_account_name') || FIRM_NAME}`));
+  items.push(bp(`Account No: ${bankField('bank_account_no')}`));
+  items.push(bp(`Bank: ${bankField('bank_name')}`));
+  if (bankField('bank_branch')) items.push(bp(`Branch: ${bankField('bank_branch')}`));
   items.push(gap());
 
   // ── Closing ────────────────────────────────────────────────────────────────
-  items.push(bp('Yours faithfully,', { alignment: AlignmentType.LEFT }));
-  items.push(gap());
-  items.push(new Paragraph({ children: [], spacing: { before: 400, after: 0 } }));
-  items.push(bp('For MAK & Partners Advocates', { alignment: AlignmentType.LEFT }));
+  items.push(...FirmLetter.signOff({
+    signatoryName: advocateNameCaps(),
+    signatoryRole: 'Advocate (' + advocateP105('fee_note') + ')',
+  }, 24));
 
   return items;
 }
 
-// ─── Build Developer Sale Agreement (dispatcher) ─────────────────────────────
-// If d.project_slug is supplied AND matches an entry in developer-projects.json,
-// route to the project-aware builder. Otherwise fall back to the legacy builder
-// for backward compatibility with existing data files.
-function buildDeveloperSaleAgreement() {
-  const slug = d.project_slug;
-  if (!slug) return buildLegacyDeveloperSaleAgreement();
-  const project = loadDeveloperProject(slug);
-  if (!project) {
-    throw new Error(`Unknown developer project slug: "${slug}". Add an entry to scripts/developer-projects.json under projects.${slug}.`);
-  }
-  return buildProjectAwareDeveloperSaleAgreement(project);
+const LETTERHEAD_DOCS = ['conveyance_letter', 'engagement_letter', 'fee_note', 'undertaking_letter', 'undertaking_request'];
+if (LH_MODE === 'image' && LETTERHEAD_DOCS.includes(d.doc_type) && !FirmLetter.HEADER_IMG) {
+  console.error('\nREFUSED: letterhead_mode is "image" but scripts/assets/letterhead-header.png (or .jpg) is missing. Add the artwork or set letterhead_mode to "generated". No document was written.\n');
+  process.exit(1);
 }
-
-// ─── Project-aware Developer Sale Agreement builder ──────────────────────────
-// Reads the project registry + per-project drafting rules and emits a faithful
-// MAK-style developer sale agreement. Handles conditional clauses (LSK 2015,
-// COVID AV, arbitration vs NCIA, Common Seal vs PoA, electricity line item,
-// resale admin fee, signing-anchored completion, bi-annual service charge,
-// tenant handover protocol).
-function buildProjectAwareDeveloperSaleAgreement(project) {
-  const children = [];
-  const vendor       = project.vendor;
-  const land         = project.land;
-  const development  = project.development;
-  const completion   = project.completion;
-  const payments     = project.payments;
-  const dispute      = project.dispute_resolution;
-  const tsavo        = developerProjects.tsavo_group_constants || {};
-  const vAdv         = developerProjects.vendor_advocates || {};
-
-  // Conditional flags driving rendering
-  const isPoA           = project.vendor_execution_mode === 'power_of_attorney';
-  const incorpLSK       = project.incorporates_lsk_conditions_2015 === true;
-  const incCovid        = project.covid_audio_visual_verification_clause === true;
-  const includesElec    = payments?.stage_2?.electricity_meter_kes != null;
-  const hasDLP          = completion?.defects_liability_period_months != null;
-  const hasResaleFee    = project.resale_admin_fee_percent != null;
-  const isSigningAnchor = completion?.anchor === 'agreement_signing_date';
-  const isBiAnnualSC    = completion?.service_charge_frequency === 'bi_annually';
-  const hasTenantHand   = project.tenant_handover_notice_days != null;
-  const graceUnit       = payments?.late_payment_grace_unit === 'business_days' ? 'Business Days' : 'days';
-  const graceDays       = payments?.late_payment_grace_days ?? 30;
-  const lagDays         = completion?.lag_business_days ?? 90;
-  const lagLabel        = completion?.lag_label || 'Sale Completion Date';
-  const dlpMonths       = completion?.defects_liability_period_months ?? 6;
-  const inspectDays     = completion?.post_handover_inspection_window_days ?? 30;
-
-  // ── REQUIRED-FIELDS VALIDATION ────────────────────────────────────────────
-  // The Schedule of Particulars (Sections I-V) is where matter-specific data
-  // lands. Missing fields used to silently render as "[*]", producing a
-  // half-blank contract that looked superficially complete. Per the no
-  // paraphrased fallbacks rule, fail loudly so the caller knows to collect
-  // the data before generating.
-  const REQUIRED = [
-    'purchaser_name', 'purchaser_id', 'purchaser_email', 'purchaser_phone',
-    'apartment_number', 'apartment_floor',
-    'purchase_price_words', 'purchase_price_figures',
-    'deposit_words', 'deposit_figures',
-    'balance_words', 'balance_figures',
-    'balance_installments_count', 'balance_monthly_amount', 'balance_start_month',
-  ];
-  const missing = REQUIRED.filter(k => d[k] == null || d[k] === '');
-  if (missing.length) {
-    throw new Error(
-      `developer_sale_agreement is missing required fields for project "${project.short_label || project.display_name}":\n` +
-      missing.map(k => `  - ${k}`).join('\n') + '\n\n' +
-      'These populate Sections I-V of the Schedule of Particulars (purchaser, apartment, price, deposit, balance instalments).\n' +
-      'Collect them from the Purchaser (or the Conveyance Airtable record) before re-running the generator.\n' +
-      'See commands/draft-conveyance-doc.md → developer_sale_agreement required fields checklist.'
-    );
-  }
-
-  const purchaserName   = d.purchaser_name;
-  const purchaserId     = d.purchaser_id;
-  const purchaserEmail  = d.purchaser_email;
-  const purchaserPhone  = d.purchaser_phone;
-  const aptNumber       = d.apartment_number;
-  const aptFloor        = d.apartment_floor;
-  const priceFigures    = d.purchase_price_figures;
-  const priceWords      = d.purchase_price_words;
-  const depositFigures  = d.deposit_figures;
-  const depositWords    = d.deposit_words;
-  const balanceFigures  = d.balance_figures;
-  const balanceWords    = d.balance_words;
-  const installments    = d.balance_installments_count;
-  const monthlyAmount   = d.balance_monthly_amount;
-  const startMonth      = d.balance_start_month;
-  const date            = d.date || '';
-
-  // Cover page helpers
-  const cvT = (text, opts = {}) => new TextRun({ text: String(text || ''), font: 'Tw Cen MT', size: 22, color: BLACK, ...opts });
-  const cvP = (runs, align = AlignmentType.CENTER, sp = {}) => new Paragraph({ children: runs, alignment: align, spacing: { before: 0, after: 0, ...sp } });
-  const cvGap = (twips) => new Paragraph({ children: [], spacing: { before: twips, after: 0 } });
-  // Horizontal rule — bottom border on an empty paragraph spans full content width
-  const hRule = () => new Paragraph({
-    children: [],
-    spacing: { before: 40, after: 40 },
-    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 1 } },
-  });
-
-  // Load MAK logo (designed PNG asset) — falls back to text if missing.
-  const makLogoPath = path.join(__dirname, 'assets', 'sale-agreement-logo.png');
-  const makLogo = fs.existsSync(makLogoPath) ? fs.readFileSync(makLogoPath) : null;
-
-  // ── COVER PAGE ─────────────────────────────────────────────────────────────
-  // Older MAK templates (Royal Suburb 1, Royal Suburb 2) open with the "Dated"
-  // line at the very top of the cover. Newer templates skip it.
-  if (project.cover_page_dated_top_line === true) {
-    children.push(cvGap(200));
-    children.push(cvP([
-      cvT('Dated', { bold: true }),
-      cvT('________________ '),
-      cvT('this day', { bold: true }),
-      cvT(' _________________________ '),
-      cvT('of', { bold: true }),
-      cvT('   '),
-      cvT(String(new Date().getFullYear()) + '.', { bold: true }),
-    ], AlignmentType.CENTER, { line: 300, lineRule: 'auto' }));
-    children.push(cvGap(280));
-  } else {
-    children.push(cvGap(400));
-  }
-
-  // Vendor block
-  children.push(cvP([cvT(vendor.company_name, { bold: true, size: 24 })]));
-  children.push(cvGap(40));
-  children.push(cvP([cvT('(as “Vendor”)')]));
-  children.push(cvGap(180));
-
-  // MAK signature "- a n d -" style with letter spacing
-  children.push(cvP([cvT('- a n d –', { bold: false })]));
-  children.push(cvGap(180));
-
-  // Purchaser block
-  children.push(cvP([cvT(purchaserName, { bold: true, size: 24 })]));
-  children.push(cvGap(40));
-  children.push(cvP([cvT('(as “Purchaser”)')]));
-  children.push(cvGap(160));
-
-  // Top horizontal rule
-  children.push(hRule());
-  children.push(cvGap(80));
-
-  // AGREEMENT FOR SALE title block
-  children.push(cvP([cvT('AGREEMENT FOR SALE', { bold: true, size: 24 })]));
-  children.push(cvGap(80));
-  // Per-project relation phrase and apartment line — both pulled verbatim
-  // from Ann's source covers. Fallbacks preserve prior behavior.
-  const coverRelation = project.cover_relation_phrase
-    || (isSigningAnchor ? 'relating to' : 'in respect of');
-  const coverApartmentLine = (project.cover_apartment_line
-    || `Apartment${project.cover_page_dated_top_line ? '(s)' : ''} Number${project.cover_page_dated_top_line ? '(s)' : ''} {*}, ${vendor.company_name}`)
-    .replace(/\{\*\}/g, aptNumber);
-  children.push(cvP([cvT(coverRelation)]));
-  children.push(cvGap(80));
-  // Apartment + Project line
-  children.push(cvP([cvT(coverApartmentLine, { bold: true })]));
-  children.push(cvGap(80));
-
-  // Bottom horizontal rule
-  children.push(hRule());
-
-  // Spacer down to the DRAWN BY block
-  children.push(cvGap(400));
-
-  // DRAWN BY label
-  children.push(cvP([cvT('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  children.push(cvGap(40));
-
-  // MAK logo if available, otherwise firm name in text
-  if (makLogo) {
-    children.push(new Paragraph({
-      children: [new ImageRun({ data: makLogo, transformation: { width: 166, height: 69 }, type: 'png' })],
-      alignment: AlignmentType.CENTER,
-      spacing: { before: 0, after: 120 },
-    }));
-  } else {
-    children.push(cvP([cvT(vAdv.firm_name, { bold: true })]));
-  }
-
-  // Firm address block (centered, under the logo) — bold per Robin's
-  // formatting pass across all 6 templates.
-  children.push(cvP([cvT(vAdv.address_line_1 || '', { bold: true })]));
-  children.push(cvP([cvT(vAdv.address_line_2 || '', { bold: true })]));
-  children.push(cvP([cvT(vAdv.po_box || '', { bold: true })]));
-  children.push(cvP([cvT(`E: ${vAdv.email || ''}`, { bold: true })]));
-  children.push(cvP([cvT(vAdv.website || '', { bold: true })]));
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-
-  // ── DISPATCH: per-project verbatim body (REQUIRED — no fallback) ──────────
-  // Generator HARD-FAILS if scripts/clause-bodies/<project_slug>.js is absent.
-  // This is by design: paraphrased fallbacks for firm work product are not
-  // permitted (see memory/feedback_no_paraphrased_fallbacks.md).
-  const perProjectBodyPath = path.join(__dirname, 'clause-bodies', d.project_slug + '.js');
-  if (!fs.existsSync(perProjectBodyPath)) {
-    throw new Error(
-      `Verbatim clause-bodies file is missing for project "${d.project_slug}". ` +
-      `Expected at: ${perProjectBodyPath}\n` +
-      `\n` +
-      `Generators for MAK firm work product must use verbatim source text only. ` +
-      `Paraphrased / synthesised fallbacks are not permitted.\n` +
-      `\n` +
-      `To add this project: extract the verbatim clauses from the MAK source DOCX ` +
-      `into scripts/clause-bodies/${d.project_slug}.js (see royal_suburb_1.js as the canonical example).`
-    );
-  }
-  delete require.cache[require.resolve(perProjectBodyPath)]; // hot-reload during dev
-  const buildBody = require(perProjectBodyPath);
-  const perProjectBody = buildBody({
-    project, d,
-    helpers: {
-      antiqua, bodyPara, centeredPara, spacer, definitionPara, bulletPara,
-      makClauseH, makSubC, makRecital, makParty,
-      AlignmentType, UnderlineType, BorderStyle, WidthType,
-      Paragraph, TextRun, Table, TableRow, TableCell, ImageRun, PageBreak,
-      numberInWords, formatKes,
-    },
-  });
-  if (!Array.isArray(perProjectBody) || perProjectBody.length === 0) {
-    throw new Error(`clause-bodies/${d.project_slug}.js returned an empty or invalid body. Expected an array of Paragraph elements.`);
-  }
-  children.push(...perProjectBody);
-
-  // ── (Legacy paraphrased body has been disabled — kept inline below in dead ─
-  //     code only as a transcription scaffold while verbatim bodies are being ─
-  //     populated. The if(false) gate guarantees it is never reached at runtime.)
-  if (false) {
-  // ── PREAMBLE ───────────────────────────────────────────────────────────────
-  // MAK style: "THIS AGREEMENT is made…" is CENTRED.
-  children.push(centeredPara([
-    antiqua(`THIS AGREEMENT is made as of the ${date || '___ day of ___'}, 20___`),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('BETWEEN:', { bold: true })]));
-  children.push(spacer());
-  children.push(makParty([
-    antiqua(`${vendor.company_name} (Company Registration Number ${vendor.company_registration_number}), of ${vendor.po_box} (the `),
-    antiqua('"Vendor"', { bold: true }),
-    antiqua(' which shall, where context allows, include the Vendor’s successors in title and assigns); and'),
-  ]));
-  children.push(makParty([
-    antiqua('The Purchaser, being the person(s), whose particulars are set out in Section I of the Schedule of Particulars (which shall, where context allows, include the Purchaser’s successors in title, personal representatives, heirs and permitted assigns (as may be applicable) and where the Purchaser is more than one person, the Purchaser’s obligation shall be joint and several).'),
-  ]));
-  children.push(spacer());
-
-  // ── RECITALS ──────────────────────────────────────────────────────────────
-  children.push(bodyPara([antiqua('WHEREAS:', { bold: true })]));
-  children.push(spacer());
-
-  // Recital A — Vendor's title (tenure varies by project)
-  let titleRecital;
-  if (land.tenure === 'leasehold_government_of_kenya') {
-    titleRecital = `The Vendor is registered as proprietor as lessee from the Government of Kenya of ALL THAT property known as Title Number ${land.title_number} (subject to the conditions contained in the Certificate of Lease) (hereinafter referred to as "the Land").`;
-  } else {
-    titleRecital = `The Vendor is the registered legal and beneficial owner of ALL THAT parcel of land known as ${land.title_number} (hereinafter referred to as "the Land").`;
-  }
-  children.push(makRecital([antiqua(titleRecital)]));
-
-  // Recital B — Development construction status
-  const constructionPhrase = {
-    constructed:                'has constructed',
-    erected_and_completed:      'has erected and completed',
-    in_process_of_erection:     'is in the process of erecting and completing',
-    under_construction:         'has commenced and shall undertake the construction of',
-  }[development.construction_status] || 'shall undertake the construction of';
-  children.push(makRecital([
-    antiqua(`The Vendor ${constructionPhrase} a development project on the Land known as "${development.name}" (hereinafter referred to as "the Development")${development.floors ? ` which comprises ${development.floors} floors consisting of ${development.unit_breakdown}` : `${development.unit_breakdown ? ` comprised of ${development.unit_breakdown}` : ''}`}, together with usual social amenities, in accordance with the Building Plans available for inspection at the Vendor’s offices.`),
-  ]));
-
-  // Recital C — Change of User status (where relevant)
-  const couStatus = land.change_of_user_status;
-  if (couStatus === 'applied_surrender_pending') {
-    children.push(makRecital([
-      antiqua('The Vendor has applied for Change of User (as hereinafter defined) of the Land from single dwelling unit to multi dwelling units, which process will require surrender of the existing Title Deed to enable issuance of a new title for the Land on or before the Practical Completion Date.'),
-    ]));
-  } else if (couStatus === 'completed_new_title_issued') {
-    children.push(makRecital([
-      antiqua('The Vendor has completed the Change of User Process of the Land from single dwelling unit to multi-dwelling units and has acquired a new title with the new user endorsed.'),
-    ]));
-  } else if (couStatus === 'in_progress_subdivision_pending') {
-    children.push(makRecital([
-      antiqua('Pending the process of subdivision and transfer of a portion of the Land as contemplated above, the Vendor has commenced and shall undertake the construction of the Development and the Change of User on the Land.'),
-    ]));
-  } else if (couStatus === 'commenced_in_progress') {
-    children.push(makRecital([
-      antiqua('The Vendor has commenced and shall undertake the Change of User of the Land. Subject to completion of the Change of User, the Vendor shall geo-reference the Development and prepare and register the Sectional Plan after the Anticipated Practical Completion Date in accordance with this Agreement.'),
-    ]));
-  }
-
-  // Recital D — Agreement to sell
-  children.push(makRecital([
-    antiqua('Subject to this Agreement, the Vendor has agreed to sell, and the Purchaser has agreed to purchase the Apartment whose particulars are set out in Section II of the Schedule of Particulars (which is part of the Development) in consideration of the Purchase Price whose particulars are set out in Section III of the Schedule of Particulars, upon the terms and conditions set out below.'),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('NOW IT IS HEREBY AGREED as follows:', { bold: true })]));
-  children.push(spacer());
-
-  // ── 1. DEFINITIONS AND INTERPRETATION ─────────────────────────────────────
-  // From here on, every makClauseH is auto-numbered 1, 2, 3 ... and each
-  // makSubC continues 1.1, 1.2 (restarting under each new clause).
-  // Each definition is a level-2 sub-clause (1.1.1, 1.1.2, ...).
-  children.push(makClauseH('DEFINITIONS AND INTERPRETATION'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('In this Agreement (including the recitals hereto) except where the context otherwise requires the following words and expressions shall have the following meanings:'),
-  ]));
-  children.push(spacer());
-
-  const def = (term, body) => {
-    children.push(makSubC([
-      antiqua(`"${term}"`, { bold: true }),
-      antiqua(' means '),
-      antiqua(body),
-    ], 2));
-  };
-
-  const _apcd = d.apcd_override || completion.anticipated_practical_completion_date;
-  if (!isSigningAnchor && _apcd) {
-    def('Anticipated Practical Completion Date', `${_apcd}, being the anticipated date of issue by the Architect of a certificate of practical completion confirming completion of all works in respect to the Development, and "Practical Completion Certificate" shall be construed accordingly.`);
-  } else if (!isSigningAnchor) {
-    def('Anticipated Practical Completion Date', 'the anticipated date of issue by the Architect of a certificate of practical completion of the Development, and "Practical Completion Certificate" shall be construed accordingly.');
-  }
-  def('Architect', `${tsavo.architect?.name || 'TSAVO Architects Limited'}, of ${tsavo.architect?.po_box || 'Post Office Box Number 15854-00509, Nairobi'}.`);
-  def('Architect’s Office', tsavo.architect?.office || 'Coral Bells Apartments, Thindigua, Kiambu Road, Nairobi.');
-  def('Architectural Drawings', 'the Architect’s drawings for the Apartment(s) (including any revision of the drawings).');
-  def('Ardhisasa', 'the National Land Information System, being an online Government platform operated by the Ministry of Lands and Physical Planning and responsible for management of online land transactions.');
-  def('Building Plans', 'the registered building plan(s) for the Development approved by the relevant authorities which may be amended with approval from the relevant authorities from time to time.');
-  def('Business Day', 'any day (other than Saturday, Sunday, national day or gazetted public holiday) on which banking institutions in Kenya are generally open for the conduct of banking business.');
-  def('By-Laws', 'the by-laws specified under the Second Schedule of the Sectional Properties Regulations, 2021 subject to any amendments effected to the said By-Laws by the Vendor with respect to the Development.');
-  def('Common Property', 'all parts, halls, staircases and other access ways and areas on the Land and on the Development, including the common parking areas, gardens and other amenities provided for the common use of the Purchaser and other authorized occupiers residing at the Development.');
-  def('Corporation', 'the body corporate to be incorporated under the Sectional Properties Act to manage the Development; Corporation shall be construed to include the members of the Corporation.');
-  def('Data Protection Laws', 'the Data Protection Act No. 24 of 2019 together with the Data Protection (General) Regulations 2021, the Data Protection (Complaints Handling Procedure and Enforcement) Regulations 2021 and the Data Protection (Registration of Data Controllers and Processors) Regulations 2021.');
-  if (hasDLP) {
-    def('Defects Liability Period', `the period of ${dlpMonths} (${dlpMonths === 6 ? 'six' : String(dlpMonths)}) months from and including the Anticipated Practical Completion Date in which the Vendor is required to repair material defects that appear in the Apartment(s).`);
-  }
-  def('Development', `the Vendor’s development known as "${development.name}"${development.floors ? ` which shall comprise ${development.floors} floors consisting of ${development.unit_breakdown}` : (development.unit_breakdown ? ` comprised of ${development.unit_breakdown}` : '')}, together with social amenities, parking, gardens and other usual amenities in accordance with the Building Plans and Architectural Drawings.`);
-  def('Land Act', 'the Land Act (Act No. 6 of 2012).');
-  def('Land Laws', 'together the Land Registration Act, the Land Act, the Sectional Properties Laws, any subsidiary legislation, rules and regulations promulgated thereunder, and any practice directions issued pursuant to the Land Act and the Land Registration Act.');
-  def('Land Registration Act', 'the Land Registration Act (Act No. 3 of 2012).');
-  def('Registrar', 'the relevant Land Registrar at the Lands Office, Nairobi.');
-
-  // Sale Completion Date — varies by anchor
-  if (isSigningAnchor) {
-    def(lagLabel, `the date falling at least ${lagDays} (${numberInWords(lagDays)}) Business Days following the signing of this Agreement subject to: (i) all payment obligations of the Purchaser under this Agreement being satisfied in full; (ii) the Sectional Plan being duly registered at the Land Registry; (iii) the Sectional Title being issued in favour of the Vendor by the Land Registry with the Unit Factor endorsed thereon; and (iv) the provisions of the clause on Changes in Law or Circumstances.`);
-  } else {
-    const couCondition = ['applied_surrender_pending', 'commenced_in_progress', 'in_progress_subdivision_pending'].includes(couStatus)
-      ? ' (iv) the Change of User being completed by the Vendor; and (v)'
-      : ' (iv)';
-    def(lagLabel, `the date falling at least ${lagDays} (${numberInWords(lagDays)}) Business Days following the Anticipated Practical Completion Date subject to: (i) all payment obligations of the Purchaser under this Agreement being satisfied in full; (ii) the Sectional Plan being duly registered at the Land Registry; (iii) the Sectional Title being issued in favour of the Vendor by the Land Registry with the Unit Factor endorsed thereon;${couCondition} the provisions of the clause on Changes in Law or Circumstances.`);
-  }
-  def('Sectional Plan', 'a geo-referenced plan of the Apartment prepared by a duly licensed surveyor, approved by the relevant County Government and registered with the relevant Land Registry.');
-  def('Sectional Properties Act', 'the Sectional Properties Act (No. 21 of 2020), Laws of Kenya.');
-  def('Sectional Properties Regulations', 'the Sectional Properties Regulations, 2021 promulgated under the Sectional Properties Act.');
-  def('Sectional Properties Laws', 'together the Sectional Properties Act and the Sectional Properties Regulations as amended from time to time.');
-  def('Sectional Title', 'a certificate of lease/title in respect to the Apartment registered under the Sectional Properties Laws.');
-  if (isBiAnnualSC) {
-    def('Service Charge', 'a bi-annually sum that shall be payable after the Anticipated Practical Completion Date by the Purchaser to the Corporation, which Service Charge shall be utilised for the management of the Development.');
-  } else if (isSigningAnchor) {
-    def('Service Charge', 'a monthly sum that shall be payable after possession by the Purchaser to the Corporation, which Service Charge shall be utilised for the management of the Development.');
-  } else {
-    def('Service Charge', 'a monthly sum that shall be payable after the Anticipated Practical Completion Date by the Purchaser to the Corporation, which Service Charge shall be utilised for the management of the Development.');
-  }
-  def('Unit Factor', 'a proportionate factor of ownership in the Corporation, determined in accordance with the Sectional Properties Laws.');
-  def('Vendor’s Advocates', `the law firm of ${vAdv.firm_name}, ${vAdv.address_line_1}, ${vAdv.address_line_2}, ${vAdv.po_box}.`);
-  def('Vendor’s Office', tsavo.vendor_office_address || 'Coral Bells, Thindigua, Kiambu Road, Nairobi.');
-  children.push(spacer());
-
-  children.push(makSubC([
-    antiqua('In this Agreement, words importing the singular include the plural and vice versa; words of the neuter gender include the feminine and masculine; references to a statute include any statutory modification or re-enactment; and the recitals form an integral part of this Agreement.'),
-  ]));
-  children.push(spacer());
-
-  // ── 2. VENDOR'S WORKS AND PRACTICAL COMPLETION ─────────────────────────────
-  if (!isSigningAnchor) {
-    children.push(makClauseH('THE VENDOR’S WORKS AND PRACTICAL COMPLETION'));
-    children.push(spacer());
-    children.push(makSubC([
-      antiqua(`The Vendor shall undertake the construction of the Development substantially in accordance with the approved Building Plans and the Architectural Drawings.`),
-    ]));
-    children.push(makSubC([
-      antiqua('The Vendor shall have the right (in its reasonable discretion) to make such revisions, variations or modifications to the Building Plans and the Architectural Drawings as the Vendor may require, provided that the changes (a) do not materially affect the external facade of the Development or the Apartment; (b) are required for obtaining any necessary licenses, permissions or compliance with the requirements of any local or other authority; or (c) which the Vendor believes will improve the quality of accommodation or general appearance of the Development.'),
-    ]));
-    children.push(makSubC([
-      antiqua('The Purchaser shall not have the right to make variations to the design, layout or position of the Apartment, nor to issue instructions to the Vendor’s Architect.'),
-    ]));
-    children.push(makSubC([
-      antiqua('Subject to the provisions of this Agreement, the Vendor shall use all reasonable endeavours to meet the Anticipated Practical Completion Date and shall notify the Purchaser of any delays at least three (3) months prior to the Anticipated Practical Completion Date.'),
-    ]));
-    if (hasDLP) {
-      children.push(makSubC([
-        antiqua(`The Vendor shall ensure that any material defects in the Apartment which appear within the Defects Liability Period shall be repaired at the Vendor’s cost, provided that (a) the Purchaser has completed payment of the Purchase Price before or within the Defects Liability Period and has taken possession of the Apartment; (b) the Purchaser notifies the Vendor of the material defects within the Defects Liability Period; and (c) the Vendor shall only be bound to remedy those material defects notified in writing by the Purchaser within the Defects Liability Period. The Vendor is not liable for defects relating to works undertaken by the Purchaser in fitting out the Apartment, nor for ordinary wear and tear.`),
-      ]));
-    }
-    children.push(spacer());
-  } else {
-    // Skywalk path — construction complete
-    children.push(makClauseH('THE VENDOR’S WORKS'));
-    children.push(spacer());
-    children.push(makSubC([
-      antiqua('The Development has been constructed substantially in accordance with the approved Building Plans and the Architectural Drawings.'),
-    ]));
-    children.push(spacer());
-  }
-
-  // ── 3. PURCHASE PRICE AND OTHER PAYMENTS ──────────────────────────────────
-  children.push(makClauseH('THE PURCHASE PRICE AND OTHER PAYMENTS'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('The Purchaser shall pay the Purchase Price free of set-off, deduction or counterclaim on the terms set out in Section V of the Schedule of Particulars.'),
-  ]));
-  children.push(makSubC([
-    antiqua('The Purchaser shall pay legal fees and costs (as set out in the Schedule to this Agreement) in three (3) stages: Stage 1 costs payable on execution; Stage 2 costs payable within thirty (30) days of completion of payment of the Purchase Price; Stage 3 costs payable on the Sale Completion Date. Stage 2 costs are estimates which the Vendor reserves the right to adjust at the time scheduled for payment.'),
-  ]));
-  children.push(makSubC([
-    antiqua('In addition to the obligations above, the Purchaser shall pay to the Vendor the utility and georeferencing costs (the "Utility and Georeferencing Costs") on the terms set out in Section VI of the Schedule of Particulars.'),
-  ]));
-  // Vendor bank block
-  children.push(makSubC([
-    antiqua('All payments to the Vendor in respect of the Purchase Price shall be paid to the following account:'),
-  ]));
-  const vb = payments.vendor_bank;
-  const vbLines = [
-    `Account Name: ${vb.account_name}`,
-    `Bank: ${vb.bank_name}`,
-    vb.branch ? `Branch: ${vb.branch}` : null,
-    `Account Number: ${vb.account_number}`,
-    vb.bank_code ? `Bank Code: ${vb.bank_code}` : null,
-    vb.branch_code ? `Branch Code: ${vb.branch_code}` : null,
-    `SWIFT Code: ${vb.swift_code}`,
-    vb.paybill_number ? `M-PESA Paybill: ${vb.paybill_number}` : null,
-  ].filter(Boolean);
-  vbLines.forEach(line => children.push(definitionPara([antiqua(line)])));
-  children.push(spacer());
-
-  // ── 4. OVERDUE PAYMENTS ────────────────────────────────────────────────────
-  children.push(makClauseH('OVERDUE PAYMENTS'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua(`If the Purchaser fails to honour the Purchaser’s payment obligations to the Vendor, and payment is not effected within ${graceDays} (${numberInWords(graceDays)}) ${graceUnit} of the due date, then the Vendor may, in its sole discretion (but without prejudice to any other right or remedy), elect to treat non-payment as a fundamental breach of the Purchaser’s obligations under this Agreement and the provisions of the Termination clause shall apply.`),
-  ]));
-  children.push(spacer());
-
-  // ── 5. POSSESSION, COMPLETION, REGISTRATION & PROPERTY MANAGEMENT ─────────
-  children.push(makClauseH('GRANT OF POSSESSION, SALE COMPLETION, REGISTRATION AND PROPERTY MANAGEMENT'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua(`Subject to payment of (i) the Purchase Price in full and (ii) Stage 1 costs and Stage 2 costs in full, the Vendor shall grant possession of the Apartment to the Purchaser upon the issuance of the Practical Completion Certificate. For the avoidance of doubt, if the Purchaser is paying the Balance in instalments extending ${isSigningAnchor ? 'beyond such date' : 'beyond the Anticipated Practical Completion Date'}, the Purchaser shall NOT be entitled to possession of the Apartment or to any rental income from the Apartment until full payment of the Balance is received by the Vendor. Upon handover, the Purchaser shall, with effect from the first calendar month of receiving possession, remit to the Vendor and/or the Corporation the Service Charge as and when due, whether formally demanded or not.`),
-  ]));
-  if (hasTenantHand) {
-    children.push(makSubC([
-      antiqua(`Where the Purchaser completes payment of the balance of the Purchase Price and the Apartment is in occupation by a Tenant, the Purchaser shall cause the Vendor to give the tenant at least ${project.tenant_handover_notice_days} (${numberInWords(project.tenant_handover_notice_days)}) days’ notice from the date of receipt of final payment to vacate the Apartment before official handover.`),
-    ]));
-  }
-  if (hasDLP) {
-    children.push(makSubC([
-      antiqua(`Where the Purchaser is granted possession of the Apartment by the Vendor after the Defects Liability Period, the Purchaser shall be afforded a period of ${inspectDays} (${numberInWords(inspectDays)}) days from the time of handover to carry out an inspection of the Apartment with the Vendor so as to agree on any reasonable repairs required (if any) as a result of occupation by any tenant, save for ordinary wear and tear.`),
-    ]));
-  }
-  children.push(makSubC([
-    antiqua(`The Purchaser shall use the Apartment for the purposes of a private residence and for no other purpose whatsoever, subject to the conditions set in the By-Laws.`),
-  ]));
-  children.push(makSubC([
-    antiqua('The sale of the Apartment shall be completed at the offices of the Vendor’s Advocates on the Sale Completion Date. On the Sale Completion Date, the Vendor shall issue an instrument of transfer (the "Transfer") to the Purchaser in a form drawn by the Vendor’s Advocates, and the Purchaser shall execute the Transfer and return it to the Vendor’s Advocates together with: (a) a copy of the National Identity Card or valid Passport (or Certificate of Incorporation) of the Purchaser; (b) a copy of a current dated CR12 company search of the Purchaser (if applicable); (c) a copy of the tax PIN Certificate of the Purchaser; and (d) three (3) coloured passport photos of the Purchaser or its Directors (as applicable).'),
-  ]));
-  children.push(makSubC([
-    antiqua('The Vendor shall be responsible for the registration of the Sectional Plan and shall (a) procure a duly licensed surveyor to geo-reference and prepare the Sectional Plan; (b) apply for registration of the Sectional Plan; and (c) apply for registration of the Corporation, in accordance with the Sectional Properties Laws.'),
-  ]));
-  children.push(makSubC([
-    antiqua(`Upon registration, the Vendor’s Advocates shall release to the Purchaser the original Sectional Title, the stamped and registered Transfer, the KRA payment e-slip in respect of stamp duty, a certified copy of the Valuation for Stamp Duty Form, the Practical Completion Certificate, the certificate of registration of the Corporation, the registered By-Laws, the NCA license, the Occupational Certificate, the duly registered Sectional Plan, and the license from the National Environmental Management Authority for the Development.`),
-  ]));
-  children.push(makSubC([
-    antiqua(`Upon grant of possession, the Purchaser shall have the option of engaging ${tsavo.property_manager?.name || 'TSAVO LIFESTYLE LIMITED'} (the "Property Manager") for the purposes of managing the Apartment on the Purchaser’s behalf, subject to the Purchaser and the Property Manager entering into a property management agreement.`),
-  ]));
-  children.push(spacer());
-
-  // ── 6. TERMINATION ────────────────────────────────────────────────────────
-  children.push(makClauseH('TERMINATION OF AGREEMENT'));
-  children.push(spacer());
-  const negPeriodApplies = !(project.short_label === 'Tsavo Rising');
-  if (negPeriodApplies) {
-    children.push(makSubC([
-      antiqua('Upon the occurrence of a breach of this Agreement, an injured party shall, prior to exercising their rights against a defaulting party, first attempt to address and resolve the breach with the defaulting party through good-faith negotiations for a period of thirty (30) days (the "Negotiation Period"). If the breach is unable to be resolved within the Negotiation Period, the injured party shall, upon expiry of the Negotiation Period, be entitled to exercise their rights under this section.'),
-    ]));
-  } else {
-    children.push(makSubC([
-      antiqua('Upon the occurrence of a breach of this Agreement (which is not a breach of a payment obligation in respect of the Purchase Price by the Purchaser), an injured party shall, prior to exercising their rights against a defaulting party, first attempt to address and resolve the breach through good-faith negotiations for a period of thirty (30) days (the "Negotiation Period"). For the avoidance of doubt, the Negotiation Period does not apply to a Purchaser default in payment of the Purchase Price.'),
-    ]));
-  }
-  children.push(makSubC([
-    antiqua('If the Purchaser fails to comply with its obligations, the Vendor may give the Purchaser written notice to comply (the "Vendor’s Default Notice") requiring the Purchaser to make good the default within thirty (30) days, time being of the essence. On failure to comply with the Vendor’s Default Notice, the Vendor may, without prejudice to its other rights or remedies, terminate this Agreement by thirty (30) days’ written notice to the Purchaser (the "Vendor’s Termination Notice"). Upon expiry of the Vendor’s Termination Notice the Vendor shall, within ninety (90) days of expiry, refund the amount paid on account of the Purchase Price subject to deduction of all pending legal costs, and thereafter this Agreement shall stand terminated.'),
-  ]));
-  children.push(makSubC([
-    antiqua('Prior to termination of this Agreement, the Purchaser may identify other persons to purchase the Apartment on terms and conditions similar to this Agreement. If such new purchaser enters into an agreement with the Vendor for the purchase of the Apartment at a price higher than the Purchase Price, the profit earned on the sale shall be paid to the Purchaser within thirty (30) days of completion of the sale to the new purchaser.'),
-  ]));
-  children.push(spacer());
-
-  // ── 7. FORCE MAJEURE ──────────────────────────────────────────────────────
-  children.push(makClauseH('FORCE MAJEURE'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('Neither party will be liable for any delay or failure in performance in consequence of any act, cause or event which was not within its control, was not caused or precipitated by its negligence, and could not have been prevented by reasonable diligence, including without limitation: any Act of God, war or hostilities, sabotage, riots, civil disobedience, rebellion, judicial actions, strikes, government actions or inactions, acts of terror, changes in law affecting property construction and developments, storms, floods, earthquakes, subsidence, epidemics, pandemics, or other natural disasters, fire, accident, explosion or shortage of labour, or any event analogous to the foregoing (a "Force Majeure Event").'),
-  ]));
-  children.push(makSubC([
-    antiqua('The affected party shall promptly notify the other when such circumstances cause a delay or failure in performance. If circumstances continue for more than six (6) months after notification, either party may terminate this Agreement, but without prejudice to any accrued rights and subject to this Agreement. Payment obligations of the Purchaser cannot be avoided by claiming Force Majeure unless evidence is provided that the Force Majeure Event directly and adversely affects the Purchaser’s ability to pay.'),
-  ]));
-  children.push(spacer());
-
-  // ── 8. WARRANTIES ─────────────────────────────────────────────────────────
-  children.push(makClauseH('WARRANTIES'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('The Vendor warrants to the Purchaser that: (a) the Vendor is the registered legal and beneficial owner of the Land and holds a clear and valid title to the Land; (b) the Vendor has the requisite power and authority to enter into and perform this Agreement; and (c) so far as the Vendor is aware, the Land is not in a buffer zone, road or forest reserve, riparian reserve, community land or public land.'),
-  ]));
-  children.push(makSubC([
-    antiqua('The Vendor shall disclose in writing to the Purchaser any event or circumstance which may arise or become known to it after the date of this Agreement and prior to the Sale Completion Date which is inconsistent with any of the Warranties.'),
-  ]));
-  children.push(spacer());
-
-  // ── 9. LSK CONDITIONS (conditional) ───────────────────────────────────────
-  if (incorpLSK) {
-    children.push(makClauseH('THE LAW SOCIETY CONDITIONS FOR SALE (2015)'));
-    children.push(spacer());
-    children.push(bodyPara([
-      antiqua('The Law Society of Kenya Conditions of Sale (2015) will apply to this Agreement and shall be deemed incorporated herein in extensor, save in so far as the LSK Conditions are not inconsistent with the provisions of this Agreement or are varied or excluded by the terms of this Agreement.'),
-    ]));
-    children.push(spacer());
-  }
-
-  // ── 10. NOTICES ───────────────────────────────────────────────────────────
-  children.push(makClauseH('NOTICES AND COMMUNICATION'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua(`Any notice given under this Agreement shall be in writing by letter or email as follows. In the case of the Vendor: ${vendor.notice_address}, Email: ${vendor.notice_email}. In the case of the Purchaser: to the address whose particulars are set out in Section I of the Schedule of Particulars. The details of the Alternative Contact of the Purchaser are set out in Section VII of the Schedule of Particulars and are solely for communication purposes (no contractual obligation on the Alternative Contact).`),
-  ]));
-  children.push(makSubC([
-    antiqua('Any notice sent by post shall be deemed effective five (5) Business Days after posting upon proof of correct addressing; any notice sent by email shall be deemed effective two (2) Business Days after emailing upon proof of successful delivery.'),
-  ]));
-  children.push(spacer());
-
-  // ── 11. EXECUTORY AGREEMENT ───────────────────────────────────────────────
-  children.push(makClauseH('EXECUTORY AGREEMENT'));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('This Agreement is an executory agreement only and shall not operate or be deemed to operate as a lease of the Apartment.')]));
-  children.push(spacer());
-
-  // ── 12. COVID AV (conditional) ────────────────────────────────────────────
-  if (incCovid) {
-    children.push(makClauseH('VERIFICATION OF EXECUTION VIA LIVE AUDIO-VISUAL LINK'));
-    children.push(spacer());
-    children.push(bodyPara([
-      antiqua('It is hereby agreed that for such period of time as the prevailing worldwide pandemic known as "Covid-19" or "Coronavirus" shall serve to restrict or limit the physical witnessing and verification of execution of this Agreement before a licensed Advocate, Judge, Magistrate, Commissioner for Oaths, Notary Public, Kenya Consular Officer or other authorized person specified under the Land Registration Act (an "Authorized Person"), the execution of this Agreement by any party may, without prejudice to the performance of the contractual rights and obligations of the parties, be verified by an Authorized Person during a live audio-visual link.'),
-    ]));
-    children.push(spacer());
-  }
-
-  // ── 13. CHANGES IN LAW ────────────────────────────────────────────────────
-  children.push(makClauseH('CHANGES IN LAW OR CIRCUMSTANCES'));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua('The Purchaser acknowledges, confirms and agrees that the sale of the Apartment is subject always to any applicable changes in law or circumstances (including the Sectional Properties Act, if applicable) that may affect the form of title to be issued for the Apartment and/or the provisions, rights and obligations of the respective parties under this Agreement. If required, the Purchaser will execute such additional agreements and/or variations to this Agreement and pay such additional legal fees and/or costs as may be necessary to give effect to such changes.'),
-  ]));
-  children.push(spacer());
-
-  // ── 14. DISPUTE RESOLUTION (variant) ──────────────────────────────────────
-  children.push(makClauseH('DISPUTE RESOLUTION'));
-  children.push(spacer());
-  if (dispute.type === 'arbitration_ciarb_kenya') {
-    children.push(makSubC([
-      antiqua('Any dispute, controversy or claim arising out of or relating to this Agreement (including its interpretation, application or termination) shall be resolved by way of consultation held in good faith between the parties. Such consultation shall begin immediately after one party has delivered to the other a written request for such consultation. If within thirty (30) Business Days following the date of such request the dispute cannot be resolved amicably, the dispute shall be referred to arbitration.'),
-    ]));
-    children.push(makSubC([
-      antiqua(`The dispute shall be referred to arbitration by a single arbitrator to be appointed by the parties or, failing agreement within thirty (30) days, by the Chairman for the time being of the Chartered Institute of Arbitrators, Kenya Branch. The arbitration shall take place in Nairobi and the language of arbitration shall be English. The arbitration shall be conducted in accordance with the Arbitration Act, 1995. The decision of the arbitrator shall be final and binding on the parties and may be made an order of a court of competent jurisdiction.`),
-    ]));
-  } else {
-    children.push(makSubC([
-      antiqua(`Any dispute, controversy or claim arising out of or relating to this Agreement shall be resolved by way of consultation held in good faith between the parties. Such consultation shall begin immediately after one party has delivered to the other a written request for such consultation. If within thirty (30) Business Days the dispute cannot be resolved amicably, the dispute shall be submitted to a two-tier dispute resolution mechanism: (a) the parties shall first refer the dispute to mediation at the Nairobi Centre for International Arbitration (NCIA) in accordance with the NCIA Mediation Rules; and (b) should mediation fail to resolve the dispute, either party may refer the dispute to a Kenyan court of competent jurisdiction for hearing and determination.`),
-    ]));
-  }
-  children.push(spacer());
-
-  // ── 15. AML ───────────────────────────────────────────────────────────────
-  children.push(makClauseH('ANTI-MONEY LAUNDERING'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('The Purchaser confirms that the monies utilised to pay the Purchase Price for the Apartment and any other sums due under this Agreement are not and shall not be from the proceeds of crime. Failure by the Purchaser to adhere to this clause shall be treated as a material breach and, if required by any Competent Authority, shall entitle the Vendor to terminate this Agreement forthwith and confiscate all monies paid by the Purchaser, submitting them to the relevant Competent Authority as required by law.'),
-  ]));
-  children.push(makSubC([
-    antiqua('The Purchaser warrants that all monies paid to the Vendor or the Vendor’s Advocates do not contravene the Proceeds of Crime and Anti-Money Laundering Act, 2009 or the Proceeds of Crime and Anti-Money Laundering (Amendment) Act, 2021 or any other law in Kenya, and indemnifies the Vendor and the Vendor’s Advocates against any claim or action arising out of a breach by the Purchaser of those laws.'),
-  ]));
-  children.push(spacer());
-
-  // ── 16. DATA PROTECTION ───────────────────────────────────────────────────
-  children.push(makClauseH('DATA PROTECTION'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('The Vendor confirms that all personal data given to the Vendor by the Purchaser and the Purchaser’s Alternative Contact under this Agreement shall be used in accordance with the Data Protection Laws.'),
-  ]));
-  children.push(makSubC([
-    antiqua('By signing this Agreement, the Purchaser consents to their personal data being collected and processed for the purposes of execution, performance and completion of this Agreement.'),
-  ]));
-  children.push(spacer());
-
-  // ── 17. GENERAL PROVISIONS ────────────────────────────────────────────────
-  children.push(makClauseH('GENERAL PROVISIONS'));
-  children.push(spacer());
-  children.push(makSubC([
-    antiqua('This Agreement is personal to the Purchaser and the Purchaser shall not be entitled to vary, assign, or novate this Agreement without the written consent of the Vendor.'),
-  ]));
-  if (hasResaleFee) {
-    children.push(makSubC([
-      antiqua(`The Purchaser shall pay a fee of ${project.resale_admin_fee_percent}% (${numberInWords(project.resale_admin_fee_percent)} per cent) of the Purchase Price payable by the new Purchaser to the Vendor in respect of any approved resale of the Apartment.`),
-    ]));
-  }
-  children.push(makSubC([
-    antiqua('No immaterial error or omission in this Agreement or in any Plan of the Development or in any statement made prior to this Agreement shall affect the obligations of the parties or entitle the Purchaser to damages or compensation.'),
-  ]));
-  children.push(makSubC([
-    antiqua('Time shall be of the essence in this Agreement save as otherwise provided.'),
-  ]));
-  children.push(makSubC([
-    antiqua('This Agreement constitutes the entire agreement between the parties and supersedes any prior agreements, undertakings, representations or warranties relating to the sale and purchase of the Apartment.'),
-  ]));
-  children.push(makSubC([
-    antiqua('If any provision is found invalid, illegal or unenforceable, the validity, legality and enforceability of the remaining provisions shall not be affected.'),
-  ]));
-  children.push(makSubC([
-    antiqua('This Agreement may be executed in several counterparts, each of which will be deemed to be an original, but all of which, taken together, will constitute one and the same Agreement.'),
-  ]));
-  children.push(makSubC([
-    antiqua('This Agreement shall be governed by and construed in accordance with the laws of Kenya.'),
-  ]));
-  children.push(spacer());
-
-  children.push(bodyPara([
-    antiqua('IN WITNESS WHEREOF this Agreement has been duly executed by the parties hereto as of the day and year first before written.', { bold: true }),
-  ]));
-  children.push(spacer());
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-  } // end legacy body else-branch
-
-  // ── SCHEDULE OF PARTICULARS ───────────────────────────────────────────────
-  children.push(centeredPara([antiqua('SCHEDULE OF PARTICULARS', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  children.push(spacer());
-
-  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
-  const cellBorder = {
-    top:    { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-    bottom: { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-    left:   { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-    right:  { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-  };
-  const schedCell = (text, bold = false) => new TableCell({
-    children: [new Paragraph({ children: [antiqua(text, { bold })], spacing: { before: 80, after: 80 }, indent: { left: 80 } })],
-    borders: cellBorder,
-    width: { size: 30, type: WidthType.PERCENTAGE },
-  });
-  const schedValCell = (lines) => new TableCell({
-    children: (Array.isArray(lines) ? lines : [lines]).map(line => new Paragraph({ children: [antiqua(line || '')], spacing: { before: 80, after: 80 }, indent: { left: 80 } })),
-    borders: cellBorder,
-    width: { size: 70, type: WidthType.PERCENTAGE },
-  });
-  const schedRow = (label, value) => new TableRow({ children: [schedCell(label, true), schedValCell(value)] });
-
-  children.push(new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: [
-      schedRow('I. The Purchaser', [
-        `Name: ${purchaserName}`,
-        `ID Number: ${purchaserId}`,
-        `Email: ${purchaserEmail}`,
-        `Mobile Number: ${purchaserPhone}`,
-      ]),
-      schedRow('II. The Apartment', `All that Apartment Number ${aptNumber} ${isSigningAnchor ? 'situated' : 'to be situated'} on the ${aptFloor} floor of the Development.`),
-      schedRow('III. Purchase Price', `Kenya Shillings ${priceWords} (Kshs. ${priceFigures}/=) Only.`),
-      schedRow('IV. Development', `The Vendor’s development known as "${development.name}" which consists of residential apartments together with a common entrance, communal areas, common car parking spaces, pathways, driveways, and other amenities, constructed and maintained on the Land and identified in the Building Plans and the Architectural Drawings.`),
-      schedRow('V. Payment Plan', [
-        `An initial deposit of Kenya Shillings ${depositWords} (Kshs. ${depositFigures}/=) Only (the "Deposit") has been paid by the Purchaser to the Vendor (receipt whereof is confirmed by the Vendor); and`,
-        `The balance of the Purchase Price of Kenya Shillings ${balanceWords} (Kshs. ${balanceFigures}/=) Only (the "Balance") shall be paid by the Purchaser to the Vendor in ${installments} monthly instalments of Kenya Shillings ${monthlyAmount}/= Only on or before the ${d.instalment_day || 'fifth (5th)'} day of every calendar month from ${startMonth}.`,
-      ]),
-      schedRow('VI. Utility and Sectional Plan Costs', [
-        `Water meter installation: Kshs. ${formatKes(payments.stage_2.water_meter_kes)}/=`,
-        ...(includesElec ? [`Electricity meter installation: Kshs. ${formatKes(payments.stage_2.electricity_meter_kes)}/=`] : []),
-        `Service Charge deposit: Kshs. ${formatKes(payments.stage_2.service_charge_deposit_kes || payments.stage_2.service_charge_initial_six_months_kes)}/=`,
-        `Sectional Plan / georeferencing costs: Kshs. ${formatKes(payments.stage_2.georeferencing_kes)}/=`,
-      ]),
-      schedRow('VII. Alternative Contact', [
-        `Name: ${d.alt_contact_name || ''}`,
-        `Email: ${d.alt_contact_email || ''}`,
-        `Mobile Number: ${d.alt_contact_phone || ''}`,
-      ]),
-    ]
-  }));
-  children.push(spacer());
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-
-  // ── SCHEDULE OF LEGAL COSTS ───────────────────────────────────────────────
-  const costsHeading = (project.short_label === 'Tsavo Skywalk')
-    ? 'SCHEDULE OF THE PURCHASER’S ADDITIONAL COSTS'
-    : 'SCHEDULE OF LEGAL COSTS';
-  children.push(centeredPara([antiqua(costsHeading, { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  children.push(spacer());
-
-  // Intro: the three-stage payment overview (Ann's verbatim text from RS3,
-  // with Stage 2 meter mention adapted to projects that bundle electricity).
-  const hasElectricityMeter = payments.stage_2 && payments.stage_2.electricity_meter_kes != null;
-  const stage2Meters = hasElectricityMeter ? 'water and electricity meters' : 'water meters';
-  children.push(bodyPara([antiqua('The legal fees and costs shall be payable by the Purchaser in three (3) stages as follows:')]));
-  children.push(bodyPara([
-    antiqua('Stage 1 costs:', { bold: true }),
-    antiqua(' The legal fees, office disbursements and proportionate cost of registering the Sectional Plan and the Corporation payable at the time of execution of this Agreement;'),
-  ]));
-  children.push(bodyPara([
-    antiqua('Stage 2 costs:', { bold: true }),
-    antiqua(` The service charge deposit, costs of installation of ${stage2Meters} as well as the Geo Referencing costs are payable within thirty (30) days of completion of payment of the Purchase Price; and`),
-  ]));
-  children.push(bodyPara([
-    antiqua('Stage 3 costs:', { bold: true }),
-    antiqua(' The proportionate costs of registering the Sectional Plan, Stamp Duty, office disbursements, valuation and registration costs payable on the Sale Completion Date. '),
-    antiqua('NB:', { bold: true }),
-    antiqua(' Stamp Duty payable shall be subject to a market valuation of the Apartment by the Government Valuer prior to the transfer of the Sectional Title(s) from the Vendor to the Purchaser.'),
-  ]));
-  children.push(spacer());
-
-  const costRow = (item, cost) => new TableRow({
-    children: [
-      new TableCell({
-        children: [new Paragraph({ children: [antiqua(item)], indent: { left: 80 }, spacing: { before: 40, after: 40 } })],
-        borders: cellBorder,
-        width: { size: 70, type: WidthType.PERCENTAGE },
-      }),
-      new TableCell({
-        children: [new Paragraph({ children: [antiqua(cost)], indent: { left: 80 }, spacing: { before: 40, after: 40 } })],
-        borders: cellBorder,
-        width: { size: 30, type: WidthType.PERCENTAGE },
-      }),
-    ],
-  });
-
-  const costRows = [];
-  costRows.push(costRow('ITEM', 'COST (KES)'));
-  const s1 = payments.stage_1 || {};
-  if (s1.legal_fees_kes)              costRows.push(costRow('Legal Fees (Stage 1)', formatKes(s1.legal_fees_kes)));
-  if (s1.office_disbursements_kes)    costRows.push(costRow('Office Disbursements (Stage 1)', formatKes(s1.office_disbursements_kes)));
-  if (s1.vat_kes)                     costRows.push(costRow('VAT 16% on legal fees (subject to change in law) (Stage 1)', formatKes(s1.vat_kes)));
-  if (s1.proportionate_management_company_incorporation_kes)
-                                       costRows.push(costRow('Proportionate cost of incorporation of the Management Company (Stage 1)', formatKes(s1.proportionate_management_company_incorporation_kes)));
-  if (s1.share_acquisition_kes)       costRows.push(costRow('Acquisition of one share in a member of the Management Company (Stage 1)', formatKes(s1.share_acquisition_kes)));
-  if (s1.proportionate_land_transfer_kes)
-                                       costRows.push(costRow('Proportionate cost of transfer of land from the Vendor to the Management Company (Stage 1)', formatKes(s1.proportionate_land_transfer_kes)));
-  if (s1.proportionate_corp_and_sectional_plan_registration_kes)
-                                       costRows.push(costRow('Proportionate cost of registering the Corporation and the Sectional Plan (Stage 1)', formatKes(s1.proportionate_corp_and_sectional_plan_registration_kes)));
-  const s2 = payments.stage_2 || {};
-  if (s2.water_meter_kes != null)     costRows.push(costRow('Cost of installation of water meters (Stage 2)', formatKes(s2.water_meter_kes)));
-  if (s2.electricity_meter_kes != null) costRows.push(costRow('Cost of installation of electricity meters (Stage 2)', formatKes(s2.electricity_meter_kes)));
-  const scKey = s2.service_charge_deposit_kes != null ? s2.service_charge_deposit_kes : s2.service_charge_initial_six_months_kes;
-  if (scKey != null)                  costRows.push(costRow('Service Charge Deposit (Stage 2)', formatKes(scKey)));
-  if (s2.georeferencing_kes != null)  costRows.push(costRow('Georeferencing Costs (Stage 2)', formatKes(s2.georeferencing_kes)));
-  const s3 = payments.stage_3 || {};
-  costRows.push(costRow('Stamp Duty at 4% of the Purchase Price (subject to open market valuation by Government Valuer)', '[*]'));
-  if (s3.banking_charges_and_kra_eslip_kes != null) costRows.push(costRow('Banking Charges and KRA e-slip (Stage 3)', formatKes(s3.banking_charges_and_kra_eslip_kes)));
-  if (s3.office_disbursements_kes != null)          costRows.push(costRow('Office Disbursements (Stage 3)', formatKes(s3.office_disbursements_kes)));
-  if (s3.valuation_for_stamp_kes != null)           costRows.push(costRow('Valuation for Stamp Duty (Stage 3)', formatKes(s3.valuation_for_stamp_kes)));
-  if (s3.land_rent_and_rates_clearance_kes != null) costRows.push(costRow('Land Rent & Rates Clearance (Stage 3)', formatKes(s3.land_rent_and_rates_clearance_kes)));
-  if (s3.commissioner_of_lands_consent_kes != null) costRows.push(costRow('Commissioner of Lands Consent (Stage 3)', formatKes(s3.commissioner_of_lands_consent_kes)));
-  if (s3.registration_fees_kes != null)             costRows.push(costRow('Registration Fees (Stage 3)', formatKes(s3.registration_fees_kes)));
-  if (s3.valuation_and_registration_estimate_kes != null) costRows.push(costRow('Estimate of Government valuation and registration costs (Stage 3)', formatKes(s3.valuation_and_registration_estimate_kes)));
-  if (s3.registration_and_incidental_fees_kes != null) costRows.push(costRow('Registration and incidental fees (Stage 3)', formatKes(s3.registration_and_incidental_fees_kes)));
-
-  children.push(new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: costRows,
-  }));
-  children.push(spacer());
-
-  // Vendor's Advocates account block
-  children.push(bodyPara([antiqua('All payments to the Vendor’s Advocates shall be made by cheque, cash deposit or bank transfer to the following account or M-PESA Paybill:', { bold: true })]));
-  children.push(spacer());
-  const va = payments.vendor_advocates_bank || {};
-  [
-    `Account Name: ${va.account_name || ''}`,
-    `Bank: ${va.bank_name || ''}`,
-    va.branch ? `Branch: ${va.branch}` : null,
-    `Account Number: ${va.account_number || va.kes_account_number || ''}`,
-    va.swift_code ? `SWIFT Code: ${va.swift_code}` : null,
-    va.paybill_number ? `M-PESA Paybill: ${va.paybill_number}` : null,
-    va.paybill_account ? `M-PESA Account: ${va.paybill_account}` : null,
-  ].filter(Boolean).forEach(line => children.push(definitionPara([antiqua(line)])));
-  children.push(spacer());
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-
-  // ── EXECUTION BLOCK ───────────────────────────────────────────────────────
-  children.push(centeredPara([antiqua('EXECUTION OF AGREEMENT FOR SALE', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('THE VENDOR:', { bold: true })]));
-  if (isPoA) {
-    children.push(bodyPara([antiqua(`${vendor.company_name}`, { bold: true })]));
-    children.push(bodyPara([antiqua('SIGNED by the duly authorized and constituted Attorney of the Vendor under and by virtue of a Power of Attorney registered at the Registry of Documents at Nairobi as Number ______________________ in the presence of:')]));
-  } else {
-    children.push(bodyPara([antiqua(`SEALED with the Common Seal of ${vendor.company_name}`, { bold: true })]));
-    children.push(bodyPara([antiqua('in the presence of:')]));
-  }
-  children.push(spacer());
-  children.push(bodyPara([antiqua('Signature: __________________________')]));
-  children.push(bodyPara([antiqua('Date: ______________________________')]));
-  children.push(bodyPara([antiqua('Name: ______________________________')]));
-  children.push(bodyPara([antiqua('ID No.: _____________________________')]));
-  children.push(bodyPara([antiqua('PIN No.: ____________________________')]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('I CERTIFY that the Vendor’s authorized representative freely and voluntarily executed this Agreement on the date stated hereabove and understood its contents.')]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('_____________________________________________')]));
-  children.push(bodyPara([antiqua('Signature and designation of the person certifying')]));
-  children.push(spacer());
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-
-  children.push(bodyPara([antiqua('THE PURCHASER:', { bold: true })]));
-  children.push(bodyPara([antiqua(`SIGNED by ${purchaserName}`)]));
-  children.push(bodyPara([antiqua('in the presence of:')]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('Signature: __________________________')]));
-  children.push(bodyPara([antiqua('Date: ______________________________')]));
-  children.push(bodyPara([antiqua('ID No.: _____________________________')]));
-  children.push(bodyPara([antiqua('PIN No.: ____________________________')]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua(`I CERTIFY that the above-named ${purchaserName} freely and voluntarily executed this Agreement on the date stated hereabove and understood its contents.`)]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('_____________________________________________')]));
-  children.push(bodyPara([antiqua('Signature and designation of the person certifying')]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('**When signing this Agreement your signature(s) must be certified by an Authorized Person.')]));
-  children.push(spacer());
-
-  // ── Footer "DRAWN AND FILED BY" block (last page) ─────────────────────────
-  // MAK source DOCX puts the firm logo PNG centred under "DRAWN BY:" at the
-  // end of the document, mirroring the cover page. Address centred below.
-  children.push(centeredPara([antiqua('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  if (makLogo) {
-    children.push(new Paragraph({
-      children: [new ImageRun({ data: makLogo, transformation: { width: 166, height: 69 }, type: 'png' })],
-      alignment: AlignmentType.CENTER,
-      spacing: { before: 60, after: 60 },
-    }));
-  } else {
-    children.push(centeredPara([antiqua(vAdv.firm_name || '', { bold: true })]));
-  }
-  children.push(centeredPara([antiqua(vAdv.address_line_1 || '')]));
-  children.push(centeredPara([antiqua(vAdv.address_line_2 || '')]));
-  children.push(centeredPara([antiqua(vAdv.po_box || '')]));
-  children.push(centeredPara([antiqua(`E: ${vAdv.email || ''}`)]));
-  children.push(centeredPara([antiqua(vAdv.website || '')]));
-
-  return children;
-}
-
-// Number-to-words helper for clauses ("Thirty (30)" etc.). Lightweight; covers 1-200.
-function numberInWords(n) {
-  if (n == null || isNaN(n)) return '[*]';
-  const ones = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-  const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-  if (n < 20) return ones[n];
-  if (n < 100) return tens[Math.floor(n/10)] + (n % 10 ? '-' + ones[n%10] : '');
-  if (n < 200) return 'One Hundred' + (n > 100 ? ' and ' + numberInWords(n-100) : '');
-  return String(n);
-}
-
-function formatKes(n) {
-  if (n == null) return '[*]';
-  return new Intl.NumberFormat('en-KE').format(n);
-}
-
-// ─── Legacy Developer Sale Agreement builder (pre-registry, kept for backward compat) ──
-function buildLegacyDeveloperSaleAgreement() {
-  const children = [];
-
-  const cvT  = (text, opts = {}) => new TextRun({ text, font: FONT_BODY, size: 24, color: BLACK, ...opts });
-  const cvP  = (runs, align = AlignmentType.CENTER, sp = {}) =>
-    new Paragraph({ children: runs, alignment: align, spacing: { before: 0, after: 0, ...sp } });
-  const cvGap  = (twips) => new Paragraph({ children: [], spacing: { before: twips, after: 0 } });
-
-  const vendor = d.vendor_name || d.developer_name || '';
-  const vendorReg = d.vendor_reg_no || d.developer_reg_no || '';
-  const vendorPO  = d.vendor_po_box || '';
-
-  // ── COVER PAGE ─────────────────────────────────────────────────────────────
-  children.push(cvGap(400));
-  children.push(cvP([cvT(vendor, { bold: true, size: 28 })]));
-  children.push(cvGap(80));
-  children.push(cvP([cvT('(as the Vendor)')]));
-  children.push(cvGap(280));
-  children.push(cvP([cvT('AND', { bold: true })]));
-  children.push(cvGap(280));
-  children.push(cvP([cvT(d.purchaser_name || '', { bold: true, size: 28 })]));
-  children.push(cvGap(80));
-  children.push(cvP([cvT('(as the Purchaser)')]));
-  children.push(cvGap(400));
-  children.push(new Paragraph({
-    children: [],
-    border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: BLACK, space: 1 } },
-    spacing: { before: 0, after: 0 },
-  }));
-  children.push(cvGap(280));
-  children.push(cvP([cvT('AGREEMENT FOR SALE', { bold: true })]));
-  children.push(cvGap(200));
-  children.push(cvP([cvT('relating to', { italics: true })]));
-  children.push(cvGap(200));
-  children.push(cvP([cvT(d.apartment_description || d.property_lr_no || '', { bold: true })]));
-  children.push(cvGap(1800));
-
-  const saleLogoPath = path.join(__dirname, 'assets', 'sale-agreement-logo.png');
-  const saleLogo = fs.existsSync(saleLogoPath) ? fs.readFileSync(saleLogoPath) : null;
-  if (saleLogo) {
-    children.push(new Paragraph({
-      children: [new ImageRun({ data: saleLogo, transformation: { width: 166, height: 69 }, type: 'png' })],
-      spacing: { before: 0, after: 120 }
-    }));
-  }
-  children.push(new Paragraph({ children: [cvT('DRAWN BY:', { bold: true, underline: { type: UnderlineType.SINGLE } })], spacing: { before: 0, after: 80 } }));
-  children.push(new Paragraph({ children: [cvT(FIRM_NAME_TC, { bold: true })], spacing: { before: 0, after: 0 } }));
-  children.push(new Paragraph({ children: [cvT(firmConfig.firm_line2 || '')], spacing: { before: 0, after: 0 } }));
-  children.push(new Paragraph({ children: [cvT(firmConfig.firm_po || '')], spacing: { before: 0, after: 0 } }));
-  if (firmConfig.firm_tel)   children.push(new Paragraph({ children: [cvT('Tel: ' + firmConfig.firm_tel)],     spacing: { before: 0, after: 0 } }));
-  if (firmConfig.firm_email) children.push(new Paragraph({ children: [cvT('Email: ' + firmConfig.firm_email)], spacing: { before: 0, after: 0 } }));
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-
-  // ── SCHEDULE OF PARTICULARS ────────────────────────────────────────────────
-  children.push(centeredPara([antiqua('SCHEDULE OF PARTICULARS', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  children.push(spacer());
-
-  const noBorder = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
-  const cellBorder = { top: { style: BorderStyle.SINGLE, size: 4, color: '999999' }, bottom: { style: BorderStyle.SINGLE, size: 4, color: '999999' }, left: { style: BorderStyle.SINGLE, size: 4, color: '999999' }, right: { style: BorderStyle.SINGLE, size: 4, color: '999999' } };
-  const schedCell = (text, bold = false) => new TableCell({
-    children: [new Paragraph({ children: [antiqua(text, { bold })], spacing: { before: 80, after: 80 }, indent: { left: 80 } })],
-    borders: cellBorder,
-    width: { size: 35, type: WidthType.PERCENTAGE },
-  });
-  const schedValCell = (text) => new TableCell({
-    children: [new Paragraph({ children: [antiqua(text)], spacing: { before: 80, after: 80 }, indent: { left: 80 } })],
-    borders: cellBorder,
-    width: { size: 65, type: WidthType.PERCENTAGE },
-  });
-  const schedRow = (label, value) => new TableRow({ children: [schedCell(label, true), schedValCell(value)] });
-
-  const purchaserId = d.purchaser_id || '';
-  const purchaserEmail = d.purchaser_email || '';
-  const purchaserPhone = d.purchaser_phone || '';
-
-  children.push(new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: [
-      schedRow('I. The Purchaser', `Name: ${d.purchaser_name || ''}\nID Number: ${purchaserId}\nEmail: ${purchaserEmail}\nMobile Number: ${purchaserPhone}`),
-      schedRow('II. The Apartment / Property', d.apartment_description || d.property_lr_no || ''),
-      schedRow('III. Purchase Price', `Kenya Shillings ${d.purchase_price_words || ''} (Kshs. ${d.purchase_price_figures || ''}/-) Only`),
-      schedRow('IV. Development', d.development_description || ''),
-      schedRow('V. Payment Plan', d.payment_plan || `An initial deposit of Kenya Shillings ${d.deposit_words || ''} (Kshs. ${d.deposit_figures || ''}/-) Only; the balance of Kenya Shillings ${d.balance_words || ''} (Kshs. ${d.balance_figures || ''}/-) Only to be paid in full on or before ${d.completion_date || ''}.`),
-    ]
-  }));
-  children.push(spacer());
-  children.push(new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
-
-  // ── BODY ───────────────────────────────────────────────────────────────────
-  children.push(centeredPara([antiqua('AGREEMENT FOR SALE', { bold: true, underline: { type: UnderlineType.SINGLE } })]));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua('THIS AGREEMENT is made as of the '),
-    antiqua(d.date || '___', { bold: true }),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('BETWEEN:', { bold: true })]));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua(`${vendor}${vendorReg ? ` (Company Registration Number ${vendorReg})` : ''}, of Post Office Box Number ${vendorPO} (the `),
-    antiqua('"Vendor"', { bold: true }),
-    antiqua('); and'),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua('The Purchaser, being the person(s) whose particulars are set out in Section I of the Schedule of Particulars (the '),
-    antiqua('"Purchaser"', { bold: true }),
-    antiqua(').'),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('WHEREAS:', { bold: true })]));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua(`The Vendor is the registered proprietor of all that property known as ${d.property_lr_no || ''} situate at ${d.property_location || ''} (the `),
-    antiqua('"Land"', { bold: true }), antiqua(').'),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua('The Vendor has agreed to sell, and the Purchaser has agreed to purchase, the property described in the Schedule of Particulars at the Purchase Price and upon the terms and conditions hereinafter appearing.'),
-  ]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('NOW IT IS HEREBY AGREED as follows:', { bold: true })]));
-  children.push(spacer());
-
-  // ── Key clauses ────────────────────────────────────────────────────────────
-  children.push(clauseHeading('1', 'PURCHASE PRICE AND PAYMENT'));
-  children.push(spacer());
-  children.push(subClause('1.1', [
-    antiqua(`The Purchase Price is Kenya Shillings ${d.purchase_price_words || ''} (Kshs. ${d.purchase_price_figures || ''}/-) Only, payable as set out in Section V of the Schedule of Particulars.`),
-  ]));
-  children.push(subClause('1.2', [
-    antiqua('Time shall be of the essence with regard to the payment of the Purchase Price. Failure to make payment on the due date shall entitle the Vendor to terminate this Agreement and forfeit the deposit paid.'),
-  ]));
-  children.push(spacer());
-
-  children.push(clauseHeading('2', 'COMPLETION'));
-  children.push(spacer());
-  children.push(subClause('2.1', [
-    antiqua(`The Completion Date shall be ${d.completion_date || '___'}, or such other date as the parties may agree in writing.`),
-  ]));
-  children.push(subClause('2.2', [
-    antiqua('On the Completion Date, upon full payment of the Purchase Price, the Vendor shall execute and deliver to the Purchaser all documents necessary to effect registration of the transfer of the Property in the name of the Purchaser.'),
-  ]));
-  children.push(spacer());
-
-  children.push(clauseHeading('3', 'STAMP DUTY AND COSTS'));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua('      Stamp duty, registration costs, and any other government levies payable on the transfer of the Property shall be for the account of the Purchaser. Each party shall bear the fees of its own legal advisers.'),
-  ]));
-  children.push(spacer());
-
-  children.push(clauseHeading('4', 'GOVERNING LAW'));
-  children.push(spacer());
-  children.push(bodyPara([
-    antiqua('      This Agreement shall be governed by and construed in accordance with the laws of the Republic of Kenya.'),
-  ]));
-  children.push(spacer());
-
-  // ── IN WITNESS ─────────────────────────────────────────────────────────────
-  children.push(bodyPara([antiqua('IN WITNESS WHEREOF this Agreement has been duly executed by the parties as of the day and year first above written.')]));
-  children.push(spacer());
-  children.push(spacer());
-
-  // Vendor execution (company)
-  children.push(bodyPara([antiqua(`SIGNED for and on behalf of ${vendor.toUpperCase()}`, { bold: true })]));
-  children.push(spacer());
-  children.push(bodyPara([antiqua('Director / Authorized Signatory: ___________________________')]));
-  children.push(bodyPara([antiqua('Name: ___________________________')]));
-  children.push(bodyPara([antiqua('Date: ___________________________')]));
-  children.push(spacer());
-
-  // Purchaser execution (individual)
-  children.push(buildExecutionBlock(d.purchaser_name, 'Purchaser'));
-
-  return children;
-}
-
 function buildDocumentChildren() {
+  const kids = buildDocumentChildrenInner();
+  // A firm that puts a cover sheet on its registry instruments supplies it as a firm extension.
+  if ((LRA_TYPES.includes(d.doc_type) || d._isGenericLraForm) && d.cover_page !== false) {
+    const cover = loadFirmExtension('registry-cover');
+    const sheet = cover ? cover(extensionContext()) : null;
+    if (sheet != null && !Array.isArray(sheet)) refuse('firm extension registry-cover.js returned something other than a list of paragraphs.');
+    if (Array.isArray(sheet) && sheet.length) {
+      kids.unshift(...sheet, new Paragraph({ children: [new PageBreak()], spacing: { before: 0, after: 0 } }));
+      REGISTRY_COVER = true;
+    }
+  }
+  // Only the builders that draw no letterhead of their own need the first-page spacer added here.
+  if (['undertaking_letter', 'undertaking_request'].includes(d.doc_type) && LH_MODE === 'image') kids.unshift(FirmLetter.firstPageSpacer());
+  return kids;
+}
+function buildDocumentChildrenInner() {
   switch (d.doc_type) {
     case 'sale_agreement':
       return buildSaleAgreement();
@@ -3496,18 +3052,25 @@ function buildDocumentChildren() {
       return buildEngagementLetter();
     case 'fee_note':
       return buildFeeNote();
-    case 'developer_sale_agreement':
-      return buildDeveloperSaleAgreement();
     default: {
-      // Try schema-driven generic LRA form
-      const schemaPath = path.join(__dirname, 'form-schemas', d.doc_type + '.json');
-      if (fs.existsSync(schemaPath)) {
-        const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
-        d._isGenericLraForm = true; // trained registry form: use the clean page-number footer, not the firm letterhead
-        return buildGenericLRAForm(schema);
+      // Library form served from scripts/form-schemas/<doc_type>.json
+      const schema = loadFormSchema(d.doc_type);
+      if (!schema) {
+        // Not a built-in and not a registry form: the firm's own precedent, if its build has one.
+        const ext = loadFirmExtension(d.doc_type);
+        if (ext) {
+          const r = ext(extensionContext());
+          if (!r || !Array.isArray(r.children) || r.children.length === 0) refuse(`firm extension ${d.doc_type}.js returned no document body.`);
+          const own = new Set(FirmLetter.numberingConfig.map(n => n.reference));
+          for (const n of (r.numbering || [])) if (own.has(n.reference)) refuse(`firm extension ${d.doc_type}.js redefines the numbering "${n.reference}" the generator already uses.`);
+          EXT_RESULT = r;
+          d._isFirmExtension = true; // the firm's own instrument: plain page numbers, not the letterhead
+          return r.children;
+        }
       }
-      console.error(`Unknown doc_type: ${d.doc_type}`);
-      process.exit(1);
+      if (!schema) refuse(`unknown doc_type "${d.doc_type}". Run node scripts/form-schemas/build-index.js and check _index.json for the forms this plugin drafts.`);
+      d._isGenericLraForm = true; // registry form: use the clean page-number footer, not the firm letterhead
+      return buildGenericLRAForm(schema);
     }
   }
 }
@@ -3518,136 +3081,43 @@ const rawChildren = buildDocumentChildren();
 // Flatten — buildExecutionBlock returns arrays of items
 const flatChildren = rawChildren.flat(Infinity);
 
-// MAK cover-page page border (firstPage only, asymmetric thick-thin/thin-thick).
-// Applied only when project_slug is present AND the project's cover_page_border flag is true.
-// docx-js shape: page.borders contains pageBorders (display/offsetFrom) + per-edge.
-let pageBordersConfig = undefined;
-if (d.doc_type === 'developer_sale_agreement' && d.project_slug) {
-  const projectForBorder = loadDeveloperProject(d.project_slug);
-  if (projectForBorder && projectForBorder.cover_page_border === true) {
-    pageBordersConfig = {
-      pageBorders: { display: 'allPages', offsetFrom: 'page' },
-      pageBorderTop:    { style: BorderStyle.THICK_THIN_SMALL_GAP, size: 12, space: 24, color: 'auto' },
-      pageBorderLeft:   { style: BorderStyle.THICK_THIN_SMALL_GAP, size: 12, space: 24, color: 'auto' },
-      pageBorderBottom: { style: BorderStyle.THIN_THICK_SMALL_GAP, size: 12, space: 24, color: 'auto' },
-      pageBorderRight:  { style: BorderStyle.THIN_THICK_SMALL_GAP, size: 12, space: 24, color: 'auto' },
-    };
-  }
-}
-
-// ─── MAK developer-sale-agreement numbering (Word auto-numbering) ───────────
-// Three schemes that coexist in the document:
-//   - mak-main-clauses: 1. / 1.1 / 1.1.1 — top-level + 2 sub-levels, restart per parent
-//   - mak-recitals:     (A) (B) (C) (D) — single level UPPER_LETTER in parens
-//   - mak-parties:      (1) (2)         — single level DECIMAL in parens for BETWEEN block
-// Activated only when at least one Paragraph references one. Safe to always include.
-const makNumberingConfig = {
-  config: [
-    {
-      reference: 'mak-main-clauses',
-      levels: [
-        {
-          level: 0,
-          format: LevelFormat.DECIMAL,
-          text: '%1.',
-          alignment: AlignmentType.START,
-          style: {
-            run: { font: 'Tw Cen MT', size: 24, bold: true, color: BLACK },
-            paragraph: { indent: { left: 720, hanging: 720 } },
-          },
-        },
-        {
-          level: 1,
-          format: LevelFormat.DECIMAL,
-          text: '%1.%2',
-          alignment: AlignmentType.START,
-          isLegalNumberingStyle: true,
-          style: {
-            run: { font: 'Tw Cen MT', size: 24, color: BLACK },
-            paragraph: { indent: { left: 1080, hanging: 720 } },
-          },
-        },
-        {
-          level: 2,
-          format: LevelFormat.DECIMAL,
-          text: '%1.%2.%3',
-          alignment: AlignmentType.START,
-          isLegalNumberingStyle: true,
-          style: {
-            run: { font: 'Tw Cen MT', size: 24, color: BLACK },
-            paragraph: { indent: { left: 1440, hanging: 720 } },
-          },
-        },
-      ],
-    },
-    {
-      reference: 'mak-recitals',
-      levels: [
-        {
-          level: 0,
-          format: LevelFormat.UPPER_LETTER,
-          text: '(%1)',
-          alignment: AlignmentType.START,
-          style: {
-            run: { font: 'Tw Cen MT', size: 24, color: BLACK },
-            paragraph: { indent: { left: 720, hanging: 720 } },
-          },
-        },
-      ],
-    },
-    {
-      reference: 'mak-parties',
-      levels: [
-        {
-          level: 0,
-          format: LevelFormat.DECIMAL,
-          text: '(%1)',
-          alignment: AlignmentType.START,
-          style: {
-            run: { font: 'Tw Cen MT', size: 24, color: BLACK },
-            paragraph: { indent: { left: 720, hanging: 720 } },
-          },
-        },
-      ],
-    },
-  ],
-};
-
 const doc = new Document({
   styles: {
     default: {
       document: {
-        run: { font: FONT_BODY, size: 24, color: BLACK },
+        run: { font: 'Book Antiqua', size: 24, color: BLACK },
         paragraph: { spacing: { after: 0, line: 240 } }
       }
     }
   },
-  numbering: makNumberingConfig,
+  numbering: { config: FirmLetter.numberingConfig.concat((EXT_RESULT && EXT_RESULT.numbering) || []) },
   sections: [
-    {
+    (LETTERHEAD_DOCS.includes(d.doc_type) && LH_MODE === 'image')
+      ? Object.assign(FirmLetter.sectionProps(), { children: flatChildren })   // header on page one, footer on every page, margins clear of both
+      : {
       properties: {
-        ...( ['conveyance_letter', 'engagement_letter'].includes(d.doc_type) ? { titlePage: true } : {} ),
+        ...(REGISTRY_COVER ? { titlePage: true } : {}),
         page: {
           size: { width: A4_W, height: A4_H },
           margin: {
             top: MARGIN_TOP,
             right: MARGIN_SIDE,
             bottom: MARGIN_BOTTOM,
-            left: MARGIN_SIDE,
-            header: 864
+            left: MARGIN_SIDE
           },
-          ...(pageBordersConfig ? { borders: pageBordersConfig } : {}),
+          ...(EXT_RESULT && EXT_RESULT.pageBorders ? { borders: EXT_RESULT.pageBorders } : {}),
         }
       },
-      ...( ['conveyance_letter', 'engagement_letter'].includes(d.doc_type) && LH_HEADER_IMG
-        ? { headers: { first: buildFirstPageLetterhead() } }
-        : {} ),
-      ...(!['sale_agreement', 'developer_sale_agreement'].includes(d.doc_type) && !(LRA_TYPES.includes(d.doc_type) || d._isGenericLraForm) && {
-        footers: {
-          default: buildLetterheadFooter(),
-          ...(['conveyance_letter', 'engagement_letter'].includes(d.doc_type) ? { first: buildLetterheadFooter() } : {})
-        },
-      }),
+      // A nine-page agreement signed page by page needs its pages numbered; the sale
+      // agreement used to carry no footer at all. It takes the plain page number, not
+      // the letterhead footer, because it is not printed on the firm's letterhead.
+      footers: {
+        default: (LRA_TYPES.includes(d.doc_type) || d._isGenericLraForm || d.doc_type === 'sale_agreement' || d._isFirmExtension)
+          ? buildPageNumberFooter()
+          : buildLetterheadFooter(),
+        // A cover sheet carries no page number.
+        ...(REGISTRY_COVER ? { first: new Footer({ children: [new Paragraph({ children: [] })] }) } : {}),
+      },
       children: flatChildren
     }
   ]

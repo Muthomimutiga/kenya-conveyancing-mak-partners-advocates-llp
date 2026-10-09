@@ -1,0 +1,100 @@
+{
+  "form_id": "lra_30",
+  "form_number": "LRA 30",
+  "regulation": "(r. 46(1))",
+  "doc_title": "APPLICATION FOR PARTITION PURSUANT TO AN ORDER OF THE REGISTRAR",
+  "doc_title_official": "APPLICATION FOR PARTITION PURSUANT TO AN ORDER OF THE REGISTRAR",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-30-APPLICATION-FOR-PARTITION-PURSUANT-TO-AN-ORDER-OF-THE-REGISTRAR.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-30.txt"
+  },
+  "category": "application",
+  "when_used": "Tenants in common apply for the land to be partitioned in the manner a court order or an order of the Registrar directs.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Proprietor (s)",
+    "transferor_single": "Proprietor (s)"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument",
+      "value_blank": true
+    },
+    {
+      "label": "Proprietor (s)*",
+      "value_template": "{{tenants_details}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "This Application is made by {{applicant_names}}"
+    },
+    {
+      "type": "plain",
+      "text": "Name of the applicant(s) the tenant(s) in common of the land comprised in the above-mentioned Title."
+    },
+    {
+      "type": "plain",
+      "text": "The applicant(s) HEREBY apply to the Registrar for the land to be partitioned in accordance to the Court order as follows:"
+    },
+    {
+      "type": "table",
+      "columns": [
+        "Cadastral Plan\nNumber",
+        "Title Number",
+        "Area (approximately)",
+        "Proprietor"
+      ],
+      "rows_field": "partition_schedule"
+    },
+    {
+      "type": "plain",
+      "text": "Dated this ………………………….. day of …………………..20.............."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor (s)",
+    "verification": true
+  },
+  "registry_block": [
+    "REGISTERED and SEALED this ……………….day of ………….20……",
+    "Seal…………………………………………………..",
+    "LAND REGISTRAR",
+    "Name:…………………………………… Registrar’s Stamp/ No…………",
+    "Signature:…………………………………………."
+  ],
+  "foot_notes": [
+    "Notes:",
+    "*Give details of all the tenants : name; PIN; ID/Passport No.; and Address **Delete whichever is not applicable.",
+    "***The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”",
+    "**** Attach a Cadastral Map and a Cadastral Plan."
+  ],
+  "custom_fields": [
+    {
+      "name": "tenants_details",
+      "label": "Details of all the tenants",
+      "prompt": "For every tenant in common: name, PIN, ID or Passport number and address, numbered 1, 2 and 3 as the form prints them",
+      "required": true
+    },
+    {
+      "name": "applicant_names",
+      "label": "Name of the applicant(s)",
+      "prompt": "Full names of the tenants in common making this application",
+      "required": true
+    },
+    {
+      "name": "partition_schedule",
+      "label": "How the land is to be partitioned",
+      "prompt": "The parcels as the order directs them to stand after the partition. One parcel per line, the cells separated by a pipe: cadastral plan number | title number | area (approximately) | proprietor",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

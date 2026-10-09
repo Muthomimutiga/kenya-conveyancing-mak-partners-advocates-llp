@@ -1,0 +1,82 @@
+{
+  "form_id": "lra_40",
+  "form_number": "LRA 40",
+  "regulation": "(r. 56(3))",
+  "doc_title": "APPLICATION FOR REGISTRATION AS PROPRIETOR JOINTLY WITH OTHER PERSONAL REPRESENTATIVE(S)",
+  "doc_title_official": "APPLICATION FOR REGISTRATION AS PROPRIETOR JOINTLY WITH OTHER PERSONAL REPRESENTATIVE(S)",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-40-APPLICATION-FOR-REGISTRATION-AS-PROPRIETOR-JOINTLY-WITH-OTHER-PERSONAL-REPRESENTATIVES.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-40.txt"
+  },
+  "category": "application",
+  "when_used": "A personal representative applies to be registered as proprietor jointly with the other personal representatives of a deceased proprietor's estate.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant(s )",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application:",
+      "value_blank": true
+    },
+    {
+      "label": "Applicant(s )",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Address:",
+      "value_template": "{{applicant_address}}"
+    },
+    {
+      "label": "ID/Passport/No.",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Joint Proprietor(s) on the Register",
+      "value_template": "{{joint_proprietors_on_register}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant (s) being the Personal Representatives HEREBY APPLIES to the Land Registrar to be registered as proprietor(s) jointly with the other Personal Representatives of the above-mentioned property."
+    },
+    {
+      "type": "plain",
+      "text": "The Applicant(s) HEREBY PRODUCES for registration by the Land Registrar a certified copy of the Grant of Letters of Administration or Grant of Probate."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true,
+    "verification_heading": "Certificate of Verification under Section 45 of the Land Registration Act"
+  },
+  "registry_block": [
+    "LAND REGISTRAR",
+    "Name:",
+    "Signature:"
+  ],
+  "custom_fields": [
+    {
+      "name": "applicant_address",
+      "label": "Address of the Applicant",
+      "prompt": "Postal address of the personal representative making this application",
+      "required": true
+    },
+    {
+      "name": "joint_proprietors_on_register",
+      "label": "Joint proprietors on the register",
+      "prompt": "Full name of every joint proprietor as the register shows them, numbered 1 and 2 as the form prints them",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

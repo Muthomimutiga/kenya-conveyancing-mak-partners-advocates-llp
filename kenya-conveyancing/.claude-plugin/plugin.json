@@ -1,9 +1,17 @@
 {
   "name": "kenya-conveyancing",
-  "description": "Full conveyancing cycle automation for Kenyan practitioners — 9-milestone tracking from instructions to title, document drafting at each stage, official search expiry alerts, and client updates.",
+  "version": "2.2.0",
+  "description": "Full conveyancing cycle automation for Kenyan advocates: nine-milestone tracking from instructions to title, document drafting at each stage including every practitioner LRA form, official-search expiry alerts, and client updates.",
   "author": {
-    "name": "Robin Muthomi Mutiga",
-    "organization": "Robin Advisory Group"
+    "name": "Robin Advisory Group"
   },
-  "keywords": ["kenya", "conveyancing", "land", "transfer", "LRA", "airtable", "title"]
+  "keywords": [
+    "kenya",
+    "conveyancing",
+    "land",
+    "transfer",
+    "LRA",
+    "airtable",
+    "title"
+  ]
 }

@@ -1,0 +1,93 @@
+{
+  "form_id": "lra_82",
+  "form_number": "LRA82",
+  "regulation": "(r. 84)",
+  "doc_title": "CONSENT OF LESSEE OR LENDER ON CANCELLATION OF EASEMENT/ ANALOGOUS RIGHT BY THE PERSON OCCUPYING DOMINANT LAND",
+  "doc_title_official": "CONSENT OF LESSEE OR LENDER ON CANCELLATION OF EASEMENT/ ANALOGOUS RIGHT BY THE PERSON OCCUPYING DOMINANT LAND",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-82-CONSENT-OF-LESSEE-OR-LENDER-ON-CANCELLATION-OF-EASEMENT-ANALOGOUS-RIGHT-BY-THE-PERSON-OCCUPYING-DOMINANT-LAND.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-82.txt"
+  },
+  "category": "consent",
+  "when_used": "A lessee or lender entitled to the benefit of an easement consents to its cancellation by the person occupying the dominant land, and the consent is lodged with the LRA 81 cancellation.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "lessee/lender",
+    "transferor_single": "lessee/lender"
+  },
+  "filing_box": [
+    "Date Received\n………………",
+    "Presentation Book\nNo………………",
+    "Official Fees Paid\nKshs.",
+    "Receipt No."
+  ],
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Easement/ Analogous right",
+      "value_field": "date_of_easement"
+    },
+    {
+      "label": "Dominant Land",
+      "value_field": "dominant_land"
+    },
+    {
+      "label": "Proprietor of Dominant Land",
+      "value_field": "proprietor_of_dominant_land"
+    },
+    {
+      "label": "The Proprietor(s)/Grantors:",
+      "value_field": "proprietors_grantors"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "I, {{vendor_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "being the lessee/lender for the time being entitled to the benefit"
+    },
+    {
+      "type": "plain",
+      "text": "from the easement/analogous right in respect to the dominant land do hereby consent to the cancellation of the easement/analogous right application made by the person occupying the dominant land."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "lessee/lender",
+    "verification": false
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "date_of_easement",
+      "label": "Date of the easement or analogous right",
+      "prompt": "The date the easement or analogous right was granted or created",
+      "required": true
+    },
+    {
+      "name": "dominant_land",
+      "label": "Dominant land",
+      "prompt": "The land that enjoys the benefit of the easement, by title number and location",
+      "required": true
+    },
+    {
+      "name": "proprietor_of_dominant_land",
+      "label": "Proprietor of the dominant land",
+      "prompt": "Full name of the registered proprietor of the dominant land",
+      "required": true
+    },
+    {
+      "name": "proprietors_grantors",
+      "label": "The Proprietor(s)/Grantors",
+      "prompt": "Full name(s) of the proprietor(s) or grantor(s) who granted the easement",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

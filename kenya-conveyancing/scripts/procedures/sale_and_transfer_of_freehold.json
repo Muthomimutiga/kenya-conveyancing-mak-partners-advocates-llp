@@ -1,0 +1,235 @@
+{
+  "transaction_id": "sale_and_transfer_of_freehold",
+  "name": "Sale and transfer of a freehold title",
+  "summary": "A registered proprietor sells absolute ownership of a parcel to a purchaser. The commonest transaction in Kenyan conveyancing.",
+  "triggers": [
+    "The title is freehold, held absolutely",
+    "The transaction is a sale for consideration",
+    "The proprietor is alive and transferring in their own right"
+  ],
+  "not_this_if": [
+    {
+      "fact": "The title is leasehold",
+      "use": "sale_and_transfer_of_leasehold",
+      "why": "A leasehold title transfers on LRA 63 and engages the lessor's consent under section 55, which a freehold does not."
+    },
+    {
+      "fact": "The proprietor has died",
+      "use": "transfer_by_personal_representative_to_beneficiary",
+      "why": "The estate transfers through the personal representative under section 61, not by the deceased."
+    },
+    {
+      "fact": "The transfer is a gift or on transmission rather than a sale",
+      "use": null,
+      "why": "The instrument is still LRA 33, but the consideration, the stamp duty treatment and the Land Control Act analysis differ. Treat it as a separate matter type."
+    }
+  ],
+  "statutory_basis": [
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.45(1)",
+      "quote": "a person executing an instrument shall",
+      "effect": "Every party executing a registrable instrument must appear before the Registrar or other prescribed person, with a credible witness to establish identity unless already known, and that officer certifies the execution. This is why LRA 33 carries the verification block and why a transfer signed in an advocate's office without it is not registrable."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.45(2)",
+      "quote": "ascertain whether the person freely and voluntarily executed the instrument, and shall complete thereon a certificate to that effect",
+      "effect": "The certifying officer is certifying free and voluntary execution, not merely witnessing a signature. That is the substance of the section 45 block."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.45(3)",
+      "quote": "The Registrar may dispense with verification under this section",
+      "effect": "Verification can be dispensed with in three cases, including where the instrument was electronically processed and executed by the parties consenting to it. Dispensation is the Registrar's to give, not the advocate's to assume."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.46",
+      "quote": "An instrument required by law to be stamped shall not be accepted for registration unless it is stamped",
+      "effect": "Stamping is a gate on registration, not a step that can follow it. An unstamped transfer is not merely irregular, it will be turned away at the registry."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.59",
+      "quote": "no transfer, assignment, lease or sublease shall be registered until the written consent of the lender has been produced to the Registrar",
+      "effect": "Where the charge restricts dealing, nothing registers until the lender's written consent is produced. In practice the lender either discharges the charge or consents to the transfer subject to it. Those are alternatives, not a pair."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.6(1)",
+      "quote": "is void for all purposes unless the land control board for the land control area or division in which the land is situated has given its consent in respect of that transaction in accordance with this Act",
+      "effect": "If the land is agricultural and within a land control area, a sale without Board consent is void. Not voidable, and registration does not cure it."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.8(1)",
+      "quote": "within six months of the making of the agreement for the controlled transaction",
+      "effect": "The clock runs from the agreement, not from completion. Six months, extendable only by the High Court for sufficient reason."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.7",
+      "quote": "that money or consideration shall be recoverable as a debt by the person who paid it from the person to whom it was paid",
+      "effect": "When the transaction goes void, the purchase price becomes a debt claim against the vendor. The client's money is not lost in theory and is very hard to recover in practice."
+    },
+    {
+      "act": "Land Control Regulations",
+      "source": "land-control-regulations",
+      "provision": "r.2(1)",
+      "quote": "An application for consent to a controlled transaction shall be in Form 1 in the Schedule and be accompanied by a fee of one thousand shillings",
+      "effect": "The application is a prescribed form with a prescribed fee, not a letter. Regulation 3 then gives the board's consent in Form 2, in duplicate, and the original marked Registration Copy must accompany the instrument when it is presented for registration."
+    }
+  ],
+  "bundle": [
+    {
+      "form_id": "lcb_1",
+      "role": "Application for the consent of the land control board, in the prescribed form",
+      "order": -1,
+      "required": false,
+      "condition": "The land is agricultural and within a land control area",
+      "why": "Section 8(1) of the Land Control Act requires the application to be made in the prescribed form, which is Form 1 in the Schedule to the Land Control Regulations, in triplicate, with the prescribed fee. A letter of application is not that form. It goes before everything else because without the consent there is no transaction to register."
+    },
+    {
+      "form_id": "lra_9",
+      "role": "Cover application listing the instruments in order of priority",
+      "order": 1,
+      "required": true,
+      "why": "Everything presented for registration goes under a general application, and the order on it is the order of registration."
+    },
+    {
+      "form_id": "lra_58",
+      "role": "Discharge of the existing charge by the chargee",
+      "order": 2,
+      "required": false,
+      "condition": "The title is charged and the charge is being redeemed on completion",
+      "alternative_to": "lra_34",
+      "why": "Registers first, so the transfer takes a clean title. The commoner of the two routes on a sale."
+    },
+    {
+      "form_id": "lra_34",
+      "role": "Consent of the encumbrancer to the transfer",
+      "order": 2,
+      "required": false,
+      "condition": "The charge is not being redeemed and the purchaser takes subject to it, or the lender consents to the dealing without discharging",
+      "alternative_to": "lra_58",
+      "why": "Section 59 stops registration until the lender's written consent is produced. Where the charge survives completion this is the instrument that satisfies it. Drafting both a discharge and a consent for the same charge means one of them is wrong."
+    },
+    {
+      "form_id": "lra_33",
+      "role": "Transfer of interest in land",
+      "order": 3,
+      "required": true,
+      "why": "The operative instrument. It passes the title."
+    }
+  ],
+  "drafted_together": [
+    {
+      "forms": [
+        "lra_9",
+        "lra_58",
+        "lra_33"
+      ],
+      "why": "One lodgement on completion. The discharge must register before the transfer, which is what the order on the general application records."
+    }
+  ],
+  "alternatives": [
+    {
+      "choose_between": [
+        "lra_58",
+        "lra_34"
+      ],
+      "decided_by": "Whether the charge is redeemed on completion or survives it",
+      "why": "Both answer section 59. A discharge extinguishes the charge; a consent lets the transfer register while the charge stands. Only one of them is right for a given matter."
+    }
+  ],
+  "consents": [
+    {
+      "name": "Land Control Board consent",
+      "when_required": "The land is agricultural and lies within a land control area",
+      "when_not_required": "The land is not agricultural, or lies outside a land control area. Municipal and township plots are the usual case.",
+      "authority": "The land control board for the area or division where the land is situated",
+      "provision": "Land Control Act s.6(1)",
+      "deadline": "Six months from the making of the agreement, extendable by the High Court for sufficient reason",
+      "deadline_provision": "Land Control Act s.8(1)",
+      "consequence_if_missed": "The sale is void for all purposes under s.6(1) and the price becomes recoverable as a debt under s.7. This is the single most expensive mistake available in Kenyan conveyancing, and it is made by treating the question as a formality."
+    },
+    {
+      "name": "Lender's written consent, or a discharge",
+      "when_required": "The charge restricts dealing with the land, which is the normal term",
+      "authority": "The chargee",
+      "provision": "Land Registration Act s.59",
+      "deadline": null,
+      "consequence_if_missed": "Nothing registers. The transfer sits at the registry until the consent or the discharge is produced."
+    }
+  ],
+  "clearances": [
+    {
+      "name": "Land rates clearance",
+      "authority": "The county government",
+      "when_required": "Where the parcel attracts rates"
+    },
+    {
+      "name": "Land rent clearance",
+      "authority": "The Ministry or the county, depending on tenure",
+      "when_required": "Where rent is payable. Uncommon on a pure freehold."
+    }
+  ],
+  "sequence": [
+    "Official search before anything else, so the encumbrances on the register are known rather than assumed.",
+    "Establish whether the land is agricultural and within a land control area. That question decides whether the whole transaction is capable of being valid.",
+    "Apply for Land Control Board consent if required, watching the six month clock from the agreement.",
+    "Settle with the chargee whether the charge is discharged or consented to. One or the other, never both.",
+    "Obtain the rates and rent clearances.",
+    "Assess and pay stamp duty. Section 46 makes stamping a gate on registration.",
+    "Execute with section 45 verification.",
+    "Lodge the bundle, discharge before transfer."
+  ],
+  "traps": [
+    {
+      "trap": "Treating the Land Control Board question as a formality, or leaving it until completion",
+      "why_wrong": "The six month clock runs from the agreement, not from completion, and the consequence of missing it is a void transaction rather than a delay.",
+      "provision": "Land Control Act s.6(1) and s.8(1)"
+    },
+    {
+      "trap": "Drafting both a discharge and a consent for the same charge",
+      "why_wrong": "They are alternatives. Lodging both tells the registry the advocate has not decided what is happening to the charge.",
+      "provision": "Land Registration Act s.59"
+    },
+    {
+      "trap": "Executing the transfer in the office and lodging it without the section 45 certificate",
+      "why_wrong": "Section 45 requires appearance before the Registrar or other prescribed person, who certifies free and voluntary execution. Only the Registrar can dispense with it, and only in the three cases in subsection (3).",
+      "provision": "Land Registration Act s.45"
+    },
+    {
+      "trap": "Lodging before stamping, expecting to stamp later",
+      "why_wrong": "Section 46 makes stamping a condition of acceptance for registration.",
+      "provision": "Land Registration Act s.46"
+    }
+  ],
+  "practice_varies": [
+    {
+      "step": "Order of lodgement",
+      "note": "Registries differ on whether the discharge and transfer may be presented together or must be lodged and registered in sequence. Record what your own registry accepts."
+    },
+    {
+      "step": "Rates clearance validity",
+      "note": "The period a clearance certificate is treated as current varies by county."
+    }
+  ],
+  "milestone": 7,
+  "verified_by": {
+    "status": "APPROVED",
+    "by": "Robin Muthomi Mutiga, Advocate",
+    "date": "2026-09-23",
+    "note": "Bundles, sequence, alternatives and traps approved. Every statutory quote is proved against cached primary law by scripts/procedures/lint.js on each build; the readings remain ED's, approved by the advocate above."
+  }
+}

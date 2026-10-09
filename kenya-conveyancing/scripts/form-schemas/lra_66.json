@@ -1,0 +1,95 @@
+{
+  "form_id": "lra_66",
+  "form_number": "LRA 66",
+  "regulation": "(r. 79(2))",
+  "regulation_official": "(r. 79(2)",
+  "doc_title": "APPLICATION FOR REGISTRATION OF AN INHIBITION ORDER",
+  "doc_title_official": "APPLICATION FOR REGISTRATION OF AN INHIBITION ORDER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-66-APPLICATION-FOR-REGISTRATION-OF-AN-INHIBITION-ORDER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-66.txt"
+  },
+  "category": "application",
+  "when_used": "A person in whose favour a court has made an inhibition order applies to have the order registered against the title, attaching a sealed copy of it.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "The Applicant: Give full name(s) ID/Passport number and address. if corporate include the registered number, as well as address for service in Kenya",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "Address for service in Kenya",
+      "value_field": "applicant_address"
+    },
+    {
+      "label": "Court Order Give details of the Case Number and parties",
+      "value_field": "court_order_details"
+    },
+    {
+      "label": "Issued under Case Number",
+      "value_field": "case_number"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES for the registration of the above Court Order issued on the {{order_date}} in respect of the above mentioned land."
+    },
+    {
+      "type": "plain",
+      "text": "A copy of the Court Order duly sealed is attached."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "applicant_address",
+      "label": "Address for service in Kenya",
+      "prompt": "Postal address within Kenya at which notices may be served on the applicant",
+      "required": true
+    },
+    {
+      "name": "court_order_details",
+      "label": "Details of the Court Order",
+      "prompt": "The court that made the inhibition order and the parties to the case, as the order names them",
+      "required": true
+    },
+    {
+      "name": "case_number",
+      "label": "Case number",
+      "prompt": "The number of the case the inhibition order was issued under",
+      "required": true
+    },
+    {
+      "name": "order_date",
+      "label": "Date of the Court Order",
+      "prompt": "The date the inhibition order was issued",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

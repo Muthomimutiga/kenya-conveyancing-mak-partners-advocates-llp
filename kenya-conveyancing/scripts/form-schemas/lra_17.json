@@ -1,0 +1,84 @@
+{
+  "form_id": "lra_17",
+  "form_number": "LRA 17",
+  "regulation": "(r. 28(4), 29(4))",
+  "doc_title": "DEED OF INDEMNITY",
+  "doc_title_official": "DEED OF INDEMNITY",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-17-DEED-OF-INDEMNITY.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-17.txt"
+  },
+  "category": "deed",
+  "when_used": "A company that is the registered proprietor indemnifies the Government against loss arising from the reconstruction of a deed file the land registry cannot trace, and seals the deed under its common seal.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Owner",
+    "transferor_single": "Owner"
+  },
+  "filing_box": "none",
+  "title_line": "none",
+  "detail_rows": [],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "THIS DEED OF INDEMNITY is made the ....................................... day of .............................."
+    },
+    {
+      "type": "plain",
+      "text": "two thousand and ……………./. by {{vendor_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "a limited liability company incorporated in the Republic of Kenya whose address is care of Post Office Box Number {{owner_po_box}} Nairobi in the said Republic (hereinafter called “the Owner”)."
+    },
+    {
+      "type": "plain",
+      "text": "W H E R E A S:-"
+    },
+    {
+      "type": "plain",
+      "text": "The Owner is registered as proprietor as owner from the Government of the Republic of Kenya of ALL THAT piece of land situate {{property_location}} (hereinafter called “the Property”)."
+    },
+    {
+      "type": "plain",
+      "text": "The Advocates for the Owner have applied for a search over the Property and have been informed by the Officers (hereinafter defined) that the Deed file relating to the Property cannot be traced at the Land Titles Registry and that to carry out a search, the said Deed File is required to be reconstructed for which purpose the Owner has been requested to issue this Deed of Indemnity."
+    },
+    {
+      "type": "plain",
+      "text": "The Owner has not caused and is in no way involved with the disappearance of the original Deed file"
+    },
+    {
+      "type": "plain",
+      "text": "The Owner is desirous of reconstructing the Deed File."
+    },
+    {
+      "type": "plain",
+      "text": "This Deed of Indemnity is supplemental to the Affidavit annexed hereto sworn by the Owner."
+    },
+    {
+      "type": "plain",
+      "text": "NOW THIS DEED WITNESSETH that the Owner shall indemnify and hold harmless the Government of the Republic of Kenya its officers and agents (“the Officers”) from and against all actions proceedings claims demands costs expenses and losses whatsoever arising from the reconstruction of the Deed file (“the Losses”) PROVIDED THAT the Losses arise out of a fraud or illegality on the part of the Owner and PROVIDED FURTHER THAT the indemnity contained herein shall determine on the date on which the Owner ceases to be the registered proprietor of the Property."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF the Owner has hereunto caused its Common Seal to be hereunto affixed the day and year first hereinbefore written."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "transferor",
+    "signer_label": "Owner",
+    "verification": false
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "owner_po_box",
+      "label": "Post Office Box Number of the Owner",
+      "prompt": "Postal box number of the Owner company. Pass the Owner itself in the party record as transferors: [{company_name, is_company: true, reg_no}] with vendor_name set to the same name, so the recital and the common seal block name one company",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

@@ -1,11 +1,31 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "mak-partners-advocates-plugins",
-  "owner": { "name": "MAK & Partners Advocates LLP" },
+  "version": "2.2.0",
+  "description": "Legal workflow plugins for MAK & Partners Advocates LLP, built and maintained by Robin Advisory Group.",
+  "owner": {
+    "name": "Robin Advisory Group",
+    "email": "robinmutiga@gmail.com"
+  },
   "plugins": [
     {
       "name": "kenya-conveyancing",
       "source": "./kenya-conveyancing",
-      "description": "Full conveyancing cycle automation for Kenyan advocates — 9-milestone tracking from instructions to title, document drafting at each stage, official search expiry alerts, and client updates."
+      "description": "Full conveyancing cycle automation for Kenyan advocates: nine-milestone tracking from instructions to title, document drafting at each stage including every practitioner LRA form, official-search expiry alerts, and client updates.",
+      "version": "2.2.0",
+      "author": {
+        "name": "Robin Advisory Group"
+      },
+      "category": "legal",
+      "keywords": [
+        "kenya",
+        "conveyancing",
+        "land",
+        "transfer",
+        "LRA",
+        "airtable",
+        "title"
+      ]
     }
   ]
 }

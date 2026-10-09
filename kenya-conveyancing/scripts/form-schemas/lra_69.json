@@ -1,0 +1,130 @@
+{
+  "form_id": "lra_69",
+  "form_number": "LRA 69",
+  "regulation": "(r. 80(4))",
+  "doc_title": "WITHDRAWAL OF CAUTION",
+  "doc_title_official": "WITHDRAWAL OF CAUTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-69-WITHDRAWAL-OF-CAUTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-69.txt"
+  },
+  "category": "withdrawal",
+  "when_used": "A cautioner withdraws a caution registered against a title, so that the entry is removed from the Encumbrances Section of the register.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Cautioner",
+    "transferor_single": "Cautioner",
+    "transferee": "Proprietor",
+    "transferee_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument of Withdrawal of Caution:",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Caution",
+      "value_field": "caution_date"
+    },
+    {
+      "label": "The Cautioner:",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN",
+      "value_field": "cautioner_pin"
+    },
+    {
+      "label": "Address",
+      "value_field": "cautioner_address"
+    },
+    {
+      "label": "The Proprietor:",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN",
+      "value_field": "proprietor_pin"
+    },
+    {
+      "label": "Address",
+      "value_field": "proprietor_address"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Cautioner HEREBY APPLIES to withdraw the Caution registered in Entry Number(s) {{entry_numbers}} on the Encumbrances Section of the Register."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this withdrawal of caution has been duly executed this........................…. day of……………………..20……………."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Cautioner",
+    "verification": true
+  },
+  "registry_block": "default",
+  "foot_notes": [
+    "Notes:",
+    "Give full names ID/Passport No.; PIN and Address"
+  ],
+  "custom_fields": [
+    {
+      "name": "caution_date",
+      "label": "Date of the Caution",
+      "prompt": "The date of the caution being withdrawn",
+      "required": true
+    },
+    {
+      "name": "cautioner_pin",
+      "label": "PIN of the Cautioner",
+      "prompt": "Personal Identification Number of the cautioner",
+      "required": true
+    },
+    {
+      "name": "cautioner_address",
+      "label": "Address of the Cautioner",
+      "prompt": "Postal address of the cautioner",
+      "required": true
+    },
+    {
+      "name": "proprietor_pin",
+      "label": "PIN of the Proprietor",
+      "prompt": "Personal Identification Number of the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "proprietor_address",
+      "label": "Address of the Proprietor",
+      "prompt": "Postal address of the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "entry_numbers",
+      "label": "Entry number of the Caution",
+      "prompt": "The entry number or numbers of the caution in the Encumbrances Section of the register",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

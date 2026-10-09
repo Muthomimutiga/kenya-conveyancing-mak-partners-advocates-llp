@@ -1,0 +1,182 @@
+{
+  "form_id": "lra_15",
+  "form_number": "LRA-15",
+  "regulation": "(r. 28(2), 29(2))",
+  "doc_title": "STATUTORY DECLARATION BY A BODY CORPORATE",
+  "doc_title_official": "STATUTORY DECLARATION BY A BODY CORPORATE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-15-STATUTORY-DECLARATION-BY-A-BODY-CORPORATE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-15.txt"
+  },
+  "category": "declaration",
+  "when_used": "A director swears for a company that its certificate of title or lease has been lost or destroyed, in support of an application for a replacement.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Declarant",
+    "transferor_single": "Declarant"
+  },
+  "title_line": "none",
+  "pre_title_lines": [
+    "IN THE MATTER OF AN APPLICATION FOR A",
+    "REPLACEMENT OF CERTIFICATE OF TITLE/LEASE",
+    "THE LAND REGISTRATION ACT",
+    "TITLE NUMBER: {{property_lr_no}}"
+  ],
+  "detail_rows": [],
+  "body_text": [
+    {
+      "type": "plain",
+      "text": "I, {{declarant_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "of National Identity Card Number [or Passport Number] {{declarant_id_number}}"
+    },
+    {
+      "type": "plain",
+      "text": "and of {{declarant_postal_address}}"
+    },
+    {
+      "type": "plain",
+      "text": "SOLEMNLY AND SINCERELY DECLARE as follows:-"
+    },
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "THAT I am a director of {{company_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "of {{company_address}}"
+    },
+    {
+      "type": "plain",
+      "text": "and Registration Number {{company_registration_no}}"
+    },
+    {
+      "type": "plain",
+      "text": "(“the Company”) and duly authorized to swear this affidavit on behalf of the Company."
+    },
+    {
+      "type": "numbered",
+      "number": 2,
+      "text": "THAT the Company is the registered proprietor of ALL THAT piece of land known as Title Number {{property_lr_no}} together with the improvements erected and being thereon (“the Property”). Attached herewith and marked {{exhibit_mark_search}} is an official search of the register relating to the Property issued within 30 days of this declaration by the {{land_registry}} Land registry on {{search_date}}."
+    },
+    {
+      "type": "numbered",
+      "number": 3,
+      "text": "THAT the title to the Property is comprised in a Certificate of Title/Lease."
+    },
+    {
+      "type": "numbered",
+      "number": 4,
+      "text": "THAT the original Certificate of Title/Lease relating to the Property has been lost and/or misplaced and despite all efforts to search for it among the Company’s records and documents, I have failed to trace or find the said Certificate of Title/Lease and I verily believe that the same has been lost and cannot be found. A Police Abstract reporting the loss of the said Certificate of Title/Lease is attached and marked “{{exhibit_mark_abstract}}”"
+    },
+    {
+      "type": "plain",
+      "text": "ALTERNATIVE *"
+    },
+    {
+      "type": "numbered",
+      "number": 5,
+      "text": "THAT the original Certificate of Title/Lease relating to the Property has been destroyed by {{cause_of_destruction}}. A Police Abstract reporting the destruction of the said Certificate of Title/Lease is attached and marked “{{exhibit_mark_abstract}}”"
+    },
+    {
+      "type": "numbered",
+      "number": 6,
+      "text": "THAT I hereby confirm that the said Certificate of Title/Lease has not been deposited by way of pledge or given as security for a loan to any person, firm, company, bank or any financial institution other than as stated in the official search."
+    },
+    {
+      "type": "numbered",
+      "number": 7,
+      "text": "THAT I shall return the Certificate of Title/Lease to the Land Registrar whenever the same is found."
+    },
+    {
+      "type": "numbered",
+      "number": 8,
+      "text": "THAT I make this declaration in support of an application made under the Land Registration Act 2012 to the Land Registrar seeking a replacement Certificate of Title/Lease in lieu of the aforesaid lost/destroyed document and make this declaration conscientiously believing the same to be true and according to the Oaths and Statutory Declarations Act."
+    },
+    {
+      "type": "plain",
+      "text": "*Delete whichever is not applicable."
+    }
+  ],
+  "execution": {
+    "mode": "declaration",
+    "signer": "transferor",
+    "signer_label": "Declarant",
+    "verification": false,
+    "verb": "declared"
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "declarant_name",
+      "label": "Name of the declarant",
+      "prompt": "Full name of the director swearing this declaration for the company",
+      "required": true
+    },
+    {
+      "name": "declarant_id_number",
+      "label": "Identity card or passport number of the declarant",
+      "prompt": "National Identity Card number of the declarant, or passport number where the declarant holds one",
+      "required": true
+    },
+    {
+      "name": "declarant_postal_address",
+      "label": "Postal address of the declarant",
+      "prompt": "Postal address of the declarant: box number, code, town and country",
+      "required": true
+    },
+    {
+      "name": "company_name",
+      "label": "Name of the Company",
+      "prompt": "Registered name of the body corporate that is the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "company_address",
+      "label": "Address of the Company",
+      "prompt": "Registered or postal address of the Company",
+      "required": true
+    },
+    {
+      "name": "company_registration_no",
+      "label": "Registration number of the Company",
+      "prompt": "Company registration number, for example CPR/2010/123456",
+      "required": true
+    },
+    {
+      "name": "exhibit_mark_search",
+      "label": "Exhibit mark for the official search",
+      "prompt": "The mark the official search is annexed under, for example RM1",
+      "required": true
+    },
+    {
+      "name": "land_registry",
+      "label": "Land registry that issued the search",
+      "prompt": "The land registry the official search was issued by, for example Nairobi",
+      "required": true
+    },
+    {
+      "name": "search_date",
+      "label": "Date of the official search",
+      "prompt": "The date the official search was issued, within 30 days of this declaration",
+      "required": true
+    },
+    {
+      "name": "exhibit_mark_abstract",
+      "label": "Exhibit mark for the Police Abstract",
+      "prompt": "The mark the Police Abstract is annexed under, for example RM2",
+      "required": true
+    },
+    {
+      "name": "cause_of_destruction",
+      "label": "How the title was destroyed",
+      "prompt": "What destroyed the certificate of title or lease, for example fire at the Company's offices",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": false
+}

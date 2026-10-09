@@ -1,0 +1,77 @@
+{
+  "form_id": "lra_34",
+  "form_number": "LRA 34",
+  "regulation": "(r. 50)",
+  "doc_title": "CONSENT BY THE ENCUMBRANCER TO TRANSFER",
+  "doc_title_official": "CONSENT BY THE ENCUMBRANCER TO TRANSFER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-34-CONSENT-BY-THE-ENCUMBRANCER-TO-TRANSFER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-34.txt"
+  },
+  "category": "consent",
+  "when_used": "The holder of an encumbrance over a title consents to a transfer of that title so that the transfer can be registered.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Encumbrancer",
+    "transferor_single": "Encumbrancer"
+  },
+  "filing_box": "default",
+  "title_line": "none",
+  "detail_rows": [],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "I/We {{vendor_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "being the holder(s) of"
+    },
+    {
+      "type": "plain",
+      "text": "National Identity Card/Certificate of incorporation/Registration Number(s)/{{vendor_id}} and of P.O Box Number {{encumbrancer_po_box}}"
+    },
+    {
+      "type": "plain",
+      "text": "being the encumbrancer of the above title hereby acknowledge and declare that :-"
+    },
+    {
+      "type": "plain",
+      "text": "I/We have full knowledge of this Transfer;"
+    },
+    {
+      "type": "plain",
+      "text": "I/We understand the nature and effect of this Transfer;"
+    },
+    {
+      "type": "plain",
+      "text": "I/We acknowledge that I/We have taken legal advice regarding the nature, remedies and effect of this Transfer; and"
+    },
+    {
+      "type": "plain",
+      "text": "Neither the Transferor nor the Transferee have used any compulsion or threat or exercised undue influence on me/us to induce me/us to execute this consent;"
+    },
+    {
+      "type": "witness",
+      "text": "AND I/We HEREBY CONSENT to the said Transfer"
+    }
+  ],
+  "execution": {
+    "mode": "signature",
+    "signer": "transferor",
+    "signer_label": "encumbrancer",
+    "verification": true,
+    "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act (for individuals)"
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "encumbrancer_po_box",
+      "label": "Post Office Box Number of the encumbrancer",
+      "prompt": "Postal box number of the encumbrancer giving the consent, for example 1-00100",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

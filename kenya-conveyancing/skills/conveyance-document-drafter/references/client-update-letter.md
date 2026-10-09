@@ -1,17 +1,17 @@
-# Client Update Letter — Templates by Milestone
+# Client Update Letter: Templates by Milestone
 
 ## Output Category
 
-**Category A — Letterhead Document.** Begin output with:
-`[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Category A: Letterhead Document.** Begin output with:
+`[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Lexend 12pt, single spaced, justified.
+**Typography:** the firm's correspondence font (`font_correspondence` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
 ## Tone and Style
 
-These letters go to the client — not to other lawyers. Write in plain, clear English. No unexplained legal jargon. The client is a person who has agreed to buy or sell property. They want to know:
+These letters go to the client, not to other lawyers. Write in plain, clear English. No unexplained legal jargon. The client is a person who has agreed to buy or sell property. They want to know:
 1. What has been done
 2. What is happening next
 3. What (if anything) they need to do or provide
@@ -25,7 +25,7 @@ Keep each letter concise. One page maximum.
 
 ```
 ══════════════════════════════════════════════════════════
-[PRINT ON FIRM LETTERHEAD — MAK & PARTNERS ADVOCATES LLP]
+[PRINT ON FIRM LETTERHEAD: MAK & PARTNERS ADVOCATES LLP]
 ══════════════════════════════════════════════════════════
 
 [DATE]
@@ -35,10 +35,10 @@ Keep each letter concise. One page maximum.
 
 Dear [CLIENT FIRST NAME],
 
-RE: [PROPERTY DESCRIPTION — e.g., "PURCHASE OF LAND REFERENCE NUMBER
+RE: [PROPERTY DESCRIPTION, e.g., "PURCHASE OF LAND REFERENCE NUMBER
     209/4491, KAREN, NAIROBI"]
 
-[MILESTONE UPDATE BODY — see templates by milestone below]
+[MILESTONE UPDATE BODY: see templates by milestone below]
 
 Please do not hesitate to contact us if you have any questions.
 
@@ -53,7 +53,7 @@ MAK & PARTNERS ADVOCATES LLP
 
 ## Body Templates by Milestone
 
-### Milestone 1 — Instructions Received + Agreement Signed
+### Milestone 1: Instructions Received + Agreement Signed
 
 ```
 Thank you for instructing us to act for you in connection with the
@@ -74,15 +74,15 @@ We will keep you updated as we progress through each stage.
 
 ---
 
-### Milestone 2 — Official Search Lodged
+### Milestone 2: Official Search Lodged
 
 ```
 We write to update you on progress with your [purchase / sale] of the
 above property.
 
 We have submitted an application to the Land Registry for an Official
-Search of the title. The search confirms the current state of the register
-— that is, who is registered as owner and whether there are any mortgages,
+Search of the title. The search confirms the current state of the register,
+that is, who is registered as owner and whether there are any mortgages,
 cautions, or other matters affecting the title.
 
 We expect to receive the search result within 5 business days. We will
@@ -96,7 +96,7 @@ No action is required from you at this stage.
 
 ---
 
-### Milestone 3 — Consent Application Submitted
+### Milestone 3: Consent Application Submitted
 
 ```
 We write to update you on progress with your [purchase / sale] of the
@@ -119,7 +119,7 @@ No action is required from you at this stage.
 
 ---
 
-### Milestone 4 — Rates Clearance Certificate Received
+### Milestone 4: Rates Clearance Certificate Received
 
 ```
 We write to update you on progress with your [purchase / sale] of the
@@ -140,7 +140,7 @@ No action is required from you at this stage.
 
 ---
 
-### Milestone 6 — Stamp Duty
+### Milestone 6: Stamp Duty
 
 ```
 We write to update you on progress with your [purchase / sale] of the
@@ -152,7 +152,7 @@ property and must be paid before the Transfer can be registered.
 
 The estimated stamp duty payable is Kenya Shillings [STAMP DUTY ESTIMATE]
 (Kshs. [AMOUNT]), calculated at [4% / 2%] of the purchase price. This is
-an estimate only — the final amount will be confirmed by KRA on the iTax
+an estimate only. The final amount will be confirmed by KRA on the iTax
 portal.
 
 [If Purchaser pays stamp duty:] Stamp duty is payable by you as the
@@ -165,7 +165,7 @@ are ready.
 
 ---
 
-### Milestone 7 — Transfer Documents Ready
+### Milestone 7: Transfer Documents Ready
 
 ```
 We write to update you on progress with your [purchase / sale] of the
@@ -191,7 +191,7 @@ longer than 30 minutes.
 
 ---
 
-### Milestone 8 — Lodged at Land Registry
+### Milestone 8: Lodged at Land Registry
 
 ```
 We write to update you on progress with your [purchase / sale] of the
@@ -211,7 +211,7 @@ We will contact you as soon as registration is confirmed.
 
 ---
 
-### Milestone 9 — Completion
+### Milestone 9: Completion
 
 ```
 We write to update you on the completion of your [purchase / sale] of the

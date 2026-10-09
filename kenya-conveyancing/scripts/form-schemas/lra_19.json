@@ -1,0 +1,89 @@
+{
+  "form_id": "lra_19",
+  "form_number": "LRA 19",
+  "regulation": "(r. 30(1))",
+  "doc_title": "APPLICATION FOR ISSUE OF A CERTIFICATE OF TITLE/LEASE*",
+  "doc_title_official": "APPLICATION FOR ISSUE OF A CERTIFICATE OF TITLE/LEASE*",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-19-APPLICATION-FOR-ISSUE-OF-A-CERTIFICATE-OF-TITLE-LEASE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-19.txt"
+  },
+  "category": "application",
+  "when_used": "The registered proprietor applies to the Land Registrar for the issue of a certificate of title or a certificate of lease.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Proprietor",
+    "transferor_single": "Proprietor"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Proprietor",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport/Company Registration No. of the Proprietor(if any)",
+      "value_field": "transferorIDs"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Proprietor HEREBY APPLIES for the issue of the above Certificate of Title /Lease*"
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application, the Proprietor has attached statutory declaration and supporting documents."
+    },
+    {
+      "type": "plain",
+      "text": "Dated this ………………………….……day of …………………….20……."
+    },
+    {
+      "type": "plain",
+      "text": "* Delete where not appropriate"
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true,
+    "verification_heading": "Certificate of Verification under section 45 of the Land Registration Act, 2012"
+  },
+  "registry_block": [
+    "LAND REGISTRAR",
+    "Name:",
+    "Signature:"
+  ],
+  "annex": [
+    {
+      "type": "statutory_declaration",
+      "heading": "STATUTORY DECLARATION***",
+      "intro": "I, {{declarant_name}} (in support of this Application) do hereby sincerely declare as follows:-",
+      "closing": "I make this declaration conscientiously believing the same to be true and according to the Oaths and Statutory Declaration Act.",
+      "jurat": "DECLARED before me at",
+      "jurat_signatory": "Signature of Commissioner for Oaths or Magistrate or Notary Public"
+    }
+  ],
+  "foot_notes": [
+    "*** one of the supporting documents must be a police abstract."
+  ],
+  "custom_fields": [
+    {
+      "name": "declarant_name",
+      "label": "Name of the declarant",
+      "prompt": "Full name of the person swearing the statutory declaration in support of this application",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

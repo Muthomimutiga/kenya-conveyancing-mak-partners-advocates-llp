@@ -1,0 +1,167 @@
+{
+  "form_id": "lra_9",
+  "form_number": "LRA 9",
+  "regulation": "(r. 21(2), 22(1)(d), 70(1) and 71(1))",
+  "doc_title": "GENERAL APPLICATION FOR REGISTRATION",
+  "doc_title_official": "GENERAL APPLICATION FOR REGISTRATION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-10-APPLICATION-TO-BE-NOTED-IN-THE-REGISTER-AS-A-SPOUSE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-9.txt"
+  },
+  "category": "application",
+  "when_used": "Accompanies every instrument presented for registration, listing the instruments lodged in their order of priority and the documents enclosed with them.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Presentor",
+    "transferor_single": "Presentor"
+  },
+  "title_label": "TITLE NO",
+  "head_lines": [
+    "(To Be Filled In Quadruplicate)"
+  ],
+  "filing_box": [
+    "Fees Paid in respect of the following:\nItem\nRegistration Fee\nTitle Fee\nTotal Amount",
+    "\nReceipt Number\n\n\n",
+    "\nAmount\n\n\n",
+    "\nFor Official Use Only\nRECEIVED:\n\n"
+  ],
+  "pre_title_lines": [
+    "The Conditions on the Back of this Form shall be complied with"
+  ],
+  "title_line": "none",
+  "detail_rows": [],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "I hereby apply for the registration of the under mentioned instruments in the following order of priority:-"
+    },
+    {
+      "type": "table",
+      "columns": [
+        "Date of\nInstrument",
+        "Description",
+        "Title Number",
+        "Booking Number",
+        "For Official\nUse only"
+      ],
+      "rows_field": "instruments_presented"
+    },
+    {
+      "type": "plain",
+      "text": "I/we apply/Do not apply for: Certificate of Title /Certificate of Lease"
+    },
+    {
+      "type": "plain",
+      "text": "The following documents are enclosed:-"
+    },
+    {
+      "type": "table",
+      "columns": [
+        "Document/Instrument**",
+        "Title No",
+        "confirmed"
+      ],
+      "rows_field": "enclosed_documents"
+    },
+    {
+      "type": "plain",
+      "text": "Name in Block Capitals {{presentor_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "Postal Address   {{presentor_postal_address}}"
+    },
+    {
+      "type": "plain",
+      "text": "Tel No {{presentor_tel_no}}"
+    },
+    {
+      "type": "plain",
+      "text": "Email Address {{presentor_email}}"
+    }
+  ],
+  "execution": {
+    "mode": "signature",
+    "signer": "transferor",
+    "signer_label": "Presentor",
+    "verification": false
+  },
+  "registry_block": [
+    "Special instructions, including in appropriate cases the name and address of the person to whom the documents are to be sent if other than the presentor:-",
+    "{{special_instructions}}",
+    "(The conditions on the back of this form must be complied with)",
+    "Delete whichever fee is not applicable",
+    "provide list of all the documents provided to support registration. Add documents as appropriate.",
+    "[P.T.O.]",
+    "CONDITIONS",
+    "Every instrument presented for registration, unless it has been prepared by the Registrar, must be accompanied by this form.",
+    "The form must be completed, in triplicate, accurately in accordance with these conditions. Failure to do so may result in the rejection of the application. The information supplied by the presentor must appear legibly in English. If registration is sought at different registries, separate applications accompanied by the instrument must be addressed to each.",
+    "Delete from the list of enclosed documents those, which are not appropriate, and add any additional enclosures.",
+    "Fees must be paid before submitting the application.",
+    "Applications may be submitted as follows:-",
+    "by post, addressed to the appropriate Registrar ;",
+    "by hand, delivered at the appropriate registry;",
+    "The priority of registration is not established until the application is received by the Lands registry and a Booking Number is provided.",
+    "Documents represented for registration after they have been rejected must be accompanied by a fresh set of forms of application duly completed.",
+    "The documents shall be presented by either party to the transaction or an authorised agent. For purposes of this application, an authorised agent means a person registered by a professional body.",
+    "FOR OFFICIAL USE ONLY",
+    "To: -\tTHE UNDERMENTIONED PRESENTOR",
+    "DESPATCHED\tRECEIVED",
+    "A. The documents presented for registration are returned duly registered together with all the documents applied for.",
+    "The documents presented for registration are returned unregistered. I am unable to register because:",
+    "...................................................................",
+    "...................................................................",
+    "...................................................................",
+    "...................................................................",
+    "...................................................................",
+    "LAND REGISTRAR",
+    "Name:......................................................................",
+    "Signature:................................................................"
+  ],
+  "custom_fields": [
+    {
+      "name": "instruments_presented",
+      "label": "Instruments presented for registration",
+      "prompt": "The instruments lodged, in the order of priority they are to be registered. One instrument per line, the five cells separated by a pipe, and every line must carry the pipes or the whole line prints in the narrow Date of Instrument column: date of instrument | description | title number | booking number | for official use only. For example: 28th September 2026 | Transfer of Interest in Land (Form LRA 33) | KIAMBU/KIKUYU/9999 | |. Leave the booking number and the official column empty for the registry.",
+      "required": true
+    },
+    {
+      "name": "enclosed_documents",
+      "label": "Documents enclosed with the application",
+      "prompt": "Every document lodged with this application. One document per line, the three cells separated by a pipe: document or instrument | title number | confirmed. For example: Original Certificate of Title | KIAMBU/KIKUYU/9999 |. Leave the confirmed column empty for the registry.",
+      "required": true
+    },
+    {
+      "name": "presentor_name",
+      "label": "Name of the presentor in block capitals",
+      "prompt": "Full name of the person presenting the documents, in block capitals",
+      "required": true
+    },
+    {
+      "name": "presentor_postal_address",
+      "label": "Postal address of the presentor",
+      "prompt": "Postal address of the presentor: box number, code and town",
+      "required": true
+    },
+    {
+      "name": "presentor_tel_no",
+      "label": "Telephone number of the presentor",
+      "prompt": "Telephone number the registry can reach the presentor on",
+      "required": false
+    },
+    {
+      "name": "presentor_email",
+      "label": "Email address of the presentor",
+      "prompt": "Email address the registry can reach the presentor on",
+      "required": false
+    },
+    {
+      "name": "special_instructions",
+      "label": "Special instructions",
+      "prompt": "Any special instructions for the registry, including the name and address of the person the documents are to be sent to if that is not the presentor",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": false
+}

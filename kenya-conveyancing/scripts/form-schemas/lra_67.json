@@ -1,0 +1,170 @@
+{
+  "form_id": "lra_67",
+  "form_number": "LRA 67",
+  "regulation": "(r. 80(1))",
+  "doc_title": "CAUTION",
+  "doc_title_official": "CAUTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-67-CAUTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-67.txt"
+  },
+  "category": "application",
+  "when_used": "A person claiming an interest in land lodges a caution so that no dealing is registered on the title without notice to them.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Cautioner",
+    "transferor_single": "Cautioner",
+    "transferee": "Proprietor",
+    "transferee_single": "Proprietor"
+  },
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Caution",
+      "value_blank": true
+    },
+    {
+      "label": "The Cautioner: Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport No./Registration No of the Cautioner (if any)",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Address of the Cautioner (within Kenya for service of Notice).",
+      "value_field": "cautioner_address"
+    },
+    {
+      "label": "The Proprietor: Give full name(s)",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/Passport/Registration No. of the Proprietor (if any)",
+      "value_field": "transfereeIDs"
+    },
+    {
+      "label": "PIN Number.",
+      "value_field": "proprietor_pin"
+    },
+    {
+      "label": "Citizenship/Place of registration.",
+      "value_field": "proprietor_citizenship"
+    },
+    {
+      "label": "Address of the Proprietor (within Kenya for service of notice).",
+      "value_field": "proprietor_address"
+    },
+    {
+      "label": "Interest Claimed",
+      "value_field": "interest_claimed"
+    },
+    {
+      "label": "Extent or Scope of the Caution (Absolutely/Subject to the Interest of the Cautioner)",
+      "value_field": "caution_scope"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Cautioner HEREBY APPLIES for registration of a Caution over the above Title to the extent or scope stated above."
+    },
+    {
+      "type": "plain",
+      "text": "The Cautioner forbid the registration of dealings and the making of entries in the register relating to the Title to the extent or scope of the Caution without the Cautioner’s consent until this Caution has been withdrawn by the Cautioner or removed by order of the Court or the Registrar."
+    },
+    {
+      "type": "plain",
+      "text": "The Cautioner hereby attaches the following documents is support of the application*:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{supporting_documents}}"
+    },
+    {
+      "type": "plain",
+      "text": "*Copies of Sale Agreement, Letters of Administration, Letter of Offer etc"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS the Cautioner has signed this Caution."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Cautioner",
+    "verification": true
+  },
+  "registry_block": "default",
+  "annex": [
+    {
+      "type": "statutory_declaration",
+      "heading": "STATUTORY DECLARATION",
+      "intro": "I, {{declarant_name}} (in support of this caution) do hereby sincerely declare as follows:-",
+      "closing": "I make this declaration conscientiously believing the same to be true and according to the Oaths and Statutory Declaration Act.",
+      "jurat": "DECLARED before me at",
+      "jurat_signatory": "Signature of Advocate or Land Registrar"
+    }
+  ],
+  "custom_fields": [
+    {
+      "name": "cautioner_address",
+      "label": "Address of the Cautioner",
+      "prompt": "Postal address within Kenya for service of notice on the cautioner",
+      "required": true
+    },
+    {
+      "name": "proprietor_pin",
+      "label": "PIN Number of the Proprietor",
+      "prompt": "KRA PIN of the registered proprietor, if known",
+      "required": true
+    },
+    {
+      "name": "proprietor_citizenship",
+      "label": "Citizenship or place of registration of the Proprietor",
+      "prompt": "Citizenship of an individual proprietor, or place of registration of a corporate proprietor",
+      "required": true
+    },
+    {
+      "name": "proprietor_address",
+      "label": "Address of the Proprietor",
+      "prompt": "Postal address within Kenya for service of notice on the proprietor",
+      "required": true
+    },
+    {
+      "name": "interest_claimed",
+      "label": "Interest claimed",
+      "prompt": "The interest the cautioner claims in the land, for example purchaser under a sale agreement dated 1st September 2026",
+      "required": true
+    },
+    {
+      "name": "caution_scope",
+      "label": "Extent or scope of the caution",
+      "prompt": "Absolutely, or subject to the interest of the cautioner",
+      "required": true
+    },
+    {
+      "name": "supporting_documents",
+      "label": "Documents attached in support",
+      "prompt": "The documents attached in support, for example the sale agreement, letters of administration or letter of offer",
+      "required": true
+    },
+    {
+      "name": "declarant_name",
+      "label": "Name of the declarant",
+      "prompt": "Full name of the person swearing the statutory declaration in support of the caution",
+      "required": true
+    },
+    {
+      "name": "declaration_text",
+      "label": "Statutory declaration paragraphs",
+      "prompt": "The facts supporting the caution, one paragraph per line",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

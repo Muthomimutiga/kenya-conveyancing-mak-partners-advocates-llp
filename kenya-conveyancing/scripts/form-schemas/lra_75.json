@@ -1,0 +1,90 @@
+{
+  "form_id": "lra_75",
+  "form_number": "LRA 75",
+  "regulation": "(r. 81(1))",
+  "doc_title": "APPLICATION FOR A RESTRICTION",
+  "doc_title_official": "APPLICATION FOR A RESTRICTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-75-APPLICATION-FOR-A-RESTRICTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-75.txt"
+  },
+  "category": "application",
+  "when_used": "A person applies to the Land Registrar to register a restriction on the Proprietorship Section of the register, stating the grounds, the nature of the restriction and how long it is to run.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant",
+    "transferee": "Proprietor",
+    "transferee_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Proprietor",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Applicant",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Grounds of Application for Restriction",
+      "value_field": "grounds"
+    },
+    {
+      "label": "Nature of Restriction",
+      "value_field": "restriction_nature"
+    },
+    {
+      "label": "Duration of Restriction",
+      "value_field": "restriction_duration"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant HEREBY APPLIES to the Registrar to register a restriction on the Proprietorship Section of the Register."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application for a restriction has been duly executed this........................…. day of……………………..20……………."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "grounds",
+      "label": "Grounds of application for the restriction",
+      "prompt": "The grounds on which the restriction is applied for, one ground per line",
+      "required": true
+    },
+    {
+      "name": "restriction_nature",
+      "label": "Nature of the restriction",
+      "prompt": "What the restriction is to prohibit or require, for example no dealing without the consent of the applicant",
+      "required": true
+    },
+    {
+      "name": "restriction_duration",
+      "label": "Duration of the restriction",
+      "prompt": "How long the restriction is to run, for example until further order or for a stated period",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

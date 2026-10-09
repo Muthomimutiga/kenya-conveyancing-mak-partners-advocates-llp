@@ -1,0 +1,105 @@
+# Official LRA form texts
+
+Fetched 2026-09-22 from https://lands.go.ke/forms (Land Registration (General) Regulations, 2017 forms), converted from .doc with macOS textutil. The Ministry's files for LRA 9 and LRA 10 are swapped on the site; they are corrected here. These files are the ground truth for scripts/form-schemas/lint.js. Do not edit them.
+
+Excluded forms: 25 of the 95 are registrar documents (a register, a certificate, a notice, an order or a summons signed or sealed by the Land Registrar). Each was confirmed against its own text here; the list is scripts/form-schemas/_excluded.json. The plugin drafts none of them.
+
+The Ministry publishes 95 forms. LRA 1, LRA 95 and LRA 98 to LRA 100 are not on the site, so no text exists for them here and no schema can be written for them until the Ministry publishes one.
+
+| File | Source URL |
+|---|---|
+| lra-2.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-2-THE-LAND-REGISTER-Absolute-Titles.doc |
+| lra-3.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-3-THE-LAND-REGISTER-Leasehold.doc |
+| lra-4.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-4-REGISTER-OF-POWERS-OF-ATTORNEY.doc |
+| lra-5.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-5-GENERAL-POWER-OF-ATTORNEY.doc |
+| lra-6.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-6-SPECIFIC-POWER-OF-ATTORNEY.doc |
+| lra-7.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-7-IRREVOCABLE-POWER-OF-ATTORNEY.doc |
+| lra-8.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-8-NOTICE-OF-REVOCATION-OF-A-POWER-OF-ATTORNEY.doc |
+| lra-9.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-10-APPLICATION-TO-BE-NOTED-IN-THE-REGISTER-AS-A-SPOUSE.doc |
+| lra-10.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-9-GENERAL-APPLICATION-FOR-REGISTRATION.doc |
+| lra-11.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-11-NOTICE-OF-INTENTION-TO-NOTE-A-SPOUSE-IN-THE-REGISTER.doc |
+| lra-12.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-12-APPLICATION-FOR-REPLACEMENT-CERTIFICATE-OF-TITLELEASE-ON.doc |
+| lra-13.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-13-NOTICE-FOR-ISSUE-OF-A-REPLACEMENT-TITLE.doc |
+| lra-14.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-14-APPLICATION-FOR-RECONSTRUCTION-OF-A-LAND-REGISTER.doc |
+| lra-15.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-15-STATUTORY-DECLARATION-BY-A-BODY-CORPORATE.doc |
+| lra-16.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-16-STATUTORY-DECLARATION-BY-A-NATURAL-PERSON.doc |
+| lra-17.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-17-DEED-OF-INDEMNITY.doc |
+| lra-18.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-18-NOTICE-FOR-RECONSTRUCTION-OF-LOST-OR-DESTROYED-LAND-REGISTER.doc |
+| lra-19.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-19-APPLICATION-FOR-ISSUE-OF-A-CERTIFICATE-OF-TITLE-LEASE.doc |
+| lra-20.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-20-Certificate-of-Title.doc |
+| lra-21.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-21-Certificate-of-Lease.doc |
+| lra-22.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-22-REFUSAL-TO-REGISTER-AN-APPLICATION-FOR-REGISTRATION.doc |
+| lra-23.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-23-APPLICATION-BY-AN-INTERESTED-PERSON-TO-ASCERTAIN-AND-FIX-LAND-BOUNDARIES.doc |
+| lra-24.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-24-NOTICE-OF-INTENTION-TO-ASCERTAIN-AND-FIX-THE-BOUNDARIES.doc |
+| lra-25.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-25-ORDER-FOR-DEMARCATION-MAINTENANCE.doc |
+| lra-26.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-26-APPLICATION-FOR-COMBINATION.doc |
+| lra-27.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-27-MUTATION-FORM.doc |
+| lra-28.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-28-APPLICATION-FOR-REPARCELLATION.doc |
+| lra-29.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-29-APPLICATION-FOR-PARTITION.doc |
+| lra-30.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-30-APPLICATION-FOR-PARTITION-PURSUANT-TO-AN-ORDER-OF-THE-REGISTRAR.doc |
+| lra-31.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-31-NOTICE-FOR-A-HEARING-ON-APPLICATION-FOR-PARTITION-OF-LAND-HELD-IN-COMMON.doc |
+| lra-32.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-32-FORM-OF-CONSENT-OF-A-CHARGEE-TO-A-PARTITION.doc |
+| lra-33.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-33-TRANSFER-OF-INTEREST-IN-LAND.doc |
+| lra-34.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-34-CONSENT-BY-THE-ENCUMBRANCER-TO-TRANSFER.doc |
+| lra-35.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-35-TRANSFER-OF-UNDIVIDED-SHARE.doc |
+| lra-36.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-36-TRANSFER-OF-JOINT-INTEREST.doc |
+| lra-37.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-37-APPLICATION-FOR-SEVERANCE-OF-JOINT-OWNERSHIP.doc |
+| lra-38.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-38-APPLICATION-FOR-THE-REMOVAL-OF-THE-NAME-OF-A-DECEASED-JOINT-PROPRIETOR-FROM-THE-REGISTER.doc |
+| lra-39.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-39-TRANSFER-TO-THE-PERSONAL-REPRESENATATIVE-AS-EXECUTOR-ADMINISTRATOR.doc |
+| lra-40.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-40-APPLICATION-FOR-REGISTRATION-AS-PROPRIETOR-JOINTLY-WITH-OTHER-PERSONAL-REPRESENTATIVES.doc |
+| lra-41.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-41-NOTIFICATION-BY-REGISTRAR-TO-PERSONAL-REPRESENTATIVE-OF-AN-APP-FOR-REGISTRATION-JOINTLY-WITH-OTHER.doc |
+| lra-42.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-42-TRANSFER-BY-PERSONAL-REPRESENTATIVE-TO-PERSON-ENITITLED-UNDER-A-WILL-OR-INTESTACY.doc |
+| lra-43.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-43-TRANSFER-BY-PERSONAL-REPRESENTATIVE-TO-PURCHASER.doc |
+| lra-44.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-44-TRANSFER-BY-TRUSTEE-IN-BANKRUPTCY.doc |
+| lra-45.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-45-TRANSFER-BY-TRUSTEE-ON-BANKRUPTCY-B.doc |
+| lra-46.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-46-APPLICATION-BY-A-LIQUIDATOR-TO-BE-NOTED-IN-THE-REGISTER.doc |
+| lra-47.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-47-GENERAL-FORM-OF-STATUTORY-DECLARATION.doc |
+| lra-48.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-48-TRANSFER-OF-LAND-BY-A-LIQUIDATOR.doc |
+| lra-49.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-49-TRANSFER-by-COMPANIES-AND-LIMITED-LIABILITY-PARTNERSHIPS.doc |
+| lra-50.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-50-APPLICATION-TO-BE-REGISTERED-AS-PROPRIETOR-BY-TRANSMISSION.doc |
+| lra-51.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-51-APPLICATION-TO-BE-REGISTERED-AS-A-TRUSTEE.doc |
+| lra-52.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-52-TRANSFER-OF-LAND-BY-A-TRUSTEE.doc |
+| lra-53.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-53-CHARGE.doc |
+| lra-54.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-54-INFORMAL-CHARGE.doc |
+| lra-55.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-55-CONSENT-FOR-SECOND-OR-SUBSEQUENT-CHARGE.doc |
+| lra-56.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-56-MEMORANDUM-OF-VARIATION-OF-CHARGE.doc |
+| lra-57.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-57-TRANSFER-OF-CHARGE.doc |
+| lra-58.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-58-DISCHARGE-OF-CHARGE.doc |
+| lra-59.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-59-PARTIAL-DISCHARGE-OF-CHARGE.doc |
+| lra-60.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-60-TRANSFER-PURSUANT-TO-PURCHASE-BY-CHARGEE-WITH-LEAVE-OF-COURT.doc |
+| lra-61.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-61-TRANSFER-PURSUANT-TO-PURCHASE-BY-CHARGEE-IN-A-PUBLIC-AUCTION.doc |
+| lra-62.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-62-LEASE.doc |
+| lra-63.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-63-TRANSFR-OF-LEASE.doc |
+| lra-64.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-64-LEASE-Long-Term.doc |
+| lra-65.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-65-SURRENDER-OF-LEASE.doc |
+| lra-66.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-66-APPLICATION-FOR-REGISTRATION-OF-AN-INHIBITION-ORDER.doc |
+| lra-67.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-67-CAUTION.doc |
+| lra-68.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-68-NOTICE-OF-CAUTION.doc |
+| lra-69.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-69-WITHDRAWAL-OF-CAUTION.doc |
+| lra-70.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-70-APPLICATION-TO-REMOVE-CAUTION.doc |
+| lra-71.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-71-NOTICE-OF-INTENTION-TO-REMOVE-A-CAUTION.doc |
+| lra-72.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-72-NOTICE-OF-OBJECTION-TO-REMOVAL-OF-A-CAUTION.doc |
+| lra-73.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-73-NOTICE-FOR-OF-HEARING-ON-APPLICATION-TO-REMOVE-CAUTION.doc |
+| lra-74.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-74-ORDER-OF-THE-REGISTRAR-ON-AN-APPLICATION-TO-REMOVE-A-CAUTION.doc |
+| lra-75.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-75-APPLICATION-FOR-A-RESTRICTION.doc |
+| lra-76.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-76-NOTICE-OF-INTENTION-TO-REGISTER-REMOVE-VARY-A-RESTRICTION.doc |
+| lra-77.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-77-NOTICE-OF-RESTRICTION.doc |
+| lra-78.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-78-APPLICATION-TO-REMOVE-OR-VARY-A-RESTRICTION.doc |
+| lra-79.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-79-NOTICE-OF-VARIATION-REMOVAL-OF-RESTRICTION.doc |
+| lra-80.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-80-GRANT-OF-EASEMENT-ANALOGOUS-RIGHT.doc |
+| lra-81.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-81-CANCELLATION-OF-EASEMENT-ANALOGOUS-RIGHTS-BY-PERSON-OCCUPYING-DOMINANT-LAND.doc |
+| lra-82.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-82-CONSENT-OF-LESSEE-OR-LENDER-ON-CANCELLATION-OF-EASEMENT-ANALOGOUS-RIGHT-BY-THE-PERSON-OCCUPYING-DOMINANT-LAND.doc |
+| lra-83.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-83-APPLICATION-FOR-CANCELLATION-OF-EASEMENT-ANALOGOUS-RIGHTS-BY-PERSON-OCCUPYING-SERVIENT-LAND.doc |
+| lra-84.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-84-APPLICATION-FOR-OFFICIAL-SEARCH.doc |
+| lra-85.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-85-CERTIFICATE-OF-OFFICIAL-SEARCH.doc |
+| lra-86.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-86-APPLICATION-TO-THE-REGISTRAR-FOR-APPROVAL-OF-A-DOCUMENT-FOR-USE-WHERE-NO-FORM-HAS-BEEN-PRESCRIBED.doc |
+| lra-87.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-87-APPLICATION-TO-RECTIFY-THE-REGISTER.doc |
+| lra-88.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-88-CONSENT-TO-RECTIFY-THE-REGISTER-BY-A-COMPANY.doc |
+| lra-89.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-89-CONSENT-TO-RECTIFY-THE-REGISTER-BY-INDIVIDUAL.doc |
+| lra-90.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-90-NOTICE-OF-RECTIFICATION-OF-REGISTER-BY-REGISTRAR.doc |
+| lra-91.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-91-NOTICE-OF-INTENTION-TO-RECTIFY-REGISTER.doc |
+| lra-92.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-92-ORDER-OF-RECTIFICATION-OF-REGISTER.doc |
+| lra-93.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-93-SUMMONS.doc |
+| lra-94.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-94-APPLICATION-FOR-RECTIFICATION-OF-REGISTER-PURSUANT-TO-A-COURT-ORDER.doc |
+| lra-96.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-96-PRESENTATION-ON-OBJECTIONS-TO-THE-CONVERSION-LIST.doc |
+| lra-97.txt | https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-97-APPLICATION-FOR-REPLACEMENT-OF-TITLE-ISSUED-FROM-THE-CLOSED-REGISTER.doc |

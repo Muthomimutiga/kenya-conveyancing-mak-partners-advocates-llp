@@ -1,0 +1,127 @@
+{
+  "form_id": "lra_65",
+  "form_number": "LRA 65",
+  "regulation": "(r. 78)",
+  "doc_title": "SURRENDER OF LEASE",
+  "doc_title_official": "SURRENDER OF LEASE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-65-SURRENDER-OF-LEASE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-65.txt"
+  },
+  "category": "instrument",
+  "when_used": "A lessee surrenders a registered lease back to the lessor, who accepts the surrender, so that the lease can be closed on the register.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Lessor",
+    "transferor_single": "Lessor",
+    "transferee": "Lessee",
+    "transferee_single": "Lessee"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Surrender of Lease",
+      "value_blank": true
+    },
+    {
+      "label": "Entry No. in the Encumbrances Section",
+      "value_field": "entry_no_encumbrances"
+    },
+    {
+      "label": "Lessor",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Lessee",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Demised Premises",
+      "value_field": "demised_premises"
+    },
+    {
+      "label": "Term",
+      "value_field": "term"
+    },
+    {
+      "label": "Guarantor** (where applicable)",
+      "value_field": "guarantor"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "IN CONSIDERATION of {{consideration}}"
+    },
+    {
+      "type": "plain",
+      "text": "* (the receipt whereof is hereby acknowledged by the Lessor)* the Lessee HEREBY SURRENDERS the Lease comprised in the above-mentioned Title and the Lessor HEREBY ACCEPTS the said Surrender."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS this Surrender of Lease has been duly executed by the parties hereto."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this discharge has been duly executed this ...........…. day of………………………….., 20…."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Lessor",
+    "verification": true,
+    "signed_label": "SIGNED by the"
+  },
+  "registry_block": [
+    "REGISTERED this ………………. day of ……………….………. 20..…",
+    "LAND REGISTRAR",
+    "Seal…………………………………………………..",
+    "Name:……………………………… Registrar’s  Stamp / No. ……………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "All parties including the Guarantor(s) must execute.",
+    "Notes:",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "consideration",
+      "label": "Consideration for the surrender",
+      "prompt": "What is given for the surrender, in words and figures, or the words the parties use where none passes",
+      "required": true
+    },
+    {
+      "name": "entry_no_encumbrances",
+      "label": "Entry number in the Encumbrances Section",
+      "prompt": "The entry number under which the lease being surrendered is registered",
+      "required": true
+    },
+    {
+      "name": "demised_premises",
+      "label": "Demised premises",
+      "prompt": "The premises comprised in the lease being surrendered",
+      "required": true
+    },
+    {
+      "name": "term",
+      "label": "Term of the lease",
+      "prompt": "The term of the lease being surrendered, with its commencement date",
+      "required": true
+    },
+    {
+      "name": "guarantor",
+      "label": "Guarantor",
+      "prompt": "The guarantor under the lease, where there is one",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

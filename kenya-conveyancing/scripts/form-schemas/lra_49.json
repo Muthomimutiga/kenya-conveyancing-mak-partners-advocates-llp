@@ -1,0 +1,99 @@
+{
+  "form_id": "lra_49",
+  "form_number": "LRA-49",
+  "regulation": "(r. 60)",
+  "doc_title": "TRANSFER by COMPANIES AND LIMITED LIABILITY PARTNERSHIPS",
+  "doc_title_official": "TRANSFER by COMPANIES AND LIMITED LIABILITY PARTNERSHIPS",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-49-TRANSFER-BY-COMPANIES-AND-LIMITED-LIABILITY-PARTNERSHIPS.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-49.txt"
+  },
+  "category": "instrument",
+  "when_used": "A company or limited liability partnership that is the registered proprietor transfers its whole interest in a title.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Transferor",
+    "transferor_single": "Transferor",
+    "transferee": "Transferee",
+    "transferee_single": "Transferee"
+  },
+  "title_label": "TITLE NO",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date",
+      "value_blank": true
+    },
+    {
+      "label": "Transferor (s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Transferee(s)",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Consideration",
+      "value_template": "Kenya Shillings {{purchase_price_words}} (Kshs. {{purchase_price_figures}}/=)"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "This TRANSFER witnesses as follows;"
+    },
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "The Transferor as the legal [and beneficial]*** owner HEREBY TRANSFERS all its right title and interest in the above Title."
+    },
+    {
+      "type": "numbered",
+      "number": 2,
+      "text": "The Transferor acknowledges receipt of the Consideration."
+    },
+    {
+      "type": "numbered",
+      "number": 3,
+      "text": "The Transfer is subject to the provisions of The Land Act 2012,The Land Registration Act 2012, the Lease and the interests noted in the Register of the Title but otherwise free from encumbrances."
+    },
+    {
+      "type": "numbered",
+      "number": 4,
+      "text": "The Transferee(s) shall hold the land as joint proprietors/as proprietors in common*** in the following undivided shares:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{undivided_shares}}"
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Transferor",
+    "verification": true,
+    "signed_label": "SIGNED by the",
+    "verification_heading": "Certificate of Verification"
+  },
+  "registry_block": "default",
+  "foot_notes": [
+    "Notes:",
+    "Insert full name(s) registration number(s) registered office and address, as applicable.",
+    "Insert currency, amount and other consideration.",
+    "***Delete whichever is not applicable.",
+    "****The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "undivided_shares",
+      "label": "Undivided shares",
+      "prompt": "Where the transferees hold as proprietors in common, the undivided share each takes",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

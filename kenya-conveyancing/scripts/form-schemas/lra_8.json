@@ -1,0 +1,140 @@
+{
+  "form_id": "lra_8",
+  "form_number": "LRA 8",
+  "regulation": "(r. 20)",
+  "doc_title": "NOTICE OF REVOCATION OF A POWER OF ATTORNEY",
+  "doc_title_official": "NOTICE OF REVOCATION OF A POWER OF ATTORNEY",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-8-NOTICE-OF-REVOCATION-OF-A-POWER-OF-ATTORNEY.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-8.txt"
+  },
+  "category": "notice",
+  "when_used": "Tells the land registry that a power of attorney entered in the register of powers of attorney has been revoked.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant",
+    "transferee": "Donee",
+    "transferee_single": "Donee"
+  },
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument of Notice",
+      "value_blank": true
+    },
+    {
+      "label": "Applicant - Person Giving Notice*",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transferorIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN No.",
+      "value_field": "applicant_pin"
+    },
+    {
+      "label": "Registered Proprietor/Donor *",
+      "value_template": "{{registered_proprietor_donor}}"
+    },
+    {
+      "label": "The Donee:*",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "ID/ Passport/Company Registration No.",
+      "value_field": "transfereeIDs",
+      "use_id_label": true
+    },
+    {
+      "label": "PIN No.",
+      "value_field": "donee_pin"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant noted above HEREBY GIVE NOTICE that the Power of Attorney filed in the register of powers of attorney as No {{power_of_attorney_number}} has been revoked:-"
+    },
+    {
+      "type": "plain",
+      "text": "by the Donor; or"
+    },
+    {
+      "type": "plain",
+      "text": "by the death / bankruptcy/ disability of the Donor*; or"
+    },
+    {
+      "type": "plain",
+      "text": "by the death / disability of the Donee.*"
+    },
+    {
+      "type": "plain",
+      "text": "And the Applicant attaches the following documents in support thereof:"
+    },
+    {
+      "type": "plain",
+      "text": "{{supporting_documents}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this revocation of Power of Attorney has been duly executed this .............................…. day of…………………….. 20……………."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true
+  },
+  "registry_block": [
+    "REGISTERED in the Register of Powers of Attorney as No. ................. this …………….. day of …………………............……………20…….",
+    "LAND REGISTRAR",
+    "Seal……………………………………………",
+    "Name:………………………………………. Registrar’s Stamp / No. …………….",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "Notes:",
+    "indicate: Name; I.D/Passport No./PIN. If corporate body provide registration details."
+  ],
+  "custom_fields": [
+    {
+      "name": "applicant_pin",
+      "label": "PIN of the Applicant",
+      "prompt": "Personal Identification Number of the person giving this notice",
+      "required": true
+    },
+    {
+      "name": "donee_pin",
+      "label": "PIN of the Donee",
+      "prompt": "Personal Identification Number of the attorney whose power is revoked",
+      "required": true
+    },
+    {
+      "name": "registered_proprietor_donor",
+      "label": "Registered proprietor and Donor",
+      "prompt": "Name, identity card or passport number and PIN of the registered proprietor who gave the power of attorney, as the form's own note asks",
+      "required": true
+    },
+    {
+      "name": "power_of_attorney_number",
+      "label": "Number of the power of attorney",
+      "prompt": "The number under which the power of attorney is filed in the register of powers of attorney",
+      "required": true
+    },
+    {
+      "name": "supporting_documents",
+      "label": "Documents attached in support",
+      "prompt": "The documents lodged with this notice, for example a death certificate or a deed of revocation",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

@@ -1,0 +1,90 @@
+{
+  "form_id": "lra_29",
+  "form_number": "LRA-29",
+  "regulation": "(r. 45(1))",
+  "doc_title": "APPLICATION FOR PARTITION",
+  "doc_title_official": "APPLICATION FOR PARTITION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-29-APPLICATION-FOR-PARTITION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-29.txt"
+  },
+  "category": "application",
+  "when_used": "Proprietors holding land in common apply for the land to be partitioned between them into separate parcels.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Proprietors",
+    "transferor_single": "Proprietor"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Instrument",
+      "value_blank": true
+    },
+    {
+      "label": "Proprietor (s)*",
+      "value_template": "{{proprietors_details}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "This Application is made by the above noted registered Proprietors of the land comprised in the above-mentioned Title."
+    },
+    {
+      "type": "plain",
+      "text": "The Proprietors HEREBY APPLY for the land to be partitioned in the following manner: ***"
+    },
+    {
+      "type": "table",
+      "columns": [
+        "Cadastral Plan\nNumber",
+        "Parcel Number",
+        "Area\n(approximately)",
+        "Proprietor"
+      ],
+      "rows_field": "partition_schedule"
+    },
+    {
+      "type": "plain",
+      "text": "Dated this …………………… day of ………………….……..20.............."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true
+  },
+  "registry_block": [
+    "REGISTERED and SEALED dated the …………………….20…………",
+    "Seal…………………………………………………..",
+    "LAND REGISTRAR",
+    "Name:…………………………………… Registrar’s Stamp/ No…………",
+    "Signature:…………………………………………."
+  ],
+  "foot_notes": [
+    "Notes:",
+    "*Give details of all the proprietors : name; PIN; ID/Passport No.; and Address **Delete whichever is not applicable.",
+    "***The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”",
+    "**** Attach a Cadastral Map and a Cadastral Plan."
+  ],
+  "custom_fields": [
+    {
+      "name": "proprietors_details",
+      "label": "Details of all the proprietors",
+      "prompt": "For every registered proprietor: name, PIN, ID or Passport number and address, numbered 1, 2 and 3 as the form prints them",
+      "required": true
+    },
+    {
+      "name": "partition_schedule",
+      "label": "How the land is to be partitioned",
+      "prompt": "The parcels as they are to stand after the partition. One parcel per line, the cells separated by a pipe: cadastral plan number | parcel number | area (approximately) | proprietor",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

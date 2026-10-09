@@ -1,0 +1,140 @@
+{
+  "form_id": "lra_37",
+  "form_number": "LRA-37",
+  "regulation": "(r. 53(1))",
+  "doc_title": "APPLICATION FOR SEVERANCE OF JOINT OWNERSHIP",
+  "doc_title_official": "APPLICATION FOR SEVERANCE OF JOINT OWNERSHIP",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-37-APPLICATION-FOR-SEVERANCE-OF-JOINT-OWNERSHIP.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-37.txt"
+  },
+  "category": "application",
+  "when_used": "Joint proprietors apply to sever the joint proprietorship and to be registered instead as proprietors in common in stated undivided shares.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Joint Proprietors",
+    "transferor_single": "Proprietor"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application:",
+      "value_blank": true
+    },
+    {
+      "label": "Joint Proprietors:",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Address:",
+      "value_template": "{{joint_proprietors_addresses}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The joint Proprietors HEREBY APPLY to the Land Registrar to sever their joint proprietorship in the above-mentioned Title and apply to be registered as proprietors in common* in the following undivided shares:-"
+    },
+    {
+      "type": "plain",
+      "text": "in favour of {{share_proprietor_1}}"
+    },
+    {
+      "type": "plain",
+      "text": "in favour of {{share_proprietor_2}}"
+    },
+    {
+      "type": "plain",
+      "text": "in favour of {{share_proprietor_3}}"
+    },
+    {
+      "type": "plain",
+      "text": "in favour of {{share_proprietor_4}}"
+    },
+    {
+      "type": "plain",
+      "text": "The Transfer is subject to the following:"
+    },
+    {
+      "type": "plain",
+      "text": "The provisions of The Land Registration Act, 2012 (No 3 of 2012) and The Land Act, 2012 (No 6 of 2012);"
+    },
+    {
+      "type": "plain",
+      "text": "The interests noted in the Register of the Title."
+    },
+    {
+      "type": "plain",
+      "text": "The Transfer is also subject to the following additional provisions, if any:"
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_provisions}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF the parties hereof have signed this document this................... day of ………………...…………………..20……………."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true
+  },
+  "registry_block": [
+    "REGISTERED and SEALED this ……… day of ………………… 20……",
+    "Seal…………………………………………………..",
+    "LAND REGISTRAR",
+    "Name:………………………………. Registrar’s  Stamp / No……………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "Notes:",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "joint_proprietors_addresses",
+      "label": "Addresses of the joint proprietors",
+      "prompt": "Address of each joint proprietor, in the same order as their names and numbered 1, 2, 3 and 4 as the form prints them",
+      "required": true
+    },
+    {
+      "name": "share_proprietor_1",
+      "label": "Proprietor the first undivided share is held in favour of",
+      "prompt": "Full name of the proprietor the first undivided share is to be registered in favour of, with the share itself",
+      "required": true
+    },
+    {
+      "name": "share_proprietor_2",
+      "label": "Proprietor the second undivided share is held in favour of",
+      "prompt": "Full name of the proprietor the second undivided share is to be registered in favour of, with the share itself. Where the land is not split that many ways, give the form's own blank, [………………. insert the name of the Proprietor], so the unused line prints as the official form prints it",
+      "required": false
+    },
+    {
+      "name": "share_proprietor_3",
+      "label": "Proprietor the third undivided share is held in favour of",
+      "prompt": "Full name of the proprietor the third undivided share is to be registered in favour of, with the share itself. Where the land is not split that many ways, give the form's own blank, [………………. insert the name of the Proprietor], so the unused line prints as the official form prints it",
+      "required": false
+    },
+    {
+      "name": "share_proprietor_4",
+      "label": "Proprietor the fourth undivided share is held in favour of",
+      "prompt": "Full name of the proprietor the fourth undivided share is to be registered in favour of, with the share itself. Where the land is not split that many ways, give the form's own blank, [………………. insert the name of the Proprietor], so the unused line prints as the official form prints it",
+      "required": false
+    },
+    {
+      "name": "additional_provisions",
+      "label": "Additional provisions the transfer is subject to",
+      "prompt": "Any further provisions the transfer is to be subject to, or leave it out where there are none",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

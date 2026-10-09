@@ -1,0 +1,217 @@
+{
+  "transaction_id": "sale_and_transfer_of_leasehold",
+  "name": "Sale and transfer of a leasehold title",
+  "summary": "A registered lessee sells the unexpired residue of a lease. The instrument is LRA 63, and the lease's own terms decide what consent is needed before anything registers.",
+  "triggers": [
+    "The title is leasehold, whether from the Government, a county or a private lessor",
+    "The transaction is a sale of the unexpired residue",
+    "The lessee is alive and transferring in their own right"
+  ],
+  "not_this_if": [
+    {
+      "fact": "The title is freehold",
+      "use": "sale_and_transfer_of_freehold",
+      "why": "LRA 33 transfers a freehold and section 55 does not bite."
+    },
+    {
+      "fact": "The lease is being given up rather than sold on",
+      "use": null,
+      "why": "A surrender is LRA 65, not a transfer."
+    },
+    {
+      "fact": "A new lease is being granted",
+      "use": null,
+      "why": "LRA 62, or LRA 64 for a long term."
+    }
+  ],
+  "statutory_basis": [
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.55(a)",
+      "quote": "the consent of the lessor has been produced to, and authenticated to the satisfaction of the",
+      "effect": "Where the lease restricts dealing, nothing registers until the lessor's consent is produced and authenticated. The section prescribes no form for that consent, which is why the plugin drafts it as a letter rather than a statutory form. That is correct here and would be wrong for a Land Control Board consent."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.55(b)",
+      "quote": "a land rent clearance certificate and the consent to the lease, certifying that no rent is owing to the Commission in respect of the land, or that the land is freehold, has been produced to the Registrar",
+      "effect": "The alternative route: a land rent clearance certificate together with the consent, certifying no rent owing to the Commission. This is what practitioners call the NLC or Commissioner of Lands consent."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.45(1)",
+      "quote": "a person executing an instrument shall",
+      "effect": "Verification of execution applies to a transfer of lease as to any other registrable instrument."
+    },
+    {
+      "act": "Land Registration Act",
+      "source": "land-registration-act",
+      "provision": "s.46",
+      "quote": "An instrument required by law to be stamped shall not be accepted for registration unless it is stamped",
+      "effect": "Stamping gates registration here too."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.6(1)",
+      "quote": "is void for all purposes unless the land control board for the land control area or division in which the land is situated has given its consent in respect of that transaction in accordance with this Act",
+      "effect": "Agricultural land within a land control area cannot be dealt with without the board's consent. Registration does not cure the want of it."
+    },
+    {
+      "act": "Land Control Act",
+      "source": "land-control-act",
+      "provision": "s.8(1)",
+      "quote": "within six months of the making of the agreement for the controlled transaction",
+      "effect": "The clock runs from the agreement, not from completion. Six months, extendable only by the High Court for sufficient reason."
+    }
+  ],
+  "bundle": [
+    {
+      "form_id": "lcb_1",
+      "role": "Application for the consent of the land control board, in the prescribed form",
+      "order": -1,
+      "required": false,
+      "condition": "The leased land is agricultural and within a land control area",
+      "why": "Section 6(1) of the Land Control Act catches a lease and its transfer as readily as a sale of freehold."
+    },
+    {
+      "form_id": "lra_9",
+      "role": "Cover application",
+      "order": 1,
+      "required": true,
+      "why": "Everything lodged goes under a general application."
+    },
+    {
+      "form_id": "lra_58",
+      "role": "Discharge of the existing charge",
+      "order": 2,
+      "required": false,
+      "condition": "The leasehold title is charged and the charge is redeemed on completion",
+      "alternative_to": "lra_34",
+      "why": "Registers before the transfer so the purchaser takes a clean residue."
+    },
+    {
+      "form_id": "lra_34",
+      "role": "Consent of the encumbrancer to the transfer",
+      "order": 2,
+      "required": false,
+      "condition": "The charge is not redeemed and the purchaser takes subject to it",
+      "alternative_to": "lra_58",
+      "why": "Section 59 stops registration until the lender's written consent is produced."
+    },
+    {
+      "form_id": "lra_63",
+      "role": "Transfer of lease",
+      "order": 3,
+      "required": true,
+      "why": "The operative instrument. It passes the unexpired residue."
+    }
+  ],
+  "drafted_together": [
+    {
+      "forms": [
+        "lra_9",
+        "lra_58",
+        "lra_63"
+      ],
+      "why": "One lodgement on completion, the discharge registering before the transfer."
+    }
+  ],
+  "alternatives": [
+    {
+      "choose_between": [
+        "lra_58",
+        "lra_34"
+      ],
+      "decided_by": "Whether the charge is redeemed on completion or survives it",
+      "why": "Both answer section 59 and only one is right for a given matter."
+    }
+  ],
+  "consents": [
+    {
+      "name": "Lessor's consent to the dealing",
+      "when_required": "The lease contains a condition against transferring without the lessor's written consent, which is the normal term",
+      "when_not_required": "The lease contains no such condition",
+      "authority": "The lessor, which for public land is the National Land Commission and for private land is the landlord",
+      "provision": "Land Registration Act s.55",
+      "deadline": null,
+      "consequence_if_missed": "The dealing is not registrable. Section 55 has no prescribed form, so the consent is produced as a document and authenticated to the Registrar's satisfaction."
+    },
+    {
+      "name": "Land Control Board consent",
+      "when_required": "The leased land is agricultural and within a land control area",
+      "when_not_required": "Urban or township land, or land outside a land control area",
+      "authority": "The land control board for the area",
+      "provision": "Land Control Act s.6(1)",
+      "deadline": "Six months from the agreement",
+      "deadline_provision": "Land Control Act s.8(1)",
+      "consequence_if_missed": "The transaction is void for all purposes."
+    },
+    {
+      "name": "Lender's written consent, or a discharge",
+      "when_required": "The charge restricts dealing",
+      "authority": "The chargee",
+      "provision": "Land Registration Act s.59",
+      "deadline": null,
+      "consequence_if_missed": "Nothing registers until it is produced."
+    }
+  ],
+  "clearances": [
+    {
+      "name": "Land rent clearance certificate",
+      "authority": "the Ministry or the National Land Commission",
+      "when_required": "Always on a leasehold where rent is payable. Section 55(b) names it expressly."
+    },
+    {
+      "name": "Land rates clearance",
+      "authority": "the county government",
+      "when_required": "Where the parcel attracts rates"
+    }
+  ],
+  "sequence": [
+    "Read the lease itself before anything else. Its own covenant decides whether consent is needed and from whom.",
+    "Official search, so the encumbrances and the unexpired residue are known rather than assumed.",
+    "Establish whether the land is agricultural and within a land control area.",
+    "Obtain the lessor's consent and the land rent clearance certificate. On public land these come together.",
+    "Settle with the chargee: discharge or consent, not both.",
+    "Assess and pay stamp duty.",
+    "Execute with section 45 verification, then lodge."
+  ],
+  "traps": [
+    {
+      "trap": "Treating the leasehold consent as the same thing as a Land Control Board consent",
+      "why_wrong": "They come from different authorities under different Acts, and only the Land Control Board consent has a prescribed form. A matter can need both.",
+      "provision": "Land Registration Act s.55 and Land Control Act s.6(1)"
+    },
+    {
+      "trap": "Selling more residue than the lease has left",
+      "why_wrong": "The unexpired term is a fact from the register and the lease, not from the client's recollection.",
+      "provision": null
+    },
+    {
+      "trap": "Leaving the land rent clearance certificate to the end",
+      "why_wrong": "Section 55(b) makes it part of what must be produced for the dealing to register, and it is slow to obtain.",
+      "provision": "Land Registration Act s.55(b)"
+    }
+  ],
+  "practice_varies": [
+    {
+      "step": "Who signs the lessor's consent",
+      "note": "For public land this has moved between the Commissioner of Lands, the Ministry and the National Land Commission. Record who your registry currently accepts."
+    },
+    {
+      "step": "Validity period of the rent clearance certificate",
+      "note": "Varies. Record what your registry treats as current."
+    }
+  ],
+  "milestone": 7,
+  "verified_by": {
+    "status": "APPROVED",
+    "by": "Robin Muthomi Mutiga, Advocate",
+    "date": "2026-09-28",
+    "note": "Bundles, sequence, alternatives and traps approved. Every statutory quote is proved against cached primary law by scripts/procedures/lint.js on each build; the readings remain ED's, approved by the advocate above."
+  }
+}

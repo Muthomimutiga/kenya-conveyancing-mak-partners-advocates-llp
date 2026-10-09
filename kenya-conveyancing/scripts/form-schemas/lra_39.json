@@ -1,0 +1,134 @@
+{
+  "form_id": "lra_39",
+  "form_number": "LRA-39",
+  "regulation": "(r. 56(1))",
+  "doc_title": "TRANSFER TO THE PERSONAL REPRESENTATIVE AS EXECUTOR/ADMINISTRATOR",
+  "doc_title_official": "TRANSFER TO THE PERSONAL REPRESENATATIVE AS EXECUTOR/ADMINISTRATOR",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-39-TRANSFER-TO-THE-PERSONAL-REPRESENTATIVE.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-39.txt"
+  },
+  "category": "instrument",
+  "when_used": "The interest of a deceased proprietor is transmitted to the personal representative who holds it as executor or administrator of the estate.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Transferor(s)",
+    "transferor_single": "Transferor",
+    "transferee": "Transferee(s)",
+    "transferee_single": "Transferee"
+  },
+  "title_label": "TITLE NO",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Transfer",
+      "value_blank": true
+    },
+    {
+      "label": "Transferor(s): Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "as personal representative(s) of the Estate of",
+      "value_template": "{{deceased_name}}"
+    },
+    {
+      "label": "ID/Passport",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Transferee(s): Give full name(s)",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "as personal representative(s) of the Estate of",
+      "value_template": "{{deceased_name}}"
+    },
+    {
+      "label": "Date of Letters of Administration/Probate",
+      "value_template": "{{date_of_grant}}"
+    },
+    {
+      "label": "Nature of Interest to be transferred",
+      "value_template": "{{nature_of_interest}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "This TRANSFER witnesses as follows:"
+    },
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "The Transferor(s) HEREBY TRANSFERS to the Transferee(s) the above-mentioned interest in the above Title."
+    },
+    {
+      "type": "numbered",
+      "number": 2,
+      "text": "The Transfer is subject to the following:"
+    },
+    {
+      "type": "lettered",
+      "letter": "a",
+      "text": "The provisions of The Land Registration Act (No 3 of 2012) and The Land Act(No 6 of 2012);"
+    },
+    {
+      "type": "lettered",
+      "letter": "b",
+      "text": "The interests noted in the Register of the Title."
+    },
+    {
+      "type": "numbered",
+      "number": 3,
+      "text": "The Transfer is also subject to the following additional provisions, (if any)."
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_provisions}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS the Transferor(s) have signed this Transfer as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "transferor",
+    "signer_label": "Transferor(s)",
+    "verification": true,
+    "verification_heading": "Certificate of Verification"
+  },
+  "registry_block": "default",
+  "custom_fields": [
+    {
+      "name": "deceased_name",
+      "label": "Name of the deceased proprietor",
+      "prompt": "Full name of the deceased whose estate the personal representatives administer",
+      "required": true
+    },
+    {
+      "name": "date_of_grant",
+      "label": "Date of the letters of administration or probate",
+      "prompt": "The date the grant of letters of administration or probate was issued",
+      "required": true
+    },
+    {
+      "name": "nature_of_interest",
+      "label": "Nature of interest to be transferred",
+      "prompt": "The interest being transmitted, for example absolute proprietorship or leasehold",
+      "required": true
+    },
+    {
+      "name": "additional_provisions",
+      "label": "Additional provisions",
+      "prompt": "Any further provisions the transfer is subject to, or leave empty where there are none",
+      "required": false
+    }
+  ],
+  "pairs_with_lra9": true
+}

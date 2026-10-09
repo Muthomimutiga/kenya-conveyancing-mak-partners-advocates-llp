@@ -1,0 +1,167 @@
+{
+  "form_id": "lra_10",
+  "form_number": "LRA 10",
+  "regulation": "(r. 23(2))",
+  "doc_title": "APPLICATION TO BE NOTED IN THE REGISTER AS A SPOUSE",
+  "doc_title_official": "APPLICATION TO BE NOTED IN THE REGISTER AS A SPOUSE",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-9-GENERAL-APPLICATION-FOR-REGISTRATION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-10.txt"
+  },
+  "category": "application",
+  "when_used": "A spouse of the registered proprietor applies to have the spousal interest noted in the register of the title.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NO",
+  "filing_box": [
+    "Date received\n…..…20….....",
+    "Presentation Book\nNo:...............…....",
+    "Official fees paid\nShs. …………….",
+    "Receipt No.\n…………………"
+  ],
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Registered Proprietor",
+      "value_template": "{{registered_proprietor}}"
+    },
+    {
+      "label": "Name of Applicant",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Address for Service of Applicant (Note that the address(es) will be entered in the register and used for correspondence and the service of notice):",
+      "value_template": "{{applicant_address_for_service}}"
+    },
+    {
+      "label": "Email of Applicant",
+      "value_template": "{{applicant_email}}"
+    },
+    {
+      "label": "Telephone Number of Applicant",
+      "value_template": "{{applicant_telephone}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant as a spouse of the registered proprietor HEREBY APPLIES to be noted in the register as a spouse."
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application the Applicant has attached a statutory declaration and supporting documents."
+    },
+    {
+      "type": "plain",
+      "text": "Dated this …………………………… day of …………………………………….20……."
+    },
+    {
+      "type": "plain",
+      "text": "Note: If you dishonestly enter information or make a statement that you know is, or might be, untrue or misleading, and intend by doing so to make a gain for yourself or another person, or to cause loss or the risk of loss to another person, you may commit the offence of fraud."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true,
+    "verification_heading": "Certificate of Verification under Section 45 of the Land Registration Act"
+  },
+  "registry_block": [
+    "LAND REGISTRAR",
+    "Name:",
+    "Signature:"
+  ],
+  "annex": [
+    {
+      "type": "statutory_declaration",
+      "heading": "STATUTORY DECLARATION",
+      "intro": "I, {{declarant_name}} (in support of this Application) do hereby sincerely declare as follows:-",
+      "body_lines": [
+        "THAT I am the spouse of the {{proprietor_spouse_of}}",
+        "the registered proprietor by virtue of the following:"
+      ],
+      "closing_lines": [
+        "I attach the following supporting documents:",
+        "A duly certified copy of a marriage certificate dated {{marriage_certificate_date}} under the {{marriage_law}};",
+        "{{further_supporting_document}};",
+        "A copy of the search report in respect of the property."
+      ],
+      "closing": "I make this declaration conscientiously believing the same to be true and according to the Oaths and Statutory Declaration Act.",
+      "jurat": "DECLARED before me at",
+      "jurat_signatory": "Signature of Commissioner for Oaths or Magistrate or Notary Public"
+    }
+  ],
+  "custom_fields": [
+    {
+      "name": "registered_proprietor",
+      "label": "Registered proprietor",
+      "prompt": "Full name of the registered proprietor of the title, as the register shows it",
+      "required": true
+    },
+    {
+      "name": "applicant_address_for_service",
+      "label": "Address for service of the Applicant",
+      "prompt": "Postal and physical address of the applicant spouse. It is entered in the register and used for correspondence and for serving notices",
+      "required": true
+    },
+    {
+      "name": "applicant_email",
+      "label": "Email of the Applicant",
+      "prompt": "Email address of the applicant spouse",
+      "required": false
+    },
+    {
+      "name": "applicant_telephone",
+      "label": "Telephone number of the Applicant",
+      "prompt": "Telephone number of the applicant spouse",
+      "required": false
+    },
+    {
+      "name": "declarant_name",
+      "label": "Name of the declarant",
+      "prompt": "Full name of the person swearing the statutory declaration in support of this application",
+      "required": true
+    },
+    {
+      "name": "proprietor_spouse_of",
+      "label": "The registered proprietor the Applicant is married to",
+      "prompt": "Full name of the registered proprietor the applicant is the spouse of, as the register shows it",
+      "required": true
+    },
+    {
+      "name": "marriage_certificate_date",
+      "label": "Date of the marriage certificate",
+      "prompt": "Date on the certified copy of the marriage certificate attached to the declaration",
+      "required": true
+    },
+    {
+      "name": "marriage_law",
+      "label": "Law the marriage was celebrated under",
+      "prompt": "The name of the law the marriage certificate was issued under. The form already prints \"under the\" before this, so give just the Act's name with no leading \"the\", for example Marriage Act, 2014",
+      "required": true
+    },
+    {
+      "name": "further_supporting_document",
+      "label": "Further supporting document",
+      "prompt": "Any other document attached in support of the declaration, or leave it out where there is none",
+      "required": false
+    },
+    {
+      "name": "declaration_text",
+      "label": "Marriage particulars",
+      "prompt": "The particulars of the marriage that support this declaration, one paragraph per line, for example the date and place of the marriage and how it was contracted",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

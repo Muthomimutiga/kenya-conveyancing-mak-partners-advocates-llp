@@ -1,11 +1,11 @@
-# Agreement for Sale — Template
+# Agreement for Sale: Template
 
 ## Output Category
 
-**Category A — Letterhead Document** (formal legal instrument, not a business letter).
-Begin output with: `[LETTERHEAD DOCUMENT — Print on MAK & Partners Advocates LLP letterhead]`
+**Category A: Letterhead Document** (formal legal instrument, not a business letter).
+Begin output with: `[LETTERHEAD DOCUMENT: Print on MAK & Partners Advocates LLP letterhead]`
 
-**Typography:** Book Antiqua 12pt, single spaced, justified.
+**Typography:** the firm's court font (`font_court` in `scripts/firm-config.json`), 12pt, single spaced, justified.
 
 ---
 
@@ -41,7 +41,7 @@ AGREEMENT FOR SALE
 
 FOR
 
-[PROPERTY DESCRIPTION — e.g. L.R. NO. 209/4491]
+[PROPERTY DESCRIPTION, e.g. L.R. NO. 209/4491]
                     (The "Property")
 
 
@@ -50,8 +50,8 @@ FOR
 DRAWN BY
 
 MAK & PARTNERS ADVOCATES LLP
-4th Floor, Victoria at Two Rivers, Two Rivers Development, Limuru Road
-P.O. Box 10644-00100
+4TH FLOOR, VICTORIA AT TWO RIVERS, TWO RIVERS DEVELOPMENT, LIMURU ROAD, NAIROBI
+P.O. BOX 10644-00100, NAIROBI
 NAIROBI
 
 Tel: +254 100 939 727
@@ -60,7 +60,7 @@ Email: mak@makadvocates.com
 
 ---
 
-## Agreement for Sale — Full Body
+## Agreement for Sale: Full Body
 
 ```
 AGREEMENT FOR SALE
@@ -117,12 +117,12 @@ NOW IT IS HEREBY AGREED as follows:
      (Kshs. [PURCHASE PRICE IN FIGURES]/-);
 
      "The Vendor's Advocates" means Messrs. MAK & Partners Advocates LLP
-     of 4th Floor, Victoria at Two Rivers, Two Rivers Development, Limuru Road,
-     P.O. Box 10644-00100, Nairobi [OR, where this firm does not act for the
+     of 4TH FLOOR, VICTORIA AT TWO RIVERS, TWO RIVERS DEVELOPMENT, LIMURU ROAD, NAIROBI,
+     P.O. BOX 10644-00100, NAIROBI [OR, where this firm does not act for the
      Vendor, insert the Vendor's actual advocates' firm name and address];
 
      "The Purchaser's Advocates" means Messrs. [PURCHASER'S ADVOCATE FIRM NAME
-     AND ADDRESS — or "advocates to be appointed by the Purchaser"].
+     AND ADDRESS, or "advocates to be appointed by the Purchaser"].
 
 1.2  In this Agreement, unless the context otherwise requires:
 
@@ -190,11 +190,11 @@ NOW IT IS HEREBY AGREED as follows:
      stakeholders in their client account pending Completion, details of which are
      as follows:
 
-          [MAK & PARTNERS CLIENT ACCOUNT — INSERT BEFORE SENDING]
-          Account Name:   [MAK & PARTNERS CLIENT ACCOUNT — INSERT BEFORE SENDING]
-          Account Number: [MAK & PARTNERS CLIENT ACCOUNT — INSERT BEFORE SENDING]
-          Bank:           [MAK & PARTNERS CLIENT ACCOUNT — INSERT BEFORE SENDING]
-          Branch:         [MAK & PARTNERS CLIENT ACCOUNT — INSERT BEFORE SENDING]
+          [FIRM CLIENT ACCOUNT: INSERT BEFORE SENDING]
+          Account Name:   [FIRM CLIENT ACCOUNT: INSERT BEFORE SENDING]
+          Account Number: [FIRM CLIENT ACCOUNT: INSERT BEFORE SENDING]
+          Bank:           [FIRM CLIENT ACCOUNT: INSERT BEFORE SENDING]
+          Branch:         [FIRM CLIENT ACCOUNT: INSERT BEFORE SENDING]
 
 4.2  The Balance of the Purchase Price, being Kenya Shillings [BALANCE IN WORDS]
      (Kshs. [BALANCE IN FIGURES]/-), shall be paid to the Vendor's Advocates on
@@ -528,15 +528,15 @@ Name and signature of person certifying
 
 DRAWN BY:
 MAK & PARTNERS ADVOCATES LLP
-4th Floor, Victoria at Two Rivers, Two Rivers Development, Limuru Road
-P.O. Box 10644-00100, NAIROBI
+4TH FLOOR, VICTORIA AT TWO RIVERS, TWO RIVERS DEVELOPMENT, LIMURU ROAD, NAIROBI
+P.O. BOX 10644-00100, NAIROBI
 ```
 
 ---
 
-## LSK Conditions of Sale 2015 — Key Conditions Reference
+## LSK Conditions of Sale 2015: Key Conditions Reference
 
-These conditions govern automatically where incorporated (Clause 2). The skill does not need to recite them in full — Clause 2 incorporates them in extenso.
+These conditions govern automatically where incorporated (Clause 2). The skill does not need to recite them in full. Clause 2 incorporates them in extenso.
 
 | Condition | Subject | Key Rule |
 |---|---|---|
@@ -557,7 +557,7 @@ These conditions govern automatically where incorporated (Clause 2). The skill d
 | 13.2 | Late completion | Compensation at Contract Rate (CBR + 2%) from Completion Date to actual Completion |
 | 13.4 | Purchaser's breach | Vendor may forfeit deposit (up to 10%), rescind, claim damages |
 | 13.5 | Vendor's breach | Return Deposit + Accrued Interest; Purchaser retains remedies at law and equity |
-| 14 | Taxation | CGT is the Vendor's liability, charged at 15% of the net gain (effective 1 Jan 2023, Finance Act 2022), payable on or before transfer — on the earlier of receipt of the full consideration or lodging/application for registration of the transfer (KRA iTax). VAT where applicable is the Purchaser's liability. Verify the current rate with KRA before advising. |
+| 14 | Taxation | CGT is the Vendor's liability, charged at 15% of the net gain (effective 1 Jan 2023, Finance Act 2022), payable on or before transfer: on the earlier of receipt of the full consideration or lodging/application for registration of the transfer (KRA iTax). VAT where applicable is the Purchaser's liability. Verify the current rate with KRA before advising. |
 | 23 | Legal costs | Each party pays own advocates' costs |
 | 25.5 | Jurisdiction | Kenyan law; non-exclusive jurisdiction of Kenyan courts |
 | 25.8 | Special Conditions prevail | If any conflict between Special Conditions and these Conditions, Special Conditions prevail |
@@ -568,12 +568,12 @@ These conditions govern automatically where incorporated (Clause 2). The skill d
 
 - Fill all square bracket fields from party + property details collected at intake before outputting.
 - Use the cover page format. It prints as page 1.
-- The Spousal Consent block is required wherever the Property is or may be matrimonial property, or where any Vendor is or may be married. The spousal interest is an OVERRIDING interest under s.28 Land Registration Act 2012, so it binds whether or not an LRA 10 (Spouse's Interest) restriction is noted on the register — do NOT condition the consent on a register note. Confirm marital status at intake. Statutory basis: s.93 Land Registration Act 2012, read with s.12 Matrimonial Property Act 2013 (and, for a charge of a matrimonial home, s.79(3) Land Act 2012); constitutional anchor Article 45(3). Always include the block; it can be omitted at printing only if marital status is confirmed not to apply.
+- The Spousal Consent block is required wherever the Property is or may be matrimonial property, or where any Vendor is or may be married. The spousal interest is an OVERRIDING interest under s.28 Land Registration Act 2012, so it binds whether or not an LRA 10 (Spouse's Interest) restriction is noted on the register. Do NOT condition the consent on a register note. Confirm marital status at intake. Statutory basis: s.93 Land Registration Act 2012, read with s.12 Matrimonial Property Act 2013 (and, for a charge of a matrimonial home, s.79(3) Land Act 2012); constitutional anchor Article 45(3). Always include the block; it can be omitted at printing only if marital status is confirmed not to apply.
 - For company Vendors or Purchasers: use the Company execution block. Include Directors' details and Board Resolution in Completion Documents list.
-- Completion Date in Clause 5.1 must match the date recorded in Airtable and Outlook Calendar.
+- Completion Date in Clause 5.1 must match the date recorded in Airtable and in the firm's calendar (Outlook or Google, whichever is connected).
 - Deposit in Clause 4.1 must equal 10% of Purchase Price unless a different amount is expressly agreed.
 - Balance of Purchase Price = Purchase Price minus Deposit.
-- For leasehold: include Clauses 5.2(iv) and 5.2(v) — NLC Rent Clearance and NLC Consent to Transfer.
-- For agricultural land: include Clause 5.2(vi) — Land Control Board Consent.
-- For charged property: include Clause 5.2(xiii) — Discharge of Charge.
-- The firm's client-account details in Clause 4.1 ship as the loud placeholder `[MAK & PARTNERS CLIENT ACCOUNT — INSERT BEFORE SENDING]`. There is no MAK client/bank account on file in this template. Never substitute a guessed number and never leave a third-party firm's account: insert MAK & Partners' actual verified client-account details before the document is sent to any party. A wrong client-account figure reaching a party is unrecoverable.
+- For leasehold: include Clauses 5.2(iv) and 5.2(v): NLC Rent Clearance and NLC Consent to Transfer.
+- For agricultural land: include Clause 5.2(vi): Land Control Board Consent.
+- For charged property: include Clause 5.2(xiii): Discharge of Charge.
+- The firm's client-account details in Clause 4.1 ship as the loud placeholder `[FIRM CLIENT ACCOUNT: INSERT BEFORE SENDING]`. There is no client/bank account on file in this template. Never substitute a guessed number and never leave a third-party firm's account: insert the firm's actual verified client-account details before the document is sent to any party. A wrong client-account figure reaching a party is unrecoverable.

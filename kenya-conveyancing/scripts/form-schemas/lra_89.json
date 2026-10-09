@@ -1,0 +1,87 @@
+{
+  "form_id": "lra_89",
+  "form_number": "LRA 89",
+  "regulation": "(r. 91(3))",
+  "doc_title": "CONSENT TO RECTIFY THE REGISTER BY INDIVIDUAL",
+  "doc_title_official": "CONSENT TO RECTIFY THE REGISTER BY INDIVIDUAL",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-89-CONSENT-TO-RECTIFY-THE-REGISTER-BY-INDIVIDUAL.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-89.txt"
+  },
+  "category": "consent",
+  "when_used": "An individual affected by an intended rectification of the register consents to it, so that the Registrar may rectify.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Party Giving Consent",
+    "transferor_single": "Party Giving Consent",
+    "transferee": "Proprietor",
+    "transferee_single": "Proprietor"
+  },
+  "filing_box": "default",
+  "title_line": "default",
+  "title_label": "TITLE NUMBER",
+  "detail_rows": [
+    {
+      "label": "Date of consent:",
+      "value_blank": true
+    },
+    {
+      "label": "Name of Proprietor",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Name of party giving consent:",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "ID/PP No.:",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Nature of rectification Consented:",
+      "value_field": "nature_of_rectification"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The above named being the affected party/parties hereby acknowledge and declare that :-"
+    },
+    {
+      "type": "plain",
+      "text": "I/We have full knowledge of the intended rectification;"
+    },
+    {
+      "type": "plain",
+      "text": "I/We understand the nature and effect of this Consent;"
+    },
+    {
+      "type": "witness",
+      "text": "AND I/We HEREBY CONSENT to the rectification of the register."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Party Giving Consent",
+    "verification": true,
+    "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act"
+  },
+  "registry_block": [
+    "LAND REGISTRAR",
+    "Name:……………………...…… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "custom_fields": [
+    {
+      "name": "nature_of_rectification",
+      "label": "Nature of the rectification consented to",
+      "prompt": "What is to be rectified in the register, set out as the entry to be corrected and the correction sought",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

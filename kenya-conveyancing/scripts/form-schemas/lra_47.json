@@ -1,0 +1,58 @@
+{
+  "form_id": "lra_47",
+  "form_number": "LRA-47",
+  "regulation": "(r. 60(2)(b)(ii), 63(2)(c))",
+  "doc_title": "GENERAL FORM OF STATUTORY DECLARATION",
+  "doc_title_official": "GENERAL FORM OF STATUTORY DECLARATION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-47-GENERAL-FORM-OF-STATUTORY-DECLARATION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-47.txt"
+  },
+  "category": "declaration",
+  "when_used": "A declarant sets out facts on oath in support of an application to the land registry, in the declarant's own words.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Declarant",
+    "transferor_single": "Declarant"
+  },
+  "filing_box": "none",
+  "title_line": "none",
+  "detail_rows": [],
+  "body_text": [
+    {
+      "type": "plain",
+      "text": "I, {{declarant_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "(in support of this Application) do hereby sincerely declare as follows:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{declaration_text}}"
+    },
+    {
+      "type": "plain",
+      "text": "I make this declaration conscientiously believing the same to be true and according to the Oaths and Statutory Declaration Act."
+    }
+  ],
+  "execution": {
+    "mode": "declaration",
+    "signer": "transferor",
+    "signer_label": "Declarant",
+    "verification": false,
+    "verb": "declared",
+    "jurat_signatory": "Signature of Commissioner for Oaths or Magistrate or Notary Public"
+  },
+  "registry_block": "none",
+  "custom_fields": [
+    {
+      "name": "declarant_name",
+      "label": "Name of the declarant",
+      "prompt": "Full name of the person swearing this declaration in support of the application",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": false
+}

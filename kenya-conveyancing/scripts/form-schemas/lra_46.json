@@ -1,0 +1,73 @@
+{
+  "form_id": "lra_46",
+  "form_number": "LRA-46",
+  "regulation": "(r. 60(1))",
+  "doc_title": "APPLICATION BY A LIQUIDATOR TO BE NOTED IN THE REGISTER",
+  "doc_title_official": "APPLICATION BY A LIQUIDATOR TO BE NOTED IN THE REGISTER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-46-APPLICATION-BY-A-LIQUIDATOR-TO-BE-NOTED-IN-THE-REGISTER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-46.txt"
+  },
+  "category": "application",
+  "when_used": "The liquidator of a proprietor company applies to be noted in the register as proprietor of the company's land.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "The registered Proprietor: Give full name(s) and the registered number, if any",
+      "value_template": "{{registered_proprietor}}"
+    },
+    {
+      "label": "The Applicant / Liquidator: Give full name(s)",
+      "value_field": "transferorNames",
+      "bold": true
+    }
+  ],
+  "body_text": [
+    {
+      "type": "intro",
+      "text": "The Applicant, the Liquidator of the above named Proprietor Company HEREBY APPLIES to the Land Registrar to be noted in the Register as proprietor of the above-motioned Title."
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application, the Applicant attaches a sealed copy of Court Order / resolution duly certified by the Company Secretary or (in case of a foreign company) a notary public*, a Statutory Declaration and Supporting Documents."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Applicant",
+    "verification": true,
+    "photograph": false
+  },
+  "registry_block": [
+    "REGISTERED and SEALED this ………. day of …………………. 20….",
+    "Seal…………………………………………………..",
+    "LAND REGISTRAR",
+    "Name:………………………………………… Registrar’s Stamp / No…………………",
+    "Signature: ………………………………………….."
+  ],
+  "foot_notes": [
+    "* Delete where inapplicable"
+  ],
+  "custom_fields": [
+    {
+      "name": "registered_proprietor",
+      "label": "The registered proprietor",
+      "prompt": "Full name of the proprietor company as the register shows it, with its registration number where it has one",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

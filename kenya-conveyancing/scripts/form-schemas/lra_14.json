@@ -1,0 +1,204 @@
+{
+  "form_id": "lra_14",
+  "form_number": "LRA 14",
+  "regulation": "(r. 28(1), 29(1))",
+  "doc_title": "APPLICATION FOR RECONSTRUCTION OF A LAND REGISTER",
+  "doc_title_official": "APPLICATION FOR RECONSTRUCTION OF A LAND REGISTER",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-14-APPLICATION-FOR-RECONSTRUCTION-OF-A-LAND-REGISTER.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-14.txt"
+  },
+  "category": "application",
+  "when_used": "The registered proprietor, or a person entitled under the law, applies for the reconstruction of a land register that has been lost or destroyed.",
+  "party_mode": "single_party",
+  "party_roles": {
+    "transferor": "Applicant",
+    "transferor_single": "Applicant"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of Application",
+      "value_blank": true
+    },
+    {
+      "label": "Applicant*",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Registration Details (ID/Passport/Registration No.)",
+      "value_field": "transferorIDs"
+    },
+    {
+      "label": "Address in Kenya (Postal and Physical)",
+      "value_template": "{{applicant_address}}"
+    },
+    {
+      "label": "E-mail address",
+      "value_template": "{{applicant_email}}"
+    },
+    {
+      "label": "Telephone Number",
+      "value_template": "{{applicant_telephone}}"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "The registered proprietor of the above noted property is:-"
+    },
+    {
+      "type": "plain",
+      "text": "Name: {{registered_proprietor_name}}"
+    },
+    {
+      "type": "plain",
+      "text": "Address: {{registered_proprietor_address}}"
+    },
+    {
+      "type": "plain",
+      "text": "ID/Registration details {{registered_proprietor_id}}"
+    },
+    {
+      "type": "plain",
+      "text": "The Applicant being:"
+    },
+    {
+      "type": "plain",
+      "text": "the registered proprietor of the above noted property; or"
+    },
+    {
+      "type": "plain",
+      "text": "the person entitled to make this application pursuant to1 {{basis_of_entitlement}}"
+    },
+    {
+      "type": "plain",
+      "text": "HEREBY APPLIES for the reconstruction of the land register."
+    },
+    {
+      "type": "plain",
+      "text": "In support of this Application the Applicant attaches:"
+    },
+    {
+      "type": "plain",
+      "text": "A statutory declaration."
+    },
+    {
+      "type": "plain",
+      "text": "Deed of Indemnity (if the Applicant is the registered proprietor)"
+    },
+    {
+      "type": "plain",
+      "text": "The following supporting documents:-"
+    },
+    {
+      "type": "plain",
+      "text": "Certified copies of National Identity card/Passport of the registered Proprietor(s)."
+    },
+    {
+      "type": "plain",
+      "text": "Certified copies of certificate of registration/incorporation as well as copies of National Identity Cards/Passport of the directors/partners/officials who have sworn the statutory declaration in the case of a registered entity."
+    },
+    {
+      "type": "plain",
+      "text": "Colour passport sized photos of the individual registered Proprietors or person(s) making the statutory declaration."
+    },
+    {
+      "type": "plain",
+      "text": "In the case of a registered entity, certified extract of the resolution of the entity seeking an application for a replacement title."
+    },
+    {
+      "type": "plain",
+      "text": "An official search from the registration office where the entity is registered."
+    },
+    {
+      "type": "plain",
+      "text": "An official search in respect of the Property and/or any other document evidencing ownership of the Property."
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS WHEREOF this application of a loss or destroyed certificate of Title / lease has been duly executed by the Proprietor."
+    }
+  ],
+  "execution": {
+    "mode": "witnessed",
+    "signer": "transferor",
+    "signer_label": "Proprietor",
+    "verification": true
+  },
+  "registry_block": [
+    "LAND REGISTRAR",
+    "Name:…………………………... Registrar’s Stamp / No………………",
+    "Signature: ………………………………………….."
+  ],
+  "annex": [
+    {
+      "type": "statutory_declaration",
+      "heading": "STATUTORY DECLARATION***",
+      "intro": "I, {{declarant_name}} (in support of this Application) do hereby sincerely declare as follows:-",
+      "closing": "I make this declaration conscientiously believing the same to be true and according to the Oaths and Statutory Declaration Act.",
+      "jurat": "DECLARED before me at",
+      "jurat_signatory": "Signature of Commissioner for Oaths or Magistrate or Notary Public"
+    }
+  ],
+  "foot_notes": [
+    "Provide details of the basis and capacity of the applicant to make this application",
+    "*The Applicant should be the registered Proprietor or the person entitled thereto under the Law."
+  ],
+  "custom_fields": [
+    {
+      "name": "applicant_address",
+      "label": "Address of the Applicant in Kenya",
+      "prompt": "Postal and physical address of the applicant in Kenya",
+      "required": true
+    },
+    {
+      "name": "applicant_email",
+      "label": "E-mail address of the Applicant",
+      "prompt": "Email address of the applicant",
+      "required": false
+    },
+    {
+      "name": "applicant_telephone",
+      "label": "Telephone Number of the Applicant",
+      "prompt": "Telephone number of the applicant",
+      "required": false
+    },
+    {
+      "name": "registered_proprietor_name",
+      "label": "Name of the registered proprietor",
+      "prompt": "Full name of the registered proprietor of the property, as the register shows it",
+      "required": true
+    },
+    {
+      "name": "registered_proprietor_address",
+      "label": "Address of the registered proprietor",
+      "prompt": "Postal address of the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "registered_proprietor_id",
+      "label": "Identity or registration details of the registered proprietor",
+      "prompt": "Identity card, passport or registration number of the registered proprietor",
+      "required": true
+    },
+    {
+      "name": "basis_of_entitlement",
+      "label": "Basis on which the Applicant is entitled to apply",
+      "prompt": "Where the applicant is not the registered proprietor, the basis and capacity on which the applicant makes this application",
+      "required": false
+    },
+    {
+      "name": "declarant_name",
+      "label": "Name of the declarant",
+      "prompt": "Full name of the person swearing the statutory declaration in support of this application",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

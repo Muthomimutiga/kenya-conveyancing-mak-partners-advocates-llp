@@ -12,5 +12,8 @@
   "type": "commonjs",
   "dependencies": {
     "docx": "^9.6.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }

@@ -1,0 +1,193 @@
+{
+  "form_id": "lra_61",
+  "form_number": "LRA 61",
+  "regulation": "(r. 75(3))",
+  "doc_title": "TRANSFER PURSUANT TO PURCHASE BY CHARGEE IN A PUBLIC AUCTION",
+  "doc_title_official": "TRANSFER PURSUANT TO PURCHASE BY CHARGEE IN A PUBLIC AUCTION",
+  "source": {
+    "url": "https://lands.go.ke/sites/default/files/Ardhi%20Forms/Form-LRA-61-TRANSFER-PURSUANT-TO-PURCHASE-BY-CHARGEE-IN-A-PUBLIC-AUCTION.doc",
+    "fetched": "2026-09-22",
+    "text": "_source/lra-61.txt"
+  },
+  "category": "instrument",
+  "when_used": "A chargee exercising its power of sale buys the charged land itself at a public auction, and transfers the title to itself.",
+  "party_mode": "two_party",
+  "party_roles": {
+    "transferor": "Chargee (as Transferor)",
+    "transferor_single": "Chargee (as Transferor)",
+    "transferee": "Transferee (being the Chargee)",
+    "transferee_single": "Transferee (being the Chargee)"
+  },
+  "title_label": "TITLE NUMBER",
+  "filing_box": "default",
+  "title_line": "default",
+  "detail_rows": [
+    {
+      "label": "Date of this Transfer:",
+      "value_blank": true
+    },
+    {
+      "label": "Date of Charge(s)",
+      "value_template": "{{date_of_charge}}"
+    },
+    {
+      "label": "Charge(s) Registered in the Register as Entry Number(s):",
+      "value_template": "{{charge_entry_numbers}}"
+    },
+    {
+      "label": "Date of Auction",
+      "value_template": "{{date_of_auction}}"
+    },
+    {
+      "label": "Chargee (as Transferor): Give full name(s) and if corporate the registered number, if any",
+      "value_field": "transferorNames",
+      "bold": true
+    },
+    {
+      "label": "Transferee (being the Chargee): Give full name(s) and company’s registered number, if any",
+      "value_field": "transfereeNames",
+      "bold": true
+    },
+    {
+      "label": "Chargor: Give full name(s) and company’s registered number, if any",
+      "value_template": "{{chargor_name}}"
+    },
+    {
+      "label": "Consideration for the Transfer",
+      "value_template": "Kenya Shillings {{purchase_price_words}} (Kshs. {{purchase_price_figures}}/=)"
+    }
+  ],
+  "body_text": [
+    {
+      "type": "numbered",
+      "number": 1,
+      "text": "The Chargee in exercise of its power of sale and pursuant to a public auction HEREBY TRANSFERS to the Transferee (being the Chargee) the interest comprised in the above Title;"
+    },
+    {
+      "type": "numbered",
+      "number": 2,
+      "text": "The Transfer is subject to the following:"
+    },
+    {
+      "type": "lettered",
+      "letter": "a",
+      "text": "The provisions of The Land Registration Act and The Land Act;"
+    },
+    {
+      "type": "lettered",
+      "letter": "b",
+      "text": "The interests noted in the Register of the Title; BUT otherwise free of the Charge(s)"
+    },
+    {
+      "type": "numbered",
+      "number": 3,
+      "text": "The Transfer is also subject to the following additional provisions, if any:"
+    },
+    {
+      "type": "plain",
+      "text": "{{additional_provisions}}"
+    },
+    {
+      "type": "numbered",
+      "number": 4,
+      "text": "The Transferee(s) shall hold the land comprised in the Title as joint proprietors/as proprietors in common*** in the following undivided shares:-"
+    },
+    {
+      "type": "plain",
+      "text": "{{undivided_shares}}"
+    },
+    {
+      "type": "witness",
+      "text": "IN WITNESS the Chargee (as Transferor) and the Transferee (being the Transferee) have signed this Transfer as a deed."
+    }
+  ],
+  "execution": {
+    "mode": "deed",
+    "signer": "both",
+    "signer_label": "Chargee (as Transferor)",
+    "verification": true,
+    "signed_label": {
+      "transferor": "SIGNED by the duly authorised attorneys of the",
+      "transferee": "SIGNED AND SEALED by the duly authorised attorneys of the"
+    },
+    "verification_heading": "Verification of execution pursuant to Section 45 of the Land Registration Act",
+    "signing_recital": "under and by virtue of Powers of Attorney registered at the {{poa_lands_registry}} Lands registry as number {{poa_lands_no_1}} and {{poa_lands_no_2}} and at the registry of Documents at Nairobi as Number {{poa_docs_no_1}} and {{poa_docs_no_2}} respectively",
+    "signatory_cell": "attorney",
+    "verification_variant": "attorney"
+  },
+  "registry_block": "default",
+  "foot_notes": [
+    "Notes:",
+    "*Delete whichever is not applicable.",
+    "**The person attesting the signature must authenticate the coloured passport size photograph, National ID Number and Tax PIN Number.”"
+  ],
+  "custom_fields": [
+    {
+      "name": "date_of_charge",
+      "label": "Date of the charge",
+      "prompt": "The date of the charge or charges the chargee is exercising its power of sale under",
+      "required": true
+    },
+    {
+      "name": "charge_entry_numbers",
+      "label": "Entry numbers of the charge(s)",
+      "prompt": "The entry number or numbers under which the charge is registered in the encumbrances section of the register",
+      "required": true
+    },
+    {
+      "name": "date_of_auction",
+      "label": "Date of the auction",
+      "prompt": "The date of the public auction at which the chargee bought the charged land",
+      "required": true
+    },
+    {
+      "name": "chargor_name",
+      "label": "Name of the chargor",
+      "prompt": "Full name of the chargor, and the company registration number where the chargor is a company",
+      "required": true
+    },
+    {
+      "name": "additional_provisions",
+      "label": "Additional provisions",
+      "prompt": "Any further provisions the transfer is subject to, or leave empty where there are none",
+      "required": false
+    },
+    {
+      "name": "undivided_shares",
+      "label": "Undivided shares",
+      "prompt": "Where the transferees hold as proprietors in common, the undivided share each takes",
+      "required": false
+    },
+    {
+      "name": "poa_lands_registry",
+      "label": "Lands registry the powers of attorney are registered at",
+      "prompt": "Which lands registry are the powers of attorney registered at, for example Nairobi",
+      "required": true
+    },
+    {
+      "name": "poa_lands_no_1",
+      "label": "First power of attorney number at the lands registry",
+      "prompt": "What number is the first power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "poa_lands_no_2",
+      "label": "Second power of attorney number at the lands registry",
+      "prompt": "What number is the second power of attorney registered under at that lands registry",
+      "required": true
+    },
+    {
+      "name": "poa_docs_no_1",
+      "label": "First power of attorney number at the registry of Documents",
+      "prompt": "What Number is the first power of attorney registered under at the registry of Documents at Nairobi",
+      "required": true
+    },
+    {
+      "name": "poa_docs_no_2",
+      "label": "Second power of attorney number at the registry of Documents",
+      "prompt": "What Number is the second power of attorney registered under at the registry of Documents at Nairobi",
+      "required": true
+    }
+  ],
+  "pairs_with_lra9": true
+}

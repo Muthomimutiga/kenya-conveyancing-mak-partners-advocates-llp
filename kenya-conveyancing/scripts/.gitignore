@@ -1,0 +1,5 @@
+
+# Per-user advocate identity, written by /setup on each installation.
+# Never commit: it would ship one advocate name and P.105 roll number to every
+# other installer. user-config.TEMPLATE.json is the committed shape.
+user-config.json
