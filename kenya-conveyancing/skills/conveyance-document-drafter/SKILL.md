@@ -352,6 +352,7 @@ Owner: Robin Advisory Group (build) for the firm's conveyancing practice. Review
 - `references/undertaking-letter.md`: Buyer's advocate undertaking on purchase price
 - `references/requisitions-on-title.md`: Standard requisitions on title
 - `references/completion-notice.md`: Formal completion notice to Vendor's Advocates
-- `references/consent-application.md`: LCB consent + NLC consent application letters
+- `references/consent-application.md`: LCB consent (agricultural land) + lessor's consent (leasehold) application letters
+- `scripts/form-schemas/_index.json`: every other LRA form the plugin drafts (66 schemas plus LCB 1), rendered by the generic engine; see The LRA form library above. LRA 33, 58, 63 and 84 are built into the generator.
 - `references/rates-clearance.md`: Rates clearance application letter (County Government)
 - `references/client-update-letter.md`: Plain-English milestone update for clients
